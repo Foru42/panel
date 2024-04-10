@@ -1,104 +1,45 @@
-    body {
-            padding-top: 50px;
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-        }
 
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 250px;
-            background-color: #343a40;
-            color: #ffffff;
-            overflow-y: auto;
-            z-index: 1000; /* Añadido */
-            transition: transform 0.3s ease; /* Añadido */
-        }
+            /* Estilo para el contenedor principal */
+    .container {
+        max-width: 800px; /* Ancho máximo del formulario */
+        margin: auto; /* Centrar el formulario en la página */
+        padding: 20px; /* Espaciado interno */
+        border-radius: 8px; /* Bordes redondeados */
+        background-color: #f4f4f4; /* Color de fondo */
+    }
 
-        .sidebar.closed {
-            transform: translateX(-250px); /* Añadido */
-        }
+    /* Estilo para los campos de entrada */
+    input[type="text"],
+    textarea,
+    select {
+        width: 100%; /* Ancho completo */
+        padding: 10px; /* Espaciado interno */
+        margin-bottom: 10px; /* Espacio entre campos */
+        border: 1px solid #ddd; /* Borde del campo */
+        border-radius: 4px; /* Bordes redondeados */
+        box-sizing: border-box; /* Tamaño de la caja incluyendo el borde */
+        font-size: 16px; /* Tamaño de fuente */
+    }
 
-        .sidebar-brand {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffffff;
-            text-align: center;
-            margin-bottom: 30px;
-        }
+    /* Estilo para la etiqueta del campo */
+    label {
+        font-weight: bold; /* Texto en negrita */
+        display: block; /* Mostrar en una línea */
+        margin-bottom: 5px; /* Espacio debajo de la etiqueta */
+    }
 
-        .sidebar-menu {
-            padding-left: 20px;
-        }
+    /* Estilo para el botón de envío */
+    button[type="submit"] {
+        background-color: #007bff; /* Color de fondo */
+        color: #fff; /* Color del texto */
+        padding: 10px 20px; /* Espaciado interno */
+        border: none; /* Sin borde */
+        border-radius: 4px; /* Bordes redondeados */
+        cursor: pointer; /* Cambiar el cursor al pasar el ratón */
+        font-size: 16px; /* Tamaño de fuente */
+    }
 
-        .sidebar-menu-item {
-            padding: 10px 0;
-            transition: all 0.3s;
-        }
-
-        .sidebar-menu-item a {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 18px;
-        }
-
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-250px); /* Añadido */
-            }
-
-            .main-content {
-                margin-left: 0; /* Cambiado */
-            }
-        }
-
-        .card {
-            border: none;
-            border-radius: 15px;
-            background-color: #ffffff;
-            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card-img-top {
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-        }
-
-        .card-body {
-            padding: 20px;
-        }
-
-        .card-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333333;
-            margin-bottom: 20px;
-        }
-
-        .card-text {
-            color: #666666;
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-        }
+    /* Estilo para el botón de envío al pasar el ratón */
+    button[type="submit"]:hover {
+        background-color: #0056b3; /* Cambiar color de fondo al pasar el ratón */
+    }

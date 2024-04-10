@@ -42,3 +42,12 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 use App\Http\Controllers\BuscarExtensionesController;
 
 Route::get('/buscar-extensiones', [BuscarExtensionesController::class, 'searchExtensions']);
+
+use App\Http\Controllers\PanelakController;
+
+
+Route::post('/panelak', [PanelakController::class, 'store'])->name('panelak.store');
+
+use App\Http\Controllers\PanelDeleteController;
+
+Route::post('/eliminar-panel', [PanelDeleteController::class, 'eliminar']);

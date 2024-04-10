@@ -66,21 +66,7 @@ class PanelTekTableSeeder extends Seeder
             'tek_bertsioa' => 5, 
         ]);
 
-        DB::table('panel_tek')->insert([
-            'panel_id' => 1, // ID del panel al que pertenece
-            'tek_id' => 6, // ID de la tecnología asociada
-            'tek_bertsioa' => 2, 
-        ]);
-        DB::table('panel_tek')->insert([
-            'panel_id' => 1, // ID del panel al que pertenece
-            'tek_id' => 3, // ID de la tecnología asociada
-            'tek_bertsioa' => 4, 
-        ]);
-        DB::table('panel_tek')->insert([
-            'panel_id' => 1, // ID del panel al que pertenece
-            'tek_id' => 1, // ID de la tecnología asociada
-            'tek_bertsioa' => 6, 
-        ]);
+
         DB::table('panel_tek')->insert([
             'panel_id' => 2, // ID del panel al que pertenece
             'tek_id' => 6, // ID de la tecnología asociada

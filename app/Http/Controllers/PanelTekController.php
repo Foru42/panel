@@ -15,6 +15,7 @@ class PanelTekController extends Controller
             ->join('teknologia_bertsioa', 'panel_tek.tek_bertsioa', '=', 'teknologia_bertsioa.id')
             ->join('sistema_operativo', 'panelak.so_id', '=', 'sistema_operativo.id')
             ->select('panelak.izena as panel_izena',
+                    'panel_tek.id as pt_id',
                      'panelak.desk as panel_deskripzioa',
                      'panelak.irudi as panel_irudia',
                      'teknologiak.izena as teknologia_izena',
