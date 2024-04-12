@@ -22,9 +22,6 @@ class TeknologiakTableSeeder extends Seeder
         ];
 
         foreach ($teknologiak as $teknologia) {
-            // Añade las fechas de creación y actualización
-            $teknologia['created_at'] = now();
-            $teknologia['updated_at'] = now();
 
             DB::table('teknologiak')->insert($teknologia);
         }

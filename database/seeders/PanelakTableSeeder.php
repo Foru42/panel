@@ -53,10 +53,8 @@ class PanelakTableSeeder extends Seeder
             ],
         ];
 
-        foreach ($panelaks as $panelak) {
-            $panelak['created_at'] = $now;
-            $panelak['updated_at'] = $now;
-            DB::table('panelak')->insert($panelak);
-        }
+
+            DB::table('panelak')->insert($panelaks);
+        
     }
 }

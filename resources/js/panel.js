@@ -1,3 +1,4 @@
+
 var tarjetaEditandoId = null;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -45,6 +46,7 @@ function handlePanelClick(pane) {
     }); 
     document.getElementById('panel4').addEventListener('click', function (event) {
         handlePanelClick('panel4');
+        MostrarActualizados();
     });
     
     document.getElementById('panelSelect').addEventListener('change', function() {
@@ -328,3 +330,63 @@ function mostrarResultados(resultados) {
     });
     document.getElementById("resultados").innerHTML = contenidoHTML;
 }
+
+function MostrarActualizados() {
+    var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
+
+    // Realizar la petición AJAX con el token CSRF incluido en la cabecera
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/ultimas-modificaciones-panel-tek', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // Incluir el token CSRF en la cabecera
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                // Si la solicitud fue exitosa, obtener los datos
+                var data = JSON.parse(xhr.responseText);
+                generarCards(data); // Generar cards con los datos obtenidos
+            } else {
+                // Si hubo un error, mostrar un mensaje de error
+                console.error('Error al obtener los datos:', xhr.responseText);
+            }
+        }
+    };
+    xhr.send();
+}
+function generarCards(data) {
+    var aldatetak = document.getElementById('aldaketak');
+    aldatetak.innerHTML = ''; // Limpiar el contenido previo del contenedor
+
+    // Iterar sobre todos los paneles disponibles en los datos
+    Object.keys(data).forEach(function(panelSeleccionado) {
+        var infoPanel = data[panelSeleccionado]; // Obtener la información del panel seleccionado
+
+        // Agrupar los elementos de infoPanel en grupos de tres
+        for (var i = 0; i < infoPanel.length; i += 3) {
+            var contenidoHTML = `
+                <div class="md:flex md:justify-center md:items-center mb-8">
+            `;
+            // Agregar tres columnas para cada grupo
+            for (var j = i; j < Math.min(i + 3, infoPanel.length); j++) {
+                var item1 = infoPanel[j];
+                contenidoHTML += `
+                    <div class="card mb-4 shadow-lg rounded-lg overflow-hidden w-full">
+                        <img src="${item1.panel_irudia}" class="w-full h-64 object-cover" alt="${item1.panel_izena}">
+                        <div class="px-6 py-4">
+                            <div class="font-bold text-xl mb-2">${item1.panel_izena}</div>
+                            <p class="text-gray-700 text-base mb-2" data-editable="panel_deskripzioa" data-id="${item1.pt_id}">${item1.panel_deskripzioa}</p>
+                            <p class="text-gray-700 text-base mb-2" data-editable="teknologia_desk" data-id="${item1.pt_id}">${item1.teknologia_izena} - ${item1.teknologia_desk}</p>
+                            <p class="text-gray-700 text-base mb-2" data-editable="bertsioa_izena" data-id="${item1.pt_id}">${item1.bertsioa_izena}</p>
+                            <p class="text-gray-700 text-base mb-2" data-editable="so_desk" data-id="${item1.pt_id}">${item1.so_izena} - ${item1.so_desk}</p>
+                        </div>
+                    </div>
+                `;
+            }
+            contenidoHTML += `
+                </div>
+            `;
+            aldatetak.innerHTML += contenidoHTML;
+        }
+    });
+}
+

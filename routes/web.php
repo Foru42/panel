@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PanelController;
 use App\Http\Controllers\PanelTekController;
+use App\Http\Controllers\ModController;
 
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 
@@ -43,3 +44,6 @@ Route::post('/eliminar-panel', [PanelDeleteController::class, 'eliminar']);
 use App\Http\Controllers\PanelUpdateController;
 
 Route::post('/actualizar-panel', [PanelUpdateController::class, 'actualizarPanel']);
+
+// En routes/web.php
+Route::get('/ultimas-modificaciones-panel-tek', [ModController::class, 'ultimasModificacionesPanelTek'])->name('ultimas-modificaciones-panel-tek');

@@ -50,12 +50,9 @@ class PanelTekTableSeeder extends Seeder
             // Agrega más datos según sea necesario
         ];
 
-        foreach ($panelTeks as $panelTek) {
             // Añade las fechas de creación y actualización
-            $panelTek['created_at'] = now();
-            $panelTek['updated_at'] = now();
 
-            DB::table('panel_tek')->insert($panelTek);
-        }
+            DB::table('panel_tek')->insert($panelTeks);
+        
     }
 }

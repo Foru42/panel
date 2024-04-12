@@ -22,9 +22,6 @@ class TeknologiaBertsioaTableSeeder extends Seeder
         ];
 
         foreach ($teknologiaBertsioa as $teknologia) {
-            // Añade las fechas de creación y actualización
-            $teknologia['created_at'] = now();
-            $teknologia['updated_at'] = now();
 
             DB::table('teknologia_bertsioa')->insert($teknologia);
         }

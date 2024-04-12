@@ -23,8 +23,6 @@ class SistemaOperativoTableSeeder extends Seeder
 
         foreach ($sistemasOperativos as $sistema) {
             // Añade las fechas de creación y actualización
-            $sistema['created_at'] = now();
-            $sistema['updated_at'] = now();
 
             DB::table('sistema_operativo')->insert($sistema);
         }
