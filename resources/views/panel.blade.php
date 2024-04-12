@@ -8,21 +8,26 @@
     <!-- Enlace al archivo CSS de Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
         rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
         <meta name="csrf-token" content="{{ csrf_token() }}">
 @vite('resources/css/app.css')
 </head>
 <body class="bg-gray-100 font-sans">
-    <div id="sidebar" class="sidebar bg-blue-800 text-white fixed left-0 top-0 bottom-0 w-60 pt-32 overflow-y-auto md:relative md:static hidden md:block">
-        <div class="sidebar-brand text-center mb-8 text-2xl font-bold">
+    <div id="sidebar">
+        <div class="sidebar-brand">
             Kontrol Panela<br>
             <span class="block">Aupa {{ session('username') }}</span>
         </div>
 
-        <div class="sidebar-menu pl-5">
-            <a href="#" id="panel1" class="sidebar-menu-item block py-2 hover:bg-blue-700 transition duration-300">Datuak ikusi</a>
-            <a href="#" id="panel2" class="sidebar-menu-item block py-2 hover:bg-blue-700 transition duration-300">Teknologiak ikusi</a>
-            <a href="#" id="panel3" class="sidebar-menu-item block py-2 hover:bg-blue-700 transition duration-300">Panelak gehitu</a>
-           <div class="sidebar-menu-item">
+        <div class="sidebar-menu">
+            <a href="#" id="panel1" class="sidebar-menu-item hover:bg-gray-800">Datuak ikusi</a>
+            <a href="#" id="panel2" class="sidebar-menu-item hover:bg-gray-800">Teknologiak ikusi</a>
+            <a href="#" id="panel3" class="sidebar-menu-item hover:bg-gray-800">Panelak gehitu</a>
+            <a href="#" id="panel4" class="sidebar-menu-item hover:bg-gray-800">Aldaketak ikusi</a>
+
+
+            <div class="sidebar-menu-item">
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white hover:bg-red-700 transition duration-300">Logout</button>
@@ -32,8 +37,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="container mx-auto mt-16 px-10 main-content mb-8"> <!-- Agregado mb-8 para agregar un margen inferior -->
-    <!-- Panel Select -->
+    <div class="container mx-auto mt-16 px-10 main-content mb-8"> <!-- Panel Select -->
     <div id="ControladorGeneral" class="panel-select hidden mb-8">
         <select class="form-select" id="panelSelect">
             <option selected disabled>Aukeratu Panel bat</option>
@@ -50,6 +54,10 @@
     </div>
 
     <div id="resultados" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    <div id="aldaketak" class="hidden">
+    <a>Hola</a>
+</div>
+
     <div id="anadir" class="hidden">
     <!-- Formulario -->
     <div id="grouped_info" data-info="{{ json_encode($grouped_info) }}"></div>
@@ -97,11 +105,18 @@
 
     <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white hover:bg-blue-700 transition duration-300">Gorde</button>
 </form>
-</div>
-</div>
 
+
+</div>
+</div>
+<script>
+    var teknologias = @json($teknologias);
+    var bertsioa_izenak = @json($bertsioa_izenak);
+    var so_desk = @json($so_desk);
+</script>
 
 @vite('resources/js/app.js')
+
 </body>
 
 </html>

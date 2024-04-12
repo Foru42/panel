@@ -14,7 +14,7 @@ return new class extends Migration
             $table->text('desk');
             $table->string('irudi');
             $table->unsignedBigInteger('so_id');
-
+            $table->timestamps();
 
             $table->foreign('so_id')->references('id')->on('sistema_operativo')->onDelete('cascade');
       

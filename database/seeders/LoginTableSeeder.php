@@ -10,22 +10,25 @@ class LoginTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('usuarios')->delete();
-        
-        DB::table('usuarios')->insert([
-            'username' => 'kepa',
-            'password' => Hash::make('111'),
-        ]);
+        DB::table('usuarios')->truncate(); // Elimina todos los registros antes de insertar nuevos
 
-        DB::table('usuarios')->insert([
-            'username' => 'mikel',
-            'password' => Hash::make('222'),
+        $usuarios = [
+            [
+                'username' => 'kepa',
+                'password' => Hash::make('111'),
+            ],
+            [
+                'username' => 'mikel',
+                'password' => Hash::make('222'),
+            ],
+            [
+                'username' => 'antxon',
+                'password' => Hash::make('333'),
+            ],
+        ];
 
-        ]);
-        DB::table('usuarios')->insert([
-            'username' => 'antxon',
-            'password' => Hash::make('333'),
-
-        ]);
+        foreach ($usuarios as $usuario) {
+            DB::table('usuarios')->insert($usuario);
+        }
     }
 }

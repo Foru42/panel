@@ -9,27 +9,15 @@ Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 
 
 Route::get('/reset-database', function () {
-    // Ejecutar el comando 'migrate:fresh'
-    Artisan::call('migrate:fresh');
 
+    Artisan::call('migrate:fresh');
+    Artisan::call('migrate');
+    Artisan::call('db:seed');
     // Devolver una respuesta
     return 'Base de datos reiniciada';
 });
 
-Route::get('/seed', function () {
-    // Ejecutar los seeders
-    Artisan::call('db:seed');
 
-    // Devolver una respuesta
-    return 'Seeders ejecutados';
-});
-Route::get('/migrate', function () {
-    // Ejecutar las migraciones
-    Artisan::call('migrate');
-
-    // Devolver una respuesta
-    return 'Migraciones ejecutadas';
-});
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 
@@ -51,3 +39,7 @@ Route::post('/panelak', [PanelakController::class, 'store'])->name('panelak.stor
 use App\Http\Controllers\PanelDeleteController;
 
 Route::post('/eliminar-panel', [PanelDeleteController::class, 'eliminar']);
+
+use App\Http\Controllers\PanelUpdateController;
+
+Route::post('/actualizar-panel', [PanelUpdateController::class, 'actualizarPanel']);

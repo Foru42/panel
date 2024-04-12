@@ -43,3 +43,87 @@
     button[type="submit"]:hover {
         background-color: #0056b3; /* Cambiar color de fondo al pasar el ratón */
     }
+
+
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 260px; /* Ancho del sidebar */
+        background-color: #1a202c; /* Color de fondo */
+        color: #fff; /* Color del texto */
+        z-index: 1000; /* Z-index para superponer sobre el contenido */
+        overflow-y: auto; /* Habilitar desplazamiento vertical si el contenido excede la altura */
+        transition: width 0.3s; /* Transición suave para cambios de ancho */
+    }
+
+    #sidebar .sidebar-brand {
+        padding: 20px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    #sidebar .sidebar-menu {
+        padding: 20px;
+    }
+
+    #sidebar .sidebar-menu-item {
+        display: block;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Borde inferior para separar elementos */
+        transition: background-color 0.3s; /* Transición suave para cambios de color de fondo */
+    }
+
+    #sidebar .sidebar-menu-item:last-child {
+        border-bottom: none; /* No hay borde inferior en el último elemento */
+    }
+
+    #sidebar .sidebar-menu-item:hover {
+        background-color: rgba(255, 255, 255, 0.1); /* Color de fondo al pasar el ratón */
+    }
+
+    /* Estilos para el contenido principal */
+    .main-content {
+        margin-left: 260px; /* Margen izquierdo para evitar la superposición del contenido */
+        transition: margin-left 0.3s; /* Transición suave para cambios de margen izquierdo */
+    }
+
+    .card {
+        width: 250px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin: 10px auto;
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        object-position: center;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+    
+    .card-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    
+    .card-text {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 8px;
+    }

@@ -26,9 +26,18 @@ class PanelTekController extends Controller
             ->get();
 
         // Agrupar la información por panel_izena
-        $grouped_info = $panel_tek_info->groupBy('panel_izena');
+    // Obtener datos de tecnología para el campo de selección
+    $teknologias = DB::table('teknologiak')->get();
 
-        // Retornar la vista con la información agrupada
-        return view('panel', ['grouped_info' => $grouped_info]);
-    }
+    // Obtener versiones disponibles para bertsioa_izena
+    $bertsioa_izenak = DB::table('teknologia_bertsioa')->get();
+
+    $so_desk = DB::table('sistema_operativo')->get();
+
+    // Agrupar la información por panel_izena
+    $grouped_info = $panel_tek_info->groupBy('panel_izena');
+
+    // Retornar la vista con la información agrupada, los datos de tecnología y las versiones de bertsioa_izena
+    return view('panel', ['grouped_info' => $grouped_info, 'teknologias' => $teknologias, 'bertsioa_izenak' => $bertsioa_izenak , 'so_desk' => $so_desk]);
+} 
 }

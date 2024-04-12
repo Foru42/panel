@@ -12,10 +12,19 @@ class Tekinser extends Model
 
     protected $fillable = ['izena', 'desk'];
 
-    public $timestamps = false; // Agrega esta línea para desactivar los timestamps
 
     public function bertsioa()
     {
         return $this->hasOne(TeknologiaBertsioa::class, 'teknologia_id');
+    }
+
+    public function paneles()
+    {
+        return $this->belongsToMany(paneInser::class, 'panel_tek', 'tek_id', 'panel_id');
+    }
+
+    public function panelTeks()
+    {
+        return $this->hasMany(PanelTek::class, 'tek_id')->onDelete('cascade');
     }
 }

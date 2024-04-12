@@ -12,8 +12,6 @@ class TeknologiaBertsioa extends Model
 
     protected $fillable = ['teknologia_id', 'izena'];
 
-    public $timestamps = false; // Si no necesitas timestamps
-
     // Si es necesario, puedes definir las relaciones con otros modelos aquí
     public function teknologia()
     {

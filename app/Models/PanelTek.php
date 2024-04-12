@@ -8,6 +8,7 @@ class PanelTek extends Model
 {
     protected $table = 'panel_tek';
 
+
     protected $fillable = [
         'id',
         'panel_id',
@@ -24,7 +25,7 @@ class PanelTek extends Model
     // Relación con el modelo Tecnologia
     public function teknologia()
     {
-        return $this->belongsTo(Tecnologia::class, 'tek_id')->onDelete('cascade');
+        return $this->belongsTo(Tekinser::class, 'tek_id')->onDelete('cascade');
     }
 
     // Relación con el modelo TeknologiaBertsioa

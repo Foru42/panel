@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-
+    @vite('resources/css/app.css')
 </head>
 <body class="login-page">
     <h1>Login</h1>
@@ -13,16 +13,16 @@
         <div>{{ session('error') }}</div>
     @endif
 
-    <form method="POST" action="{{ route('login') }}">
+    <form class="form1" method="POST" action="{{ route('login') }}">
         @csrf
 
         <div>
-            <label for="username">Usuario</label>
+            <label for="username">Erabiltzailea</label>
             <input type="text" id="username" name="username" value="{{ old('username') }}" required autofocus>
         </div>
 
         <div>
-            <label for="password">Contraseña</label>
+            <label for="password">Pasahitza</label>
             <input type="password" id="password" name="password" required>
         </div>
 

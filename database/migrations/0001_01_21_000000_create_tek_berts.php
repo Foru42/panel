@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('teknologia_id');
             $table->string('izena');
-
+            $table->timestamps();
 
             $table->foreign('teknologia_id')->references('id')->on('teknologiak')->onDelete('cascade');
       
