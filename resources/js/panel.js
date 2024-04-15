@@ -3,6 +3,8 @@ var tarjetaEditandoId = null;
 
 document.addEventListener('DOMContentLoaded', function () {
     // Event listener para la pulsación de tecla en el input
+    if(window.location.href == 'http://panel.eitb.eus/panel#' || window.location.href == 'http://panel.eitb.eus/panel'){
+    
     document.getElementById('extensionInput').addEventListener('keypress', function(event) {
         buscarExtensiones();
     });
@@ -30,6 +32,7 @@ function handlePanelClick(pane) {
     toggleElement('infoPanel', pane === 'panel1' || pane === 'panelSelect'); 
     toggleElement('resultados', pane === 'panel2'); 
     toggleElement('aldaketak', pane === 'panel4');
+    toggleElement('pertsonak', pane === 'panel5');
 }
 
 
@@ -48,6 +51,10 @@ function handlePanelClick(pane) {
         handlePanelClick('panel4');
         MostrarActualizados();
     });
+    document.getElementById('panel5').addEventListener('click', function (event) {
+        handlePanelClick('panel5');
+        mostrarUsuarios();
+    }); 
     
     document.getElementById('panelSelect').addEventListener('change', function() {
         var selectedPanelId = this.value;
@@ -56,6 +63,7 @@ function handlePanelClick(pane) {
             mostrarInfo(this);
         }
     });
+}
 });
 
 function mostrarInfo(select) {
@@ -357,36 +365,170 @@ function generarCards(data) {
     var aldatetak = document.getElementById('aldaketak');
     aldatetak.innerHTML = ''; // Limpiar el contenido previo del contenedor
 
-    // Iterar sobre todos los paneles disponibles en los datos
-    Object.keys(data).forEach(function(panelSeleccionado) {
-        var infoPanel = data[panelSeleccionado]; // Obtener la información del panel seleccionado
-
-        // Agrupar los elementos de infoPanel en grupos de tres
-        for (var i = 0; i < infoPanel.length; i += 3) {
+    // Iterar sobre todos los elementos de datos y generar una tarjeta para cada uno
+    Object.values(data).forEach(function(panelSeleccionado) {
+        panelSeleccionado.forEach(function(item) {
             var contenidoHTML = `
                 <div class="md:flex md:justify-center md:items-center mb-8">
-            `;
-            // Agregar tres columnas para cada grupo
-            for (var j = i; j < Math.min(i + 3, infoPanel.length); j++) {
-                var item1 = infoPanel[j];
-                contenidoHTML += `
                     <div class="card mb-4 shadow-lg rounded-lg overflow-hidden w-full">
-                        <img src="${item1.panel_irudia}" class="w-full h-64 object-cover" alt="${item1.panel_izena}">
+                        <img src="${item.panel_irudia}" class="w-full h-64 object-cover" alt="${item.panel_izena}">
                         <div class="px-6 py-4">
-                            <div class="font-bold text-xl mb-2">${item1.panel_izena}</div>
-                            <p class="text-gray-700 text-base mb-2" data-editable="panel_deskripzioa" data-id="${item1.pt_id}">${item1.panel_deskripzioa}</p>
-                            <p class="text-gray-700 text-base mb-2" data-editable="teknologia_desk" data-id="${item1.pt_id}">${item1.teknologia_izena} - ${item1.teknologia_desk}</p>
-                            <p class="text-gray-700 text-base mb-2" data-editable="bertsioa_izena" data-id="${item1.pt_id}">${item1.bertsioa_izena}</p>
-                            <p class="text-gray-700 text-base mb-2" data-editable="so_desk" data-id="${item1.pt_id}">${item1.so_izena} - ${item1.so_desk}</p>
+                            <div class="font-bold text-xl mb-2">${item.panel_izena}</div>
+                            <p class="text-gray-700 text-base mb-2" data-editable="panel_deskripzioa" data-id="${item.pt_id}">${item.panel_deskripzioa}</p>
+                            <p class="text-gray-700 text-base mb-2" data-editable="teknologia_desk" data-id="${item.pt_id}">${item.teknologia_izena} - ${item.teknologia_desk}</p>
+                            <p class="text-gray-700 text-base mb-2" data-editable="bertsioa_izena" data-id="${item.pt_id}">${item.bertsioa_izena}</p>
+                            <p class="text-gray-700 text-base mb-2" data-editable="so_desk" data-id="${item.pt_id}">${item.so_izena} - ${item.so_desk}</p>
                         </div>
                     </div>
-                `;
-            }
-            contenidoHTML += `
                 </div>
             `;
             aldatetak.innerHTML += contenidoHTML;
-        }
+        });
+    });
+}
+function mostrarUsuarios() {
+    $(document).ready(function() {
+        $.ajax({
+            url: "/usuarios",
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+                mostrarTablaUsuarios(response);
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText); // Manejar errores si los hay
+            }
+        });
     });
 }
 
+function mostrarTablaUsuarios(usuarios) {
+    var tablaUsuarios = document.getElementById('tablaUsuarios');
+    var tbody = tablaUsuarios.getElementsByTagName('tbody')[0]; // Obtener la referencia al cuerpo de la tabla
+    tbody.innerHTML = ''; // Limpiar el contenido previo del cuerpo de la tabla
+
+    usuarios.forEach(function(usuario) {
+        var esAdministrador = (usuario.administrador === '1' || usuario.administrador === 1) ? 'Sí' : 'No';
+        var fila = '<tr data-id="' + usuario.id + '">' + // Agregar el atributo data-id con el ID del usuario
+            '<td>' + usuario.username + '</td>' +
+            '<td class="relative">' + esAdministrador +
+            '<div class="absolute right-0 top-0 h-full flex items-center">'+
+            '<button class="btn-eliminarU flex items-center justify-center bg-red-500 text-white font-bold rounded-full h-8 w-8 mr-2">  <i class="fas fa-trash"></i></button>'+
+            '<button class="btn-editarU flex items-center justify-center bg-blue-500 text-white font-bold rounded-full h-8 w-8"><i class="fas fa-pencil-alt"></i></button>'+
+            '</div>'+
+            '</td>' +
+            '</tr>';
+        tbody.innerHTML += fila;
+    });
+
+    // Mostrar la tabla de usuarios
+    tablaUsuarios.parentElement.classList.remove("hidden");
+
+    // Asignar manejadores de eventos a los botones de eliminar
+    var botonesEliminar = document.querySelectorAll('.btn-eliminarU');
+    botonesEliminar.forEach(function(boton) {
+        boton.addEventListener('click', function() {
+            var panelId = this.closest('tr').getAttribute('data-id');
+            eliminarUsuario(panelId);
+        });
+    });
+
+    // Asignar manejador de eventos a los botones de editar
+    var botonesEditar = document.querySelectorAll('.btn-editarU');
+    botonesEditar.forEach(function(boton) {
+        boton.addEventListener('click', function() {
+            var usuarioId = this.closest('tr').getAttribute('data-id');
+            var filaUsuario = this.closest('tr');
+            var camposFila = filaUsuario.querySelectorAll('td');
+
+            // Verificar si ya hay otro usuario en edición
+            var usuarioEditando = document.querySelector('.usuario-editando');
+            if (usuarioEditando && usuarioEditando !== filaUsuario) {
+                alert('Ya estás editando otro usuario. Por favor, guarda o cancela los cambios antes de continuar.');
+                return;
+            }
+
+            // Marcar esta fila como usuario en edición
+            filaUsuario.classList.add('usuario-editando');
+
+            // Convertir los campos en editables
+            camposFila.forEach(function(campo, index) {
+                if (index === 1) return; // Saltar la columna de administrador
+                var valorActual = campo.textContent.trim();
+                var input = document.createElement('input');
+                input.setAttribute('type', 'text');
+                input.setAttribute('value', valorActual);
+                input.classList.add('w-full', 'py-2', 'px-4', 'rounded', 'border', 'border-gray-300', 'focus:outline-none', 'focus:border-blue-500');
+                campo.innerHTML = '';
+                campo.appendChild(input);
+            });
+
+            // Ocultar el botón de editar y mostrar el botón de guardar
+            this.style.display = 'none';
+            var botonGuardar = document.createElement('button');
+            botonGuardar.textContent = 'Guardar';
+            botonGuardar.classList.add('btn-guardarU', 'flex', 'items-center', 'justify-center', 'bg-green-500', 'text-white', 'font-bold', 'rounded-full', 'h-8', 'w-16', 'mx-auto', 'mt-2');
+            botonGuardar.setAttribute('id', 'btn-guardarU');
+            botonGuardar.addEventListener('click', function() {
+                // Obtener los nuevos valores de los campos editables
+                var nuevosValores = {};
+                camposFila.forEach(function(campo, index) {
+                    if (index === 1) return; // Saltar la columna de administrador
+                    var nombreCampo = index === 0 ? 'username' : 'otroCampo'; // Reemplaza 'otroCampo' con el nombre correcto del campo
+                    var nuevoValor = campo.querySelector('input').value;
+                    nuevosValores[nombreCampo] = nuevoValor;
+                });
+
+                // Realizar aquí la lógica para guardar los nuevos valores
+                // Puedes enviar una solicitud AJAX para actualizar el usuario, similar a lo que hiciste en eliminarUsuario()
+
+                // Eliminar la clase 'usuario-editando' de la fila
+                filaUsuario.classList.remove('usuario-editando');
+
+                // Restaurar la fila a su estado original (texto no editable)
+                camposFila.forEach(function(campo, index) {
+                    if (index === 1) return; // Saltar la columna de administrador
+                    campo.innerHTML = nuevosValores[index === 0 ? 'username' : 'otroCampo']; // Reemplaza 'otroCampo' con el nombre correcto del campo
+                });
+
+                // Mostrar nuevamente el botón de editar
+                boton.style.display = 'inline-block';
+                botonGuardar.remove(); // Eliminar el botón de guardar
+            });
+            this.parentElement.appendChild(botonGuardar); // Agregar el botón de guardar a la fila
+            document.getElementById('btn-guardarU').addEventListener('click', function() {alert('de')});
+        });
+    });
+
+}
+
+
+function eliminarUsuario(id) {
+    // Obtener el token CSRF del meta tag
+    var confirmacion = confirm("¿Estás seguro de eliminar este usuario?");
+    if (!confirmacion) {
+        return; // Si el usuario cancela, salir de la función sin hacer nada
+    }
+
+    var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
+
+    // Hacer la solicitud AJAX para eliminar el usuario
+    $.ajax({
+        url: '/eliminar-usuario',
+        type: 'POST',
+        data: {
+            id: id,
+            _token: csrfToken // Incluir el token CSRF en los datos de la solicitud
+        },
+        success: function(response) {
+            // Si la eliminación fue exitosa, puedes actualizar la tabla de usuarios o realizar cualquier otra acción necesaria
+            console.log('Usuario eliminado exitosamente');
+            // Por ejemplo, podrías recargar la página para mostrar la tabla actualizada
+            window.location.reload();
+        },
+        error: function(xhr, status, error) {
+            // Maneja los errores si ocurren durante la eliminación
+            console.error('Error al eliminar el usuario:', error);
+        }
+    });
+}

@@ -25,6 +25,7 @@
             <a href="#" id="panel2" class="sidebar-menu-item hover:bg-gray-800">Teknologiak ikusi</a>
             <a href="#" id="panel3" class="sidebar-menu-item hover:bg-gray-800">Panelak gehitu</a>
             <a href="#" id="panel4" class="sidebar-menu-item hover:bg-gray-800">Aldaketak ikusi</a>
+            <a href="#" id="panel5" class="sidebar-menu-item hover:bg-gray-800">Erabiltzaileak ikusi/aldatu</a>
 
 
             <div class="sidebar-menu-item">
@@ -54,9 +55,36 @@
     </div>
 
     <div id="resultados" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    <div id="aldaketak" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden">
+    <div id="aldaketak" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
 
     </div>
+<div id="pertsonak" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
+    <table id="tablaUsuarios" class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden">
+        <thead class="bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-700 uppercase tracking-wider">Erabiltzailea</th>
+                <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-700 uppercase tracking-wider">Administradorea</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            <!-- Aquí se generarán las filas de la tabla dinámicamente -->
+        </tbody>
+    </table>
+</div>
+<div id="pertsonak" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
+    <table id="tablaUsuarios" class=" divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden">
+        <thead class="bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-700 uppercase tracking-wider">Erabiltzailea</th>
+                <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-700 uppercase tracking-wider">Administradorea</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            <!-- Aquí se generarán las filas de la tabla dinámicamente -->
+        </tbody>
+    </table>
+</div>
+
 
     <div id="anadir" class="hidden">
     <!-- Formulario -->
@@ -109,6 +137,7 @@
 
 </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     var teknologias = @json($teknologias);
     var bertsioa_izenak = @json($bertsioa_izenak);

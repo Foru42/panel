@@ -45,7 +45,6 @@ h1 {
 }
 
 .form1 button {
-    width: 100%; /* Ocupa todo el ancho del contenedor */
     max-width: 200px; /* Máximo ancho del botón para evitar que se extienda demasiado */
     padding: 10px;
     background-color: #4CAF50;
@@ -54,7 +53,9 @@ h1 {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-top: 20px; /* Añadimos margen superior */
 }
+
 
 .form1 button:hover {
     background-color: #45a049;

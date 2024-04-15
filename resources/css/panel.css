@@ -1,7 +1,7 @@
 
             /* Estilo para el contenedor principal */
     .container {
-        max-width: 800px; /* Ancho máximo del formulario */
+        
         margin: auto; /* Centrar el formulario en la página */
         padding: 20px; /* Espaciado interno */
         border-radius: 8px; /* Bordes redondeados */
@@ -28,22 +28,7 @@
         margin-bottom: 5px; /* Espacio debajo de la etiqueta */
     }
 
-    /* Estilo para el botón de envío */
-    button[type="submit"] {
-        background-color: #007bff; /* Color de fondo */
-        color: #fff; /* Color del texto */
-        padding: 10px 20px; /* Espaciado interno */
-        border: none; /* Sin borde */
-        border-radius: 4px; /* Bordes redondeados */
-        cursor: pointer; /* Cambiar el cursor al pasar el ratón */
-        font-size: 16px; /* Tamaño de fuente */
-    }
-
-    /* Estilo para el botón de envío al pasar el ratón */
-    button[type="submit"]:hover {
-        background-color: #0056b3; /* Cambiar color de fondo al pasar el ratón */
-    }
-
+ 
 
     #sidebar {
         position: fixed;
@@ -51,7 +36,7 @@
         left: 0;
         bottom: 0;
         width: 260px; /* Ancho del sidebar */
-        background-color: #1a202c; /* Color de fondo */
+        background-color: #3872e6; /* Color de fondo */
         color: #fff; /* Color del texto */
         z-index: 1000; /* Z-index para superponer sobre el contenido */
         overflow-y: auto; /* Habilitar desplazamiento vertical si el contenido excede la altura */

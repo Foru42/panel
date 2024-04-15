@@ -15,18 +15,23 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('username', 'password');
-
+    
         if (Auth::attempt($credentials)) {
-            $request->session()->put('username', $request->input('username'));
-
-            // Authentication passed...
-            return redirect()->route('panel')->with('success', '¡Bienvenido!');
-        }
-        else
-        {     
-             return redirect()->route('login')->with('error', 'Credenciales incorrectas')->withInput();
+           
+            $user = Auth::user(); 
+       
+            if ($user->administrador == 1) {
+                $request->session()->put('username', $request->input('username'));
+                return redirect()->route('panel')->with('success', '¡Bienvenido!');
+            } else {
+                $request->session()->put('username', $request->input('username'));
+                return redirect()->route('panelNoadmin')->with('success', '¡Bienvenido!');
+            }
+        } else {     
+            return redirect()->route('login')->with('error', 'Credenciales incorrectas')->withInput();
         }
     }
+    
 
     public function logout(Request $request)
 {

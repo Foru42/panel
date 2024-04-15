@@ -2,9 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\PanelController;
 use App\Http\Controllers\PanelTekController;
 use App\Http\Controllers\ModController;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\NonAdminMiddleware;
+use App\Http\Controllers\CreateUserController;
+use App\Http\Controllers\BuscarExtensionesController;
+use App\Http\Controllers\PanelDeleteController;
+use App\Http\Controllers\PanelakController;
+use App\Http\Controllers\PanelUpdateController;
+use App\Http\Controllers\UsuarioController;
 
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 
@@ -22,28 +29,28 @@ Route::get('/reset-database', function () {
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 
-Route::middleware('auth')->group(function () {
-    Route::get('/panel', [PanelTekController::class, 'obtenerInformacionPanelTek'])->name('panel');
+Route::middleware(['auth', AdminMiddleware::class])->group(function () {
+    Route::get('/panel', [PanelTekController::class, 'showPaneladmin'])->name('panel');
 });
 
+Route::middleware(['auth', NonAdminMiddleware::class])->group(function () {
+    Route::get('/panelNoadmin', [PanelTekController::class, 'showPanelNoadmin'])->name('panelNoadmin');
+});
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-use App\Http\Controllers\BuscarExtensionesController;
 
 Route::get('/buscar-extensiones', [BuscarExtensionesController::class, 'searchExtensions']);
 
-use App\Http\Controllers\PanelakController;
-
-
 Route::post('/panelak', [PanelakController::class, 'store'])->name('panelak.store');
-
-use App\Http\Controllers\PanelDeleteController;
 
 Route::post('/eliminar-panel', [PanelDeleteController::class, 'eliminar']);
 
-use App\Http\Controllers\PanelUpdateController;
-
 Route::post('/actualizar-panel', [PanelUpdateController::class, 'actualizarPanel']);
 
-// En routes/web.php
 Route::get('/ultimas-modificaciones-panel-tek', [ModController::class, 'ultimasModificacionesPanelTek'])->name('ultimas-modificaciones-panel-tek');
+
+Route::get('/kontua-sortu', [CreateUserController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [CreateUserController::class, 'register'])->name('register');
+
+Route::get('/usuarios', [UsuarioController::class, 'index']);
+
+Route::post('/eliminar-usuario', [UsuarioController::class, 'eliminar'])->name('eliminar');

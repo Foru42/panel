@@ -26,9 +26,13 @@
             <input type="password" id="password" name="password" required>
         </div>
 
+    
+        <a href='/kontua-sortu' class="text-blue-500" style="margin-top: 10px; font-weight: bold; text-decoration: underline;">Kontua Sortu</a>
+
+        
         <div>
-            <button type="submit">Login</button>
-        </div>
+        <button class="logeo" type="submit" style="margin-top: 20px;">Login</button>
+
     </form>
 </body>
 </html>
