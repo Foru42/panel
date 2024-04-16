@@ -28,9 +28,9 @@ class PanelakController extends Controller
         ]);
 
         // Procesar y guardar la imagen
-        $imageName = time().'.'.$request->irudi->extension();  
+        $imageName = time() . '.' . $request->irudi->extension();
         $request->irudi->move(public_path('img'), $imageName);
-        $imagePath = 'img/'.$imageName;
+        $imagePath = 'img/' . $imageName;
 
         // Crear un nuevo panel en paneInser
         $panel = paneInser::create([

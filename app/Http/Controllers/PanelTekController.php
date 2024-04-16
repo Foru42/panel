@@ -28,15 +28,17 @@ class PanelTekController extends Controller
             ->join('teknologiak', 'panel_tek.tek_id', '=', 'teknologiak.id')
             ->join('teknologia_bertsioa', 'panel_tek.tek_bertsioa', '=', 'teknologia_bertsioa.id')
             ->join('sistema_operativo', 'panelak.so_id', '=', 'sistema_operativo.id')
-            ->select('panelak.izena as panel_izena',
-                    'panel_tek.id as pt_id',
-                     'panelak.desk as panel_deskripzioa',
-                     'panelak.irudi as panel_irudia',
-                     'teknologiak.izena as teknologia_izena',
-                     'teknologiak.desk as teknologia_desk',
-                     'teknologia_bertsioa.izena as bertsioa_izena',
-                     'sistema_operativo.izena as so_izena',
-                     'sistema_operativo.desk as so_desk')
+            ->select(
+                'panelak.izena as panel_izena',
+                'panel_tek.id as pt_id',
+                'panelak.desk as panel_deskripzioa',
+                'panelak.irudi as panel_irudia',
+                'teknologiak.izena as teknologia_izena',
+                'teknologiak.desk as teknologia_desk',
+                'teknologia_bertsioa.izena as bertsioa_izena',
+                'sistema_operativo.izena as so_izena',
+                'sistema_operativo.desk as so_desk'
+            )
             ->get();
 
         // Obtener datos de tecnología para el campo de selección
@@ -57,7 +59,7 @@ class PanelTekController extends Controller
             'bertsioa_izenak' => $bertsioa_izenak,
             'so_desk' => $so_desk,
         ];
-    } 
+    }
 
     public function showPanelNoadmin()
     {

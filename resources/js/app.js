@@ -1,3 +1,3 @@
-import './bootstrap';
-import './panel';
-import './panelNoadmin';
+import "./bootstrap";
+import "./panel";
+import "./panelNoadmin";

@@ -1,4 +1,4 @@
-<?php   
+<?php
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -15,11 +15,11 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('username', 'password');
-    
+
         if (Auth::attempt($credentials)) {
-           
-            $user = Auth::user(); 
-       
+
+            $user = Auth::user();
+
             if ($user->administrador == 1) {
                 $request->session()->put('username', $request->input('username'));
                 return redirect()->route('panel')->with('success', '¡Bienvenido!');
@@ -27,19 +27,19 @@ class LoginController extends Controller
                 $request->session()->put('username', $request->input('username'));
                 return redirect()->route('panelNoadmin')->with('success', '¡Bienvenido!');
             }
-        } else {     
+        } else {
             return redirect()->route('login')->with('error', 'Credenciales incorrectas')->withInput();
         }
     }
-    
+
 
     public function logout(Request $request)
-{
-    Auth::logout();
+    {
+        Auth::logout();
 
-    // Eliminar la sesión
-    $request->session()->forget('username');
+        // Eliminar la sesión
+        $request->session()->forget('username');
 
-    return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente');
-}
+        return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente');
+    }
 }

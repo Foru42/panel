@@ -9,7 +9,7 @@ class UsuarioController extends Controller
 {
     public function index()
     {
-        $usuarios = User::all(['id','username', 'password', 'administrador']);
+        $usuarios = User::all(['id', 'username', 'password', 'administrador']);
         return response()->json($usuarios);
     }
     public function eliminar(Request $request)
