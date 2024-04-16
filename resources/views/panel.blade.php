@@ -26,7 +26,7 @@
             <a href="#" id="panel3" class="sidebar-menu-item hover:bg-gray-800">Panelak gehitu</a>
             <a href="#" id="panel4" class="sidebar-menu-item hover:bg-gray-800">Aldaketak ikusi</a>
             <a href="#" id="panel5" class="sidebar-menu-item hover:bg-gray-800">Erabiltzaileak ikusi/aldatu</a>
-
+            <a href="#" id="panel6" class="sidebar-menu-item hover:bg-gray-800">Zure Pasahitza aldatu</a>
 
             <div class="sidebar-menu-item">
                 <form action="{{ route('logout') }}" method="POST">
@@ -58,12 +58,13 @@
     <div id="aldaketak" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
 
     </div>
-<div id="pertsonak" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
-    <table id="tablaUsuarios" class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden">
-        <thead class="bg-gray-50">
+<div id="pertsonak" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 hidden"> <!-- Aumentar el número de columnas en pantallas grandes -->
+    <table id="tablaUsuarios" class="w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden"> <!-- Aumentar el ancho de la tabla -->
+       <thead class="bg-gray-50">
             <tr>
-                <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-700 uppercase tracking-wider">Erabiltzailea</th>
+                <th scope="col" class="px-8 py-3 text-left text-lg font-medium text-gray-700 uppercase tracking-wider">Erabiltzailea</th>
                 <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-700 uppercase tracking-wider">Administradorea</th>
+                <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-700 uppercase tracking-wider">Ekintzak</th> <!-- Nueva columna para los botones -->
             </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
@@ -71,19 +72,41 @@
         </tbody>
     </table>
 </div>
-<div id="pertsonak" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
-    <table id="tablaUsuarios" class=" divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden">
-        <thead class="bg-gray-50">
-            <tr>
-                <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-700 uppercase tracking-wider">Erabiltzailea</th>
-                <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-700 uppercase tracking-wider">Administradorea</th>
-            </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-            <!-- Aquí se generarán las filas de la tabla dinámicamente -->
-        </tbody>
-    </table>
-</div>
+
+<form id="pass" class="hidden bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+
+    <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="password_actual">
+            Contraseña actual
+        </label>
+        <input id="password_actual" type="password" name="password_actual" required
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        @error('password_actual')
+        <span class="text-red-500 text-xs">{{ $message }}</span>
+        @enderror
+    </div>
+
+    <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="password_nueva">
+            Nueva contraseña
+        </label>
+        <input id="password_nueva" type="password" name="password_nueva" required
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    </div>
+
+    <div class="mb-6">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="password_nueva_confirmation">
+            Confirmar nueva contraseña
+        </label>
+        <input id="password_nueva_confirmation" type="password" name="password_nueva_confirmation" required
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    </div>
+
+    <button id="cambio" type="button"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        Cambiar contraseña
+    </button>
+</form>
 
 
     <div id="anadir" class="hidden">

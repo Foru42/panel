@@ -60,3 +60,18 @@ h1 {
 .form1 button:hover {
     background-color: #45a049;
 }
+
+#pertsonak {
+    margin: 20px; /* Ajustar los márgenes según sea necesario */
+}
+
+#tablaUsuarios th,
+#tablaUsuarios td {
+    padding: 1rem; /* Ajustar el espaciado interno de las celdas */
+    font-size: 1rem; /* Ajustar el tamaño de fuente según sea necesario */
+}
+
+/* Ajustar el tamaño de fuente de los encabezados de la tabla */
+#tablaUsuarios th {
+    font-size: 1.1rem; /* Ajustar el tamaño de fuente según sea necesario */
+}

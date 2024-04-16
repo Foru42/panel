@@ -54,3 +54,8 @@ Route::post('/register', [CreateUserController::class, 'register'])->name('regis
 Route::get('/usuarios', [UsuarioController::class, 'index']);
 
 Route::post('/eliminar-usuario', [UsuarioController::class, 'eliminar'])->name('eliminar');
+
+Route::post('/cambiar-usuario', [UsuarioController::class, 'cambiar']);
+use App\Http\Controllers\CambioContrasenaController;
+
+Route::post('/cambiar-contrasena', [CambioContrasenaController::class, 'cambiarContraseña']);

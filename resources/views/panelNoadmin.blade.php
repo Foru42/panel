@@ -19,6 +19,8 @@
         <div class="sidebar-menu">
             <a href="#" id="panel1" class="sidebar-menu-item hover:bg-gray-800">Datuak ikusi</a>
             <a href="#" id="panel2" class="sidebar-menu-item hover:bg-gray-800">Teknologiak ikusi</a>
+            <a href="#" id="panel6" class="sidebar-menu-item hover:bg-gray-800">Zure Pasahitza aldatu</a>
+
 
             <div class="sidebar-menu-item">
                 <form action="{{ route('logout') }}" method="POST">
@@ -42,13 +44,47 @@
         <div id="grouped_info" data-info="{{ json_encode($grouped_info) }}"></div>
         <div id="infoPanel" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 
+<form id="pass" class="hidden bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+<div class="mb-4">
+    <label class="block text-gray-700 text-sm font-bold mb-2" for="password_actual">
+        Contraseña actual
+    </label>
+    <input id="password_actual" type="password" name="password_actual" required
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    @error('password_actual')
+    <span class="text-red-500 text-xs">{{ $message }}</span>
+    @enderror
+</div>
+
+<div class="mb-4">
+    <label class="block text-gray-700 text-sm font-bold mb-2" for="password_nueva">
+        Nueva contraseña
+    </label>
+    <input id="password_nueva" type="password" name="password_nueva" required
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+</div>
+
+<div class="mb-6">
+    <label class="block text-gray-700 text-sm font-bold mb-2" for="password_nueva_confirmation">
+        Confirmar nueva contraseña
+    </label>
+    <input id="password_nueva_confirmation" type="password" name="password_nueva_confirmation" required
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+</div>
+
+<button id="cambio" type="button"
+    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+    Cambiar contraseña
+</button>
+</form>
+
         <div id="extensionSearch" class="mb-4 mx-auto max-w-screen-lg px-4 hidden">
             <input id="extensionInput" type="text" id="extensionInput" class="w-full py-2 px-4 rounded border border-gray-300 focus:outline-none focus:border-blue-500" placeholder="Buscar tecnologías...">
         </div>
 
         <div id="resultados" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
     </div>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         var teknologias = @json($teknologias);
         var bertsioa_izenak = @json($bertsioa_izenak);
