@@ -18,7 +18,7 @@ class PanelDeleteController extends Controller
         if ($panelTek) {
             // Si se encuentra el registro, eliminarlo
             $panelTek->delete();
-            return response()->json(['success' => true, 'message' => 'Registro de PanelTek eliminado correctamente'], 200);
+            return response()->json(['success' => true, 'message' => 'Registro de PanelTek eliminado correctamente']);
         } else {
             // Si no se encuentra el registro, devolver un mensaje de error
             return response()->json(['success' => false, 'message' => 'El registro de PanelTek no existe']);

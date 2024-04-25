@@ -67,6 +67,7 @@ export default {
         .then((data) => {
           // Verificar si la respuesta contiene la propiedad 'success'
           if (data && data.success) {
+             localStorage.setItem('username', this.username);
             // Redirigir solo si el inicio de sesión es exitoso
             window.location.href = "/panel";
           } else {

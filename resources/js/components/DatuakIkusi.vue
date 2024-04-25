@@ -10,7 +10,7 @@
       <p>No hay datos disponibles</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <div
         v-for="info in filteredInfo"
         :key="info.panel.id"
@@ -87,6 +87,7 @@
         <div v-else></div>
       </div>
     </div>
+    
   </div>
 </template>
 

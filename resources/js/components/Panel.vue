@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex contenedor-a-borrar">
     <Sidebar
       :username="username"
       @logout="handleLogout"
@@ -56,6 +56,10 @@ export default {
       show_PasahitzaAldatu_ikusi: false,
       show_FavIkusi_ikusi: false,
     };
+  },
+  mounted() {
+    // Recuperar el nombre de usuario del localStorage al cargar el componente
+    this.username = localStorage.getItem('username');
   },
   methods: {
     showDatuakIkusi() {
@@ -136,6 +140,14 @@ export default {
 }
 .small-container {
   margin-left: 300px; /* Ancho del sidebar */
-  max-width: calc(100vw - 300px); /* Restar el ancho del sidebar */
+  
 }
+
+@media (max-width: 768px) {
+  .small-container {
+    margin-left: auto; 
+        }
+    
+  
+    }
 </style>

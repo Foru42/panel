@@ -29,6 +29,7 @@ export default {
  
     DatuakIkusi
   },
+  
   data() {
     return {
       show_datuak_ikusi:true,
@@ -49,6 +50,7 @@ export default {
       .then(response => {
           if (response.ok) {
               console.log('Has cerrado sesion correctamente');
+              localStorage.removeItem('username');
               // Redirige al usuario a la página de inicio de sesión
               window.location.href = '/login';
           } else {

@@ -1,6 +1,7 @@
 //import "./bootstrap";
 //import "./panel";
 //import "./panelNoadmin";
+
 import { createApp } from "vue";
 import Login from "./components/Login.vue";
 import Register from "./components/Register.vue";

@@ -42,6 +42,16 @@
         overflow-y: auto; /* Habilitar desplazamiento vertical si el contenido excede la altura */
         transition: width 0.3s; /* Transición suave para cambios de ancho */
     }
+    
+    /* Estilos para pantallas pequeñas */
+    @media (max-width: 768px) {
+        #sidebar {
+            width: 0;
+            margin-left: 0;  /* Oculta el sidebar */
+        }
+    
+ 
+    }
 
     #sidebar .sidebar-brand {
         padding: 20px;
@@ -76,13 +86,14 @@
     }
 
     .card {
-        width: 250px;
+        width: 300px;
         background-color: #fff;
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         overflow: hidden;
-        margin: 10px auto;
+        margin: 10px auto; /* Margen en todas las direcciones */
         transition: transform 0.3s ease-in-out;
+        margin-bottom: 20px; /* Margen inferior adicional para separar las tarjetas */
     }
     
     .card:hover {
@@ -98,6 +109,7 @@
     }
     
     .card-body {
+        
         padding: 20px;
     }
     
