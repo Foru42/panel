@@ -20,7 +20,7 @@ class CambioContrasenaController extends Controller
         $password_actual_input = $request->password_actual;
 
         if (!Hash::check($password_actual_input, $usuario->password)) {
-            return back()->withErrors(['password_actual' => 'La contraseña actual no es válida.']);
+            return response()->json(['error' => 'La contraseña actual no es válida.'], 403);
         }
 
         // Si la contraseña actual es válida, procede a cambiarla

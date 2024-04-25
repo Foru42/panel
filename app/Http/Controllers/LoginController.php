@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+
     protected $model = \App\Models\User::class;
     public function showLoginForm()
     {
@@ -17,20 +18,20 @@ class LoginController extends Controller
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
-
             $user = Auth::user();
 
             if ($user->administrador == 1) {
                 $request->session()->put('username', $request->input('username'));
-                return redirect()->route('panel')->with('success', '¡Bienvenido!');
+                return response()->json(['success' => true]); // Inicio de sesión exitoso para administrador
             } else {
                 $request->session()->put('username', $request->input('username'));
-                return redirect()->route('panelNoadmin')->with('success', '¡Bienvenido!');
+                return response()->json(['success' => true]); // Inicio de sesión exitoso para usuario no administrador
             }
         } else {
-            return redirect()->route('login')->with('error', 'Credenciales incorrectas')->withInput();
+            return response()->json(['error' => 'Credenciales incorrectas'], 401); // Credenciales incorrectas
         }
     }
+
 
 
     public function logout(Request $request)
@@ -39,7 +40,8 @@ class LoginController extends Controller
 
         // Eliminar la sesión
         $request->session()->forget('username');
+        return response()->json(['message' => 'Has cerrado sesión correctamente'], 200);
 
-        return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente');
     }
+
 }

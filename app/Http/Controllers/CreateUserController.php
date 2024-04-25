@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class CreateUserController extends Controller
 {
@@ -15,27 +16,26 @@ class CreateUserController extends Controller
     }
     public function register(Request $request)
     {
-        // Validación de los datos del formulario
-        $validatedData = $request->validate([
+        // Validar los datos del formulario
+        $validator = Validator::make($request->all(), [
             'username' => 'required|unique:users',
             'password' => 'required',
         ]);
 
-        // Verificar si ya existe un usuario con el mismo nombre de usuario
-        $existingUser = User::where('username', $validatedData['username'])->first();
-        if ($existingUser) {
-            return redirect()->back()->with('error', '¡El nombre de usuario ya está en uso!');
+        // Verificar si la validación falla
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()->first()], 422);
         }
 
         // Crear un nuevo usuario en la base de datos
         $user = new User();
-        $user->username = $validatedData['username'];
-        $user->password = bcrypt($validatedData['password']);
+        $user->username = $request->username;
+        $user->password = bcrypt($request->password);
         $user->administrador = '0';
         $user->save();
 
-        // Redirigir a una página de éxito o mostrar un mensaje de éxito
-        return redirect('/')->with('success', '¡Registro exitoso!');
+        // Retornar una respuesta JSON para indicar que el registro fue exitoso
+        return response()->json(['success' => true], 200);
     }
 
 

@@ -14,6 +14,7 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'password',
+        'is_admin', // Campo para indicar si el usuario es administrador
     ];
 
     protected $hidden = [
@@ -24,4 +25,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
 }

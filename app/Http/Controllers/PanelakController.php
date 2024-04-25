@@ -24,7 +24,7 @@ class PanelakController extends Controller
             'izenatek' => 'required|string',
             'desktek' => 'required|string',
             'vertek' => 'required|string',
-            'irudi' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validación para la imagen
+            'irudi' => 'required|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         // Procesar y guardar la imagen
@@ -57,11 +57,12 @@ class PanelakController extends Controller
             'panel_id' => $panel->id,
             'tek_id' => $tekinser->id,
             'tek_bertsioa' => $teknologiaBertsioa->id,
+            'fav' => 'false',
             'updated_at' => now(),
             'created_at' => now()
         ]);
 
-        // Redireccionar de vuelta con mensaje de éxito
-        return redirect()->back()->with('success', 'Los datos se han guardado correctamente.');
+        // Redireccionar a la vista del formulario con un mensaje de éxito
+        return response()->json(['message' => 'Los datos se han guardado correctamente'], 200);
     }
 }

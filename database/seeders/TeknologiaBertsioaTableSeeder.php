@@ -12,12 +12,12 @@ class TeknologiaBertsioaTableSeeder extends Seeder
         DB::table('teknologia_bertsioa')->truncate(); // Elimina todos los registros de la tabla antes de insertar nuevos
 
         $teknologiaBertsioa = [
-            ['teknologia_id' => '1', 'izena' => '2.3'],
-            ['teknologia_id' => '2', 'izena' => '1.5'],
-            ['teknologia_id' => '3', 'izena' => '3.0'],
-            ['teknologia_id' => '4', 'izena' => '2.3'],
-            ['teknologia_id' => '5', 'izena' => '5.9.1'],
-            ['teknologia_id' => '3', 'izena' => '4.0'],
+            ['izena' => '2.3'],
+            ['izena' => '1.5'],
+            ['izena' => '3.0'],
+            ['izena' => '2.3'],
+            ['izena' => '5.9.1'],
+            ['izena' => '4.0'],
             // Agrega más datos según sea necesario
         ];
 

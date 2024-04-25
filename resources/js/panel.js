@@ -1,4 +1,5 @@
 var tarjetaEditandoId = null;
+var estadoEstrellas = cargarEstadoEstrellas();
 
 document.addEventListener("DOMContentLoaded", function () {
     // Event listener para la pulsación de tecla en el input
@@ -110,26 +111,49 @@ function mostrarInfo(select) {
     var contenidoHTML = "";
     infoPanel[panelSeleccionado].forEach(function (item) {
         contenidoHTML += `
-            <div class="card mb-4 shadow-lg rounded-lg overflow-hidden w-full" data-id="${item.pt_id}">
+            <div class="card mb-4 shadow-lg rounded-lg overflow-hidden w-full" data-id="${
+                item.pt_id
+            }">
                 <div class="flex justify-between items-center mb-2">
                     <button class="btn-eliminar flex items-center justify-center bg-red-500 text-white font-bold rounded-full h-8 w-8">  <i class="fas fa-trash"></i></button>
                     <button class="btn-editar flex items-center justify-center bg-blue-500 text-white font-bold rounded-full h-8 w-8"><i class="fas fa-pencil-alt"></i></button>
-                </div>
-                <img src="${item.panel_irudia}" class="card-img-top" alt="${item.panel_izena}">
+                    <button class="btn-sumar flex items-center justify-center bg-blue-600 text-white font-bold rounded-full h-8 w-8 mr-2"><i class="fas fa-plus"></i></button>
+
+                    </div>
+                <img src="${item.panel_irudia}" class="card-img-top" alt="${
+            item.panel_izena
+        }">
                 <div class="card-body">
                     <h5 class="card-title">${item.panel_izena}</h5>
-                    <p class="card-text" data-editable="panel_deskripzioa" data-id="${item.pt_id}">${item.panel_deskripzioa}</p>
-                    <p class="card-text" data-editable="teknologia_desk" data-id="${item.pt_id}">${item.teknologia_izena} - ${item.teknologia_desk}</p>
-                    <p class="card-text" data-editable="bertsioa_izena" data-id="${item.pt_id}">${item.bertsioa_izena}</p>
-                    <p class="card-text" data-editable="so_desk" data-id="${item.pt_id}">${item.so_izena} - ${item.so_desk}</p>
+                    <p class="card-text" data-editable="panel_deskripzioa" data-id="${
+                        item.pt_id
+                    }">${item.panel_deskripzioa}</p>
+                    <p class="card-text" data-editable="teknologia_desk" data-id="${
+                        item.pt_id
+                    }">${item.teknologia_izena} - ${item.teknologia_desk}</p>
+                    <p class="card-text" data-editable="bertsioa_izena" data-id="${
+                        item.pt_id
+                    }">${item.bertsioa_izena}</p>
+                    <p class="card-text" data-editable="so_desk" data-id="${
+                        item.pt_id
+                    }">${item.so_izena} - ${item.so_desk}</p>
                 </div>
-                <button id="guardar_${item.pt_id}" class="btn-guardar bg-green-500 text-white font-bold rounded-full h-8 w-full mt-2 hidden">GORDE</button>
+                <button id="estrella_${
+                    item.pt_id
+                }" class="btn-star star-icon bottom-2 right-2 ${
+            estadoEstrellas[item.pt_id] ? "text-yellow-500" : "text-gray-500"
+        }" data-panel-id="${item.pt_id}">
+                    <i class="${
+                        estadoEstrellas[item.pt_id] ? "fas" : "far"
+                    } fa-star"></i>
+                </button><button id="guardar_${
+                    item.pt_id
+                }" class="btn-guardar bg-green-500 text-white font-bold rounded-full h-8 w-full mt-2 hidden">GORDE</button>
             </div>
         `;
     });
 
     document.getElementById("infoPanel").innerHTML = contenidoHTML;
-
     var botonesEliminar = document.querySelectorAll(".btn-eliminar");
     botonesEliminar.forEach(function (boton) {
         boton.addEventListener("click", function () {
@@ -352,6 +376,80 @@ function mostrarInfo(select) {
     function obtenerOpcionesSO() {
         return so_desk;
     }
+
+    var botonesSumar = document.querySelectorAll(".btn-sumar");
+    console.log(botonesSumar);
+    botonesSumar.forEach(function (botones) {
+        botones.addEventListener("click", function () {
+            var panelId =
+                this.parentElement.parentElement.getAttribute("data-id");
+            console.log(panelId);
+            sumarpanel(panelId);
+        });
+    });
+    var EstrellasFav = document.querySelectorAll(".btn-star");
+    EstrellasFav.forEach(function (estrella) {
+        estrella.addEventListener("click", function () {
+            // Obtener el ID del panel asociado con esta estrella
+            var panelId = this.getAttribute("data-panel-id");
+
+            // Alternar el estado de la estrella para esta tarjeta
+            estadoEstrellas[panelId] = !estadoEstrellas[panelId];
+
+            // Guardar el estado de las estrellas actualizado en el almacenamiento local del navegador
+            guardarEstadoEstrellas(estadoEstrellas);
+
+            // Actualizar la clase y el icono de la estrella
+            const iconoEstrella = this.querySelector("i");
+            if (estadoEstrellas[panelId]) {
+                iconoEstrella.classList.remove("far");
+                iconoEstrella.classList.add("fas");
+                this.classList.remove("text-gray-500");
+                this.classList.add("text-yellow-500");
+            } else {
+                iconoEstrella.classList.remove("fas");
+                iconoEstrella.classList.add("far");
+                this.classList.remove("text-yellow-500");
+                this.classList.add("text-gray-500");
+            }
+        });
+    });
+}
+function cargarEstadoEstrellas() {
+    var estadoGuardado = localStorage.getItem("estadoEstrellas");
+    var csrfToken = document.head.querySelector(
+        'meta[name="csrf-token"]'
+    ).content;
+
+    var parsedEstadoGuardado = estadoGuardado ? JSON.parse(estadoGuardado) : {};
+
+    // Convertir los datos a un formato asociativo
+    var datosAsociativos = {};
+    for (var id in parsedEstadoGuardado) {
+        datosAsociativos[id] = { estadoEstrella: parsedEstadoGuardado[id] };
+    }
+    console.log(datosAsociativos);
+    // Hacer la solicitud AJAX para enviar los datos al controlador
+    $.ajax({
+        url: "/anadir-fav",
+        type: "POST",
+        data: {
+            datosAsociativos: datosAsociativos,
+            _token: csrfToken, // Incluir el token CSRF en los datos de la solicitud
+        },
+        success: function (response) {
+            console.log("Datos enviados correctamente al controlador");
+        },
+        error: function (xhr, status, error) {
+            console.error("Error al enviar datos al controlador:", error);
+        },
+    });
+    return parsedEstadoGuardado;
+}
+
+// Función para guardar el estado de las estrellas en el almacenamiento local del navegador
+function guardarEstadoEstrellas(estadoEstrellas) {
+    localStorage.setItem("estadoEstrellas", JSON.stringify(estadoEstrellas));
 }
 
 function actualizarPanel(panelId, nuevosValores) {
@@ -792,4 +890,57 @@ function cambiarContra() {
             }
         },
     });
+}
+
+function sumarpanel(id) {
+    var panel_izena = document.querySelector(
+        `[data-id="${id}"] .card-title`
+    ).textContent;
+    var tarjeta = document.querySelector(`[data-id="${id}"]`);
+    var teknologia_desk = tarjeta.querySelector(
+        "[data-editable='teknologia_desk']"
+    ).textContent;
+    var bets_izen = tarjeta.querySelector(
+        "[data-editable='bertsioa_izena']"
+    ).textContent;
+    var cantidad = prompt(
+        "Por favor, introduce la cantidad de paneles a añadir:"
+    );
+    // Verificar si el usuario canceló el prompt
+    if (cantidad === null) {
+        return; // No hacer nada si se cancela el prompt
+    }
+    if (cantidad < 11) {
+        var csrfToken = document.head.querySelector(
+            'meta[name="csrf-token"]'
+        ).content;
+
+        // Hacer la solicitud AJAX para eliminar el usuario
+        $.ajax({
+            url: "/anadir-panel",
+            type: "POST",
+            data: {
+                teknologia_desk: teknologia_desk,
+                id: id,
+                panel_izena: panel_izena,
+                bets_izen: bets_izen,
+                cantidad: cantidad,
+                _token: csrfToken, // Incluir el token CSRF en los datos de la solicitud
+            },
+            success: function (response) {
+                // Si la eliminación fue exitosa, puedes actualizar la tabla de usuarios o realizar cualquier otra acción necesaria
+                console.log("Usuario eliminado exitosamente");
+                window.location.reload();
+                // Por ejemplo, podrías recargar la página para mostrar la tabla actualizada
+            },
+            error: function (xhr, status, error) {
+                // Maneja los errores si ocurren durante la eliminación
+                console.error("Error al copiar panel:", error);
+            },
+        });
+    } else {
+        alert("10 Baino gutxiago mesedez");
+        return;
+    }
+    //console.log("Se añadirán " + cantidad + " paneles al panel con ID: " + id);
 }

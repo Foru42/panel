@@ -10,12 +10,12 @@ class NonAdminMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        $user = Auth::user();
+        /*$user = Auth::user();
 
         if ($user && !$user->administrador) {
-            return $next($request);
+            return redirect('/panelMain');
         }
 
-        return redirect()->route('panel')->with('error', 'No tienes permisos para acceder a esta página');
+        return redirect()->route('panelMain')->with('error', 'No tienes permisos para acceder a esta página');*/
     }
 }

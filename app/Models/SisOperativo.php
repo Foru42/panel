@@ -10,4 +10,6 @@ class SisOperativo extends Model
     use HasFactory;
 
     protected $table = 'sistema_operativo';
+
+
 }

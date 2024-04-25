@@ -2,7 +2,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\PanelTek;
-use App\Models\paneInser; // Importa el modelo de panelak
+use App\Models\paneInser;
+use App\Models\Tekinser;
+use App\Models\TeknologiaBertsioa;
 use Illuminate\Http\Request;
 
 class PanelUpdateController extends Controller
@@ -11,27 +13,65 @@ class PanelUpdateController extends Controller
     {
         $panelId = $request->input('panelId');
         $nuevosValores = $request->input('nuevosValores');
+        $sisOpe = $request->input('soId');
 
-        // Buscar el registro en la tabla panel_tek utilizando el ID proporcionado
+        // Buscar o crear una nueva entrada en la tabla TeknologiaBertsioa
+        $nuevaTeknologiaBertsioa = TeknologiaBertsioa::firstOrCreate(
+            ['izena' => $nuevosValores['bertsioa']['izena']]
+        );
+
+        $nuevaTeknologia = Tekinser::where('izena', $nuevosValores['teknologia']['izena'])->first();
+
+        if ($nuevaTeknologia) {
+            // Si la tecnología ya existe, actualiza el campo 'desk'
+            $nuevaTeknologia->desk = $nuevosValores['teknologia']['desk'];
+            $nuevaTeknologia->save();
+        } else {
+            // Si no existe, crea una nueva entrada en la tabla Tekinser
+            $nuevaTeknologia = Tekinser::create([
+                'izena' => $nuevosValores['teknologia']['izena'],
+                'desk' => $nuevosValores['teknologia']['desk']
+            ]);
+        }
+
+        $panelIMG = paneInser::where('izena', $nuevosValores['panel']['izena'])
+            ->first();
+
+        if ($panelIMG) {
+            $imagen = $panelIMG->irudi;
+        }
+        // Verificar si el panel ya existe en la tabla paneInser
+        $panel = paneInser::where('izena', $nuevosValores['panel']['izena'])
+            ->where('desk', $nuevosValores['panel']['desk'])
+            ->first();
+
+        if (!$panel) {
+            // Si no existe, crear un nuevo registro en paneInser
+            $panel = new paneInser();
+            $panel->izena = $nuevosValores['panel']['izena'];
+            $panel->desk = $nuevosValores['panel']['desk'];
+            $panel->irudi = $imagen;
+            $panel->so_id = $sisOpe;
+            $panel->save();
+        } else {
+            // Si existe, actualizar el registro existente
+            $panel->izena = $nuevosValores['panel']['izena'];
+            $panel->desk = $nuevosValores['panel']['desk'];
+            $panel->so_id = $sisOpe;
+            $panel->save();
+        }
+
+        // Actualizar o crear el registro en la tabla PanelTek
         $panelTek = PanelTek::find($panelId);
 
         if ($panelTek) {
-            // Obtener el panel asociado utilizando el panel_id del registro de panel_tek
-            $panel = paneInser::find($panelTek->panel_id);
-            $panelTek->tek_id = $nuevosValores['teknologia_desk'];
-            $panelTek->tek_bertsioa = $nuevosValores['bertsioa_izena'];
-
+            // Asignar las nuevas IDs
+            $panelTek->tek_bertsioa = $nuevaTeknologiaBertsioa->id;
+            $panelTek->tek_id = $nuevaTeknologia->id;
+            $panelTek->panel_id = $panel->id;
             $panelTek->save();
-            if ($panel) {
-                // Actualizar el campo desk en el registro de panelak
-                $panel->desk = $nuevosValores['panel_deskripzioa'];
-                $panel->so_id = $nuevosValores['so_desk'];
-                $panel->save();
 
-                return response()->json(['message' => 'Panel actualizado correctamente'], 200);
-            } else {
-                return response()->json(['message' => 'Panel no encontrado en la tabla panelak'], 404);
-            }
+            return response()->json(['message' => 'Panel actualizado correctamente'], 200);
         } else {
             return response()->json(['message' => 'Panel no encontrado en la relación panel_tek'], 404);
         }

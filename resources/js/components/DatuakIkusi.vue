@@ -1,0 +1,316 @@
+<template>
+  <div>
+    <div v-if="groupedInfo && groupedInfo.length">
+      <select v-model="selectedPanel">
+        <option disabled value="">Selecciona un panel</option>
+        <option v-for="panel in uniquePanels" :value="panel">{{ panel }}</option>
+      </select>
+    </div>
+    <div v-else>
+      <p>No hay datos disponibles</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+      <div
+        v-for="info in filteredInfo"
+        :key="info.panel.id"
+        class="card mb-4 shadow-lg rounded-lg overflow-hidden w-full"
+      >
+        <div class="flex justify-between items-center mb-2">
+          <button
+            class="btn-eliminar flex items-center justify-center bg-red-500 text-white font-bold rounded-full h-8 w-8"
+            @click="eliminarPanel(info.id)"
+          >
+            <i class="fas fa-trash"></i>
+          </button>
+          <!-- Botón de editar -->
+          <button
+            class="btn-editar flex items-center justify-center bg-blue-500 text-white font-bold rounded-full h-8 w-8"
+            @click="toggleEditMode(info)"
+          >
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+          <!-- Botón de sumar -->
+          <button
+            class="btn-sumar flex items-center justify-center bg-blue-600 text-white font-bold rounded-full h-8 w-8 mr-2"
+            @click="sumarPanel(info.id)"
+          >
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+        <img :src="info.panel.irudi" class="card-img-top" :alt="info.panel.izena" />
+        <div class="card-body" :id="info.id">
+          <h5 class="card-title panel-izena">{{ info.panel.izena }}</h5>
+          <p v-if="!info.editing" class="card-text panel-desk">{{ info.panel.desk }}</p>
+          <input v-else class="card-text panel-desk-input" v-model="info.panel.desk" />
+          <p v-if="!info.editing" class="card-text teknologia">
+            {{ info.teknologia.izena }} - {{ info.teknologia.desk }}
+          </p>
+          <div v-else>
+            <input class="card-text teknologia-izena" v-model="info.teknologia.izena" />
+            <input class="card-text teknologia-desk" v-model="info.teknologia.desk" />
+          </div>
+          <p v-if="!info.editing" class="card-text bertsioa">{{ info.bertsioa.izena }}</p>
+          <input v-else class="card-text bertsioa-izena" v-model="info.bertsioa.izena" />
+          <p v-if="!info.editing" class="card-text sistema-operativo">
+            {{ info.panel.sistema_operativo.izena }} -
+            {{ info.panel.sistema_operativo.desk }}
+          </p>
+          <select
+            v-if="info.editing"
+            v-model="info.selectedSO"
+            class="card-text sistema-operativo-select"
+          >
+            <option v-for="so in sistemasOperativos" :value="so.id">
+              {{ so.izena }}
+            </option>
+          </select>
+        </div>
+
+        <button
+          :id="'guardar_' + info.id"
+          class="btn-guardar bg-green-500 text-white font-bold rounded-full h-8 w-full mt-2"
+          @click="guardarCambios(info.id, info.selectedSO)"
+          v-show="info.editing"
+        >
+          Guardar
+        </button>
+        <!-- Estrella -->
+        <button v-if="!info.editing" class="star-icon absolute bottom-2 right-2" @click="toggleStar(info, info.id)">
+          <div v-if="info.fav">
+            <i class="fas fa-star text-yellow-500"></i>
+          </div>
+          <div v-else>
+            <i class="far fa-star"></i>
+          </div>
+        </button>
+        <div v-else></div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { debounce } from 'lodash';
+export default {
+  
+  data() {
+    return {
+      groupedInfo: [],
+      sistemasOperativos: [],
+      selectedPanel: "",
+    };
+  },
+  computed: {
+    uniquePanels() {
+      return Array.from(new Set(this.groupedInfo.map((info) => info.panel.izena)));
+    },
+    filteredInfo() {
+      if (!this.selectedPanel) return this.groupedInfo;
+      return this.groupedInfo.filter((info) => info.panel.izena === this.selectedPanel);
+    },
+  },
+  mounted() {
+    this.allDatos();
+    this.obtenerSistemasOperativos();
+  },
+  methods: {
+    allDatos() {
+      fetch("/data", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Error al recoger datos");
+          }
+        })
+        .then((data) => {
+          this.groupedInfo = data.map((info) => ({
+            ...info,
+            editing: false,
+            fav: JSON.parse(info.fav)
+          }));
+        })
+        .catch((error) => {
+          console.error("Error al recoger datos", error);
+        });
+    },
+    eliminarPanel(panelId) {
+      var confirmacion = confirm("¿Seguru Panela borratu nahi duzula?");
+      if (confirmacion) {
+        // Obtener el token CSRF de la meta etiqueta
+        var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
+
+        // Realizar la petición AJAX con el token CSRF incluido en la cabecera
+        fetch("/eliminar-panel", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
+          },
+          body: JSON.stringify({ panelTekId: panelId }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              window.location.reload();
+            } else {
+              // Si hubo un error, mostrar un mensaje de error
+              console.error("Error al eliminar el panel:", response.statusText);
+            }
+          })
+          .catch((error) => {
+            console.error("Error al eliminar el panel:", error);
+          });
+      }
+    },
+    toggleEditMode(info) {
+      if (info.editing) {
+        info.editing = false;
+      } else {
+        const editingCards = this.groupedInfo.filter((item) => item.editing);
+        // Si hay tarjetas en modo de edición, mostrar alerta y salir
+        if (editingCards.length > 0) {
+          alert("No puedes editar dos tarjetas a la vez.");
+          return;
+        }
+        // Establecer el valor seleccionado en el valor actual del sistema operativo
+        info.selectedSO = info.panel.sistema_operativo.id;
+        // Si no hay tarjetas en modo de edición, cambiar el estado de la tarjeta seleccionada
+        info.editing = true;
+      }
+    },
+
+    guardarCambios(panelId, soID) {
+      const panelIndex = this.groupedInfo.findIndex((info) => info.id === panelId);
+      if (panelIndex !== -1) {
+        const panel = this.groupedInfo[panelIndex];
+        console.log("Valores antiguos:", panel);
+
+        // Desactivar la edición
+        panel.editing = false;
+
+        var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
+
+        // Realizar la petición fetch para actualizar el panel en el servidor
+        fetch("/actualizar-panel", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
+          },
+          body: JSON.stringify({ panelId: panelId, soId: soID, nuevosValores: panel }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              // Si la actualización fue exitosa, recargar la página
+              //window.location.reload();
+            } else {
+              // Si hubo un error, puedes mostrar un mensaje de error o realizar otras acciones necesarias
+              console.error("Error al actualizar el panel:", response.statusText);
+            }
+          })
+          .catch((error) => {
+            console.error("Error al actualizar el panel:", error);
+          });
+      }
+    },
+
+    obtenerSistemasOperativos() {
+      fetch("/obtener-sistemas-operativos")
+        .then((response) => response.json())
+        .then((data) => {
+          this.sistemasOperativos = data;
+        })
+        .catch((error) => {
+          console.error("Error al obtener los sistemas operativos:", error);
+        });
+    },
+    sumarPanel(id) {
+      console.log(id);
+      var tarjeta = document.getElementById(id);
+
+      var ize = tarjeta.querySelector(".panel-izena").textContent;
+      var Tek = tarjeta.querySelector(".teknologia").textContent;
+      var Ber = tarjeta.querySelector(".bertsioa").textContent;
+
+      var cantidad = prompt("Por favor, introduce la cantidad de paneles a añadir:");
+      // Verificar si el usuario canceló el prompt
+      if (cantidad === null) {
+        return; // No hacer nada si se cancela el prompt
+      }
+      if (cantidad < 11) {
+        var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
+        fetch("/anadir-panel", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
+          },
+          body: JSON.stringify({
+            izenapanela: ize,
+            teknologiaIzena: Tek,
+            teknologiaBertsioa: Ber,
+            cantidad: cantidad,
+          }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              // Si la adición fue exitosa, puedes realizar cualquier acción necesaria
+              console.log("Panel añadido exitosamente");
+              window.location.reload(); // Recargar la página para mostrar los cambios
+            } else {
+              // Si hubo un error, mostrar un mensaje de error
+              console.error("Error al añadir panel:", response.statusText);
+            }
+          })
+          .catch((error) => {
+            console.error("Error al añadir panel:", error);
+          });
+      } else {
+        alert("Por favor, introduce una cantidad menor a 11");
+      }
+    },
+    toggleStar: debounce(function(info, id) {
+  info.fav = !info.fav; // Cambiar el estado de fav al hacer clic en la estrella
+  
+  fetch(`/anadir-fav`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-TOKEN": document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content"),
+    },
+    body: JSON.stringify({ id: id, fav: info.fav }), // Enviar el nuevo estado de fav al servidor
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error al guardar el estado de la estrella");
+      }
+    })
+    .catch((error) => {
+      console.error("Error al guardar el estado de la estrella:", error);
+      // Vuelve al estado anterior si hubo un error
+      info.fav = !info.fav;
+    });
+}, 300),
+  },
+};
+</script>
+<style>
+.star-icon {
+  z-index: 1; /* Asegura que la estrella esté sobre el contenido de la tarjeta */
+}
+
+.card {
+  position: relative; /* Asegura que los elementos absolutamente posicionados dentro de la tarjeta sean relativos a ella */
+}
+</style>

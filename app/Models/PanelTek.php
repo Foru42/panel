@@ -14,23 +14,48 @@ class PanelTek extends Model
         'panel_id',
         'tek_id',
         'tek_bertsioa',
+        'fav',
     ];
 
     // Relación con el modelo Panel
     public function panel()
     {
-        return $this->belongsTo(paneInser::class, 'panel_id')->onDelete('cascade');
+        return $this->belongsTo(paneInser::class, 'panel_id');
     }
 
-    // Relación con el modelo Tecnologia
     public function teknologia()
     {
-        return $this->belongsTo(Tekinser::class, 'tek_id')->onDelete('cascade');
+        return $this->belongsTo(Tekinser::class, 'tek_id');
     }
 
-    // Relación con el modelo TeknologiaBertsioa
-    public function teknologiaBertsioa()
+    public function bertsioa()
     {
-        return $this->belongsTo(TeknologiaBertsioa::class, 'tek_bertsioa')->onDelete('cascade');
+        return $this->belongsTo(TeknologiaBertsioa::class, 'tek_bertsioa');
     }
+
+    /**
+     * Deshabilita temporalmente los timestamps.
+     *
+     * @return void
+     */
+    public static function disableTimestamps()
+    {
+        static::saving(function ($model) {
+            $model->timestamps = false;
+        });
+    }
+
+    /**
+     * Habilita los timestamps.
+     *
+     * @return void
+     */
+    public static function enableTimestamps()
+    {
+        static::saving(function ($model) {
+            $model->timestamps = true;
+        });
+    }
+
+
 }

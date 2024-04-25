@@ -10,16 +10,12 @@ class TeknologiaBertsioa extends Model
 
     protected $table = 'teknologia_bertsioa';
 
-    protected $fillable = ['teknologia_id', 'izena'];
+    protected $fillable = ['izena'];
 
-    // Si es necesario, puedes definir las relaciones con otros modelos aquí
-    public function teknologia()
-    {
-        return $this->belongsTo(Tekinser::class, 'teknologia_id');
-    }
+    // Si es necesario, puedes definir las relaciones con otros modelos aqu
 
     public function panelTeks()
     {
-        return $this->hasMany(PanelTek::class, 'tek_bertsioa')->onDelete('cascade');
+        return $this->hasMany(PanelTek::class, 'tek_bertsioa');
     }
 }

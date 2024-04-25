@@ -12,8 +12,9 @@ use App\Http\Controllers\PanelDeleteController;
 use App\Http\Controllers\PanelakController;
 use App\Http\Controllers\PanelUpdateController;
 use App\Http\Controllers\UsuarioController;
-
-Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
+use App\Http\Controllers\CambioContrasenaController;
+use App\Http\Controllers\PanelFavStarContoller;
+use App\Models\SisOperativo;
 
 
 Route::get('/reset-database', function () {
@@ -25,37 +26,43 @@ Route::get('/reset-database', function () {
     return 'Base de datos reiniciada';
 });
 
+Route::get('/data', [PanelTekController::class, 'showPaneladmin']);
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::view('/', 'logeatu');
+Route::view('/login', 'logeatu');
 Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::view('/kontua-sortu', 'register');
+Route::post('/registrar', [CreateUserController::class, 'register'])->name('register');
 
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
-    Route::get('/panel', [PanelTekController::class, 'showPaneladmin'])->name('panel');
+    Route::view('/panel', 'panelMain');
 });
 
-Route::middleware(['auth', NonAdminMiddleware::class])->group(function () {
-    Route::get('/panelNoadmin', [PanelTekController::class, 'showPanelNoadmin'])->name('panelNoadmin');
-});
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::get('/ultimas-modificaciones-panel-tek', [ModController::class, 'obtenerInformacionPanelTekActualizado']);
 
 Route::get('/buscar-extensiones', [BuscarExtensionesController::class, 'searchExtensions']);
+Route::get('/obtener-sistemas-operativos', function () {
+    $sisOperativos = SisOperativo::all();
+    return response()->json($sisOperativos);
+})->name('obtener.sistemas.operativos');
+Route::post('/panelakGehi', [PanelakController::class, 'store']);
 
-Route::post('/panelak', [PanelakController::class, 'store'])->name('panelak.store');
 
-Route::post('/eliminar-panel', [PanelDeleteController::class, 'eliminar']);
-
-Route::post('/actualizar-panel', [PanelUpdateController::class, 'actualizarPanel']);
-
-Route::get('/ultimas-modificaciones-panel-tek', [ModController::class, 'ultimasModificacionesPanelTek'])->name('ultimas-modificaciones-panel-tek');
-
-Route::get('/kontua-sortu', [CreateUserController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [CreateUserController::class, 'register'])->name('register');
-
-Route::get('/usuarios', [UsuarioController::class, 'index']);
-
-Route::post('/eliminar-usuario', [UsuarioController::class, 'eliminar'])->name('eliminar');
 
 Route::post('/cambiar-usuario', [UsuarioController::class, 'cambiar']);
-use App\Http\Controllers\CambioContrasenaController;
-
+Route::get('/usuarios', [UsuarioController::class, 'index']);
+Route::post('/eliminar-usuario', [UsuarioController::class, 'eliminar'])->name('eliminar');
 Route::post('/cambiar-contrasena', [CambioContrasenaController::class, 'cambiarContraseña']);
+
+
+
+
+Route::post('/actualizar-panel', [PanelUpdateController::class, 'actualizarPanel']);
+Route::post('/eliminar-panel', [PanelDeleteController::class, 'eliminar']);
+Route::post('/anadir-panel', [PanelTekController::class, 'anadir']);
+
+Route::post('/anadir-fav', [PanelFavStarContoller::class, 'anadirFavorito']);
+Route::get('/gustukoa-ikusi', [PanelFavStarContoller::class, 'showFav']);
+
