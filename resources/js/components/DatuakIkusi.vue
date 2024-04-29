@@ -12,8 +12,8 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <div
-        v-for="info in filteredInfo"
-        :key="info.panel.id"
+        v-for="(info, index) in paginatedInfo"
+      
         class="card mb-4 shadow-lg rounded-lg overflow-hidden w-full"
       >
         <div class="flex justify-between items-center mb-2">
@@ -76,7 +76,11 @@
           Guardar
         </button>
         <!-- Estrella -->
-        <button v-if="!info.editing" class="star-icon absolute bottom-2 right-2" @click="toggleStar(info, info.id)">
+        <button
+          v-if="!info.editing"
+          class="star-icon absolute bottom-2 right-2"
+          @click="toggleStar(info, info.id)"
+        >
           <div v-if="info.fav">
             <i class="fas fa-star text-yellow-500"></i>
           </div>
@@ -87,28 +91,53 @@
         <div v-else></div>
       </div>
     </div>
-    
+
+    <div v-if="!selectedPanel && totalPages > 1">
+  <button @click="previousPage" :disabled="!canGoPrevious">Lehen </button>
+  <span> {{ currentPage }} / {{ totalPages }}</span>
+  <button @click="nextPage" :disabled="!canGoNext">Hurrengo</button>
+</div>
+
   </div>
 </template>
 
 <script>
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 export default {
-  
   data() {
     return {
       groupedInfo: [],
       sistemasOperativos: [],
       selectedPanel: "",
+      currentPage:1 ,
+      pageSize: 3,
     };
   },
   computed: {
-    uniquePanels() {
-      return Array.from(new Set(this.groupedInfo.map((info) => info.panel.izena)));
+        uniquePanels() {
+          return Array.from(new Set(this.groupedInfo.map((info) => info.panel.izena)));
+        },
+        filteredInfo() {
+          if (!this.selectedPanel) return this.groupedInfo;
+          return this.groupedInfo.filter((info) => info.panel.izena === this.selectedPanel);
+        },
+      totalPages() {
+      
+        if (!this.selectedPanel) {
+          return Math.ceil(this.filteredInfo.length / this.pageSize)+' ';
+    }else {
+    // Si hay un panel seleccionado, no hay paginación, así que solo hay una página
+    return 1;
+   }
     },
-    filteredInfo() {
-      if (!this.selectedPanel) return this.groupedInfo;
-      return this.groupedInfo.filter((info) => info.panel.izena === this.selectedPanel);
+    paginatedInfo() {
+      if (!this.selectedPanel) {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.filteredInfo.slice(startIndex, endIndex);
+      }else{
+        return this.filteredInfo;
+      }
     },
   },
   mounted() {
@@ -137,7 +166,7 @@ export default {
           this.groupedInfo = data.map((info) => ({
             ...info,
             editing: false,
-            fav: JSON.parse(info.fav)
+            fav: JSON.parse(info.fav),
           }));
         })
         .catch((error) => {
@@ -279,30 +308,47 @@ export default {
         alert("Por favor, introduce una cantidad menor a 11");
       }
     },
-    toggleStar: debounce(function(info, id) {
-  info.fav = !info.fav; // Cambiar el estado de fav al hacer clic en la estrella
-  
-  fetch(`/anadir-fav`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-TOKEN": document
-        .querySelector('meta[name="csrf-token"]')
-        .getAttribute("content"),
+    toggleStar: debounce(function (info, id) {
+      info.fav = !info.fav; // Cambiar el estado de fav al hacer clic en la estrella
+
+      fetch(`/anadir-fav`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+        body: JSON.stringify({ id: id, fav: info.fav }), // Enviar el nuevo estado de fav al servidor
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error al guardar el estado de la estrella");
+          }
+        })
+        .catch((error) => {
+          console.error("Error al guardar el estado de la estrella:", error);
+          // Vuelve al estado anterior si hubo un error
+          info.fav = !info.fav;
+        });
+    }, 300),
+    canGoNext() {
+      return this.currentPage < this.totalPages;
     },
-    body: JSON.stringify({ id: id, fav: info.fav }), // Enviar el nuevo estado de fav al servidor
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error al guardar el estado de la estrella");
+
+    canGoPrevious() {
+      return this.currentPage > 1;
+    },
+    nextPage() {
+      if (this.canGoNext()) {
+        this.currentPage++;
       }
-    })
-    .catch((error) => {
-      console.error("Error al guardar el estado de la estrella:", error);
-      // Vuelve al estado anterior si hubo un error
-      info.fav = !info.fav;
-    });
-}, 300),
+    },
+    previousPage() {
+      if (this.canGoPrevious()) {
+        this.currentPage--;
+      }
+    },
   },
 };
 </script>

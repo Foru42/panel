@@ -80,9 +80,11 @@
     }
 
     /* Estilos para el contenido principal */
-    .main-content {
-        margin-left: 260px; /* Margen izquierdo para evitar la superposición del contenido */
+    #main-content {
+   
         transition: margin-left 0.3s; /* Transición suave para cambios de margen izquierdo */
+       height: auto;
+
     }
 
     .card {

@@ -12,7 +12,6 @@ class LoginController extends Controller
     {
         return view('login');
     }
-
     public function login(Request $request)
     {
         $credentials = $request->only('username', 'password');
@@ -20,18 +19,21 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
-            if ($user->administrador == 1) {
-                $request->session()->put('username', $request->input('username'));
-                return response()->json(['success' => true]); // Inicio de sesión exitoso para administrador
-            } else {
-                $request->session()->put('username', $request->input('username'));
-                return response()->json(['success' => true]); // Inicio de sesión exitoso para usuario no administrador
-            }
+            $isAdmin = $user->administrador == 1 ? true : false;
+
+            return response()->json(['success' => true, 'isAdmin' => $isAdmin]); // Inicio de sesión exitoso
         } else {
             return response()->json(['error' => 'Credenciales incorrectas'], 401); // Credenciales incorrectas
         }
     }
 
+    public function checkAdminStatus(Request $request)
+    {
+        // Verificar si el usuario actual es administrador
+        $isAdmin = $request->user()->administrador == 1;
+
+        return response()->json(['isAdmin' => $isAdmin]);
+    }
 
 
     public function logout(Request $request)

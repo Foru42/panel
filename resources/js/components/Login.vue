@@ -67,9 +67,9 @@ export default {
         .then((data) => {
           // Verificar si la respuesta contiene la propiedad 'success'
           if (data && data.success) {
-             localStorage.setItem('username', this.username);
+            localStorage.setItem('username', this.username);
             // Redirigir solo si el inicio de sesión es exitoso
-            window.location.href = "/panel";
+             window.location.href = "/panel";
           } else {
             self.error = "Credenciales incorrectas";
           }
@@ -91,7 +91,7 @@ export default {
       })
         .then((response) => {
           if (response.ok) {
-            console.log("Has cerrado sesion correctamente");
+            console.log("Has cerrado sesión correctamente");
             // Redirige al usuario a la página de inicio de sesión
           } else {
             console.error("Error al cerrar sesión");

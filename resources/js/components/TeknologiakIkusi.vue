@@ -4,10 +4,18 @@
     <input
       type="text"
       v-model="searchTerm"
-      @input="buscarExtensiones"
+      @keyup.enter="realizarBusqueda"
       placeholder="Buscar extensiones..."
     />
-    <div id="resultados"></div>
+    <div class="card mb-4 shadow-lg rounded-lg overflow-hidden" v-for="resultado in resultados" :key="resultado.izena">
+      <div class="card-body">
+        <h5 class="card-title">{{ resultado.izena }}</h5>
+        <p class="card-text"><strong>Panelak:</strong></p>
+        <ul>
+          <li v-for="panel in resultado.paneles" :key="panel.izena">{{ panel.izena }}</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -20,6 +28,11 @@ export default {
     };
   },
   methods: {
+    realizarBusqueda(event) {
+      if (event.key === 'Enter') {
+        this.buscarExtensiones();
+      }
+    },
     buscarExtensiones() {
       fetch(`/buscar-extensiones?searchTerm=${this.searchTerm}`, {
         method: "GET",
@@ -37,28 +50,11 @@ export default {
           return response.json();
         })
         .then((data) => {
-          this.mostrarResultados(data);
+          this.resultados = data;
         })
         .catch((error) => {
           console.error("Error al buscar extensiones:", error);
         });
-    },
-    mostrarResultados(resultados) {
-      var contenidoHTML = "";
-      resultados.forEach(function (resultado) {
-        contenidoHTML += `
-            <div class="card mb-4 shadow-lg rounded-lg overflow-hidden">
-              <div class="card-body">
-                <h5 class="card-title">${resultado.izena}</h5>
-                <p class="card-text"><strong>Panelak:</strong></p>
-                <ul>
-                  ${resultado.paneles.map((panel) => `<li>${panel.izena}</li>`).join("")}
-                </ul>
-              </div>
-            </div>
-          `;
-      });
-      document.getElementById("resultados").innerHTML = contenidoHTML;
     },
   },
 };

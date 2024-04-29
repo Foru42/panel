@@ -2,6 +2,7 @@
   <div class="flex contenedor-a-borrar">
     <Sidebar
       :username="username"
+      :isAdmin="isAdmin"
       @logout="handleLogout"
       @show-datuak-ikusi="showDatuakIkusi"
       @show-teknologiak-ikusi="showTeknologiakIkusi"
@@ -10,6 +11,7 @@
       @show_ErabiltzaileakIkusi_ikusi="showErabiltzaileakIkusi"
       @show_PasahitzaAldatu_ikusi="showPasahitzaAldatuIkusi"
       @show_FavIkusi_ikusi="showFavIkusiIkusi"
+      @show_Grafiko_ikusi="showGrafikoIkusi"
     />
 
     <div id="main-content" class="flex-1 container small-container red-container">
@@ -18,8 +20,9 @@
       <PanelakGehitu v-if="show_panelakGehitu_ikusi"></PanelakGehitu>
       <AldaketakIkusi v-if="show_AldaketakIkusi_ikusi"></AldaketakIkusi>
       <ErabiltzaileakIkusi v-if="show_ErabiltzaileakIkusi_ikusi"></ErabiltzaileakIkusi>
-      <showPasahitzaAldatuIkusi v-if="show_PasahitzaAldatu_ikusi"></showPasahitzaAldatuIkusi>
+      <PasahitzaAldatu v-if="show_PasahitzaAldatu_ikusi"></PasahitzaAldatu>
       <FavIkusi v-if="show_FavIkusi_ikusi"></FavIkusi>
+      <GrafikoakIkusi v-if="show_Grafiko_ikusi"></GrafikoakIkusi>
     </div>
   </div>
 </template>
@@ -31,8 +34,9 @@ import TeknologiakIkusi from "./TeknologiakIkusi.vue";
 import PanelakGehitu from "./PanelakGehitu.vue";
 import AldaketakIkusi from "./AldaketakIkusi.vue";
 import ErabiltzaileakIkusi from "./ErabiltzaileakIkusi.vue";
-import showPasahitzaAldatuIkusi from "./PasahitzaAldatu.vue";
+import PasahitzaAldatu from "./PasahitzaAldatu.vue";
 import FavIkusi from "./FavIkusi.vue";
+import GrafikoakIkusi from "./GrafikoakIkusi.vue";
 
 export default {
   components: {
@@ -42,24 +46,28 @@ export default {
     PanelakGehitu,
     AldaketakIkusi,
     ErabiltzaileakIkusi,
-    showPasahitzaAldatuIkusi,
+    PasahitzaAldatu,
     FavIkusi,
+    GrafikoakIkusi,
   },
   data() {
     return {
       username: "",
-      show_datuak_ikusi: true, // Inicialmente mostrar DatuakIkusi
+      show_datuak_ikusi: false, // Inicialmente mostrar DatuakIkusi
       show_teknologiak_ikusi: false,
       show_panelakGehitu_ikusi: false, // Inicialmente no mostrar PanelakGehitu
       show_AldaketakIkusi_ikusi: false,
       show_ErabiltzaileakIkusi_ikusi: false,
       show_PasahitzaAldatu_ikusi: false,
       show_FavIkusi_ikusi: false,
+      show_Grafiko_ikusi: false,
+      isAdmin: false,
     };
   },
   mounted() {
     // Recuperar el nombre de usuario del localStorage al cargar el componente
     this.username = localStorage.getItem('username');
+    this.checkAdminStatus(); // Verificar si el usuario es administrador al cargar el componente
   },
   methods: {
     showDatuakIkusi() {
@@ -70,6 +78,7 @@ export default {
       this.show_ErabiltzaileakIkusi_ikusi = false;
       this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi= false;
+      this.show_Grafiko_ikusi= false;
     },
     showTeknologiakIkusi() {
       this.show_datuak_ikusi = false;
@@ -79,6 +88,7 @@ export default {
       this.show_ErabiltzaileakIkusi_ikusi = false;
       this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi= false;
+      this.show_Grafiko_ikusi= false;
     },
     showPanelakGehitu() {
       this.show_datuak_ikusi = false;
@@ -88,6 +98,7 @@ export default {
       this.show_ErabiltzaileakIkusi_ikusi = false;
       this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi= false;
+      this.show_Grafiko_ikusi= false;
     },
     showAldaketaIkusi() {
       this.show_datuak_ikusi = false;
@@ -97,6 +108,7 @@ export default {
       this.show_ErabiltzaileakIkusi_ikusi = false;
       this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi= false;
+      this.show_Grafiko_ikusi= false;
     },
     showErabiltzaileakIkusi() {
       this.show_datuak_ikusi = false;
@@ -106,6 +118,7 @@ export default {
       this.show_ErabiltzaileakIkusi_ikusi = true;
       this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi= false;
+      this.show_Grafiko_ikusi= false;
     },
     showPasahitzaAldatuIkusi() {
       this.show_datuak_ikusi = false;
@@ -115,6 +128,7 @@ export default {
       this.show_ErabiltzaileakIkusi_ikusi = false;
       this.show_PasahitzaAldatu_ikusi = true;
       this.show_FavIkusi_ikusi= false;
+      this.show_Grafiko_ikusi= false;
     },
     showFavIkusiIkusi() {
       this.show_datuak_ikusi = false;
@@ -124,11 +138,43 @@ export default {
       this.show_ErabiltzaileakIkusi_ikusi = false;
       this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi= true;
+      this.show_Grafiko_ikusi= false;
+    },
+    showGrafikoIkusi(){
+      this.show_datuak_ikusi = false;
+      this.show_teknologiak_ikusi = false;
+      this.show_panelakGehitu_ikusi = false;
+      this.show_AldaketakIkusi_ikusi = false;
+      this.show_ErabiltzaileakIkusi_ikusi = false;
+      this.show_PasahitzaAldatu_ikusi = false;
+      this.show_FavIkusi_ikusi= false;
+      this.show_Grafiko_ikusi= true;
+    },
+    checkAdminStatus() {
+      // Hacer una llamada al backend para verificar si el usuario es administrador
+      fetch("/check-admin-status", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data && data.isAdmin) {
+          console.log("El usuario es administrador.");
+          this.isAdmin = true;
+        } else {
+          console.log("El usuario no es administrador.");
+          this.isAdmin = false;
+        }
+      })
+      .catch((error) => {
+        console.error("Error al verificar el estado de administrador:", error);
+      });
     },
     handleLogout() {
       // Método para el logout
     },
-
   },
 };
 </script>

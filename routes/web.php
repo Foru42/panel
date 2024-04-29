@@ -4,8 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PanelTekController;
 use App\Http\Controllers\ModController;
-use App\Http\Middleware\AdminMiddleware;
-use App\Http\Middleware\NonAdminMiddleware;
 use App\Http\Controllers\CreateUserController;
 use App\Http\Controllers\BuscarExtensionesController;
 use App\Http\Controllers\PanelDeleteController;
@@ -35,9 +33,9 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::view('/kontua-sortu', 'register');
 Route::post('/registrar', [CreateUserController::class, 'register'])->name('register');
 
-Route::middleware(['auth', AdminMiddleware::class])->group(function () {
-    Route::view('/panel', 'panelMain');
-});
+
+Route::view('/panel', 'panelMain');
+Route::get('/check-admin-status', [LoginController::class, 'checkAdminStatus']);
 
 
 Route::get('/ultimas-modificaciones-panel-tek', [ModController::class, 'obtenerInformacionPanelTekActualizado']);

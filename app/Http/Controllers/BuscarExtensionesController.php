@@ -15,7 +15,13 @@ class BuscarExtensionesController extends Controller
         $searchTerm = $request->input('searchTerm');
 
         // Realizar la búsqueda en la base de datos
-        $results = Tekinser::where('izena', 'LIKE', '%' . $searchTerm . '%')->with('paneles')->get();
+        $results = Tekinser::where('izena', 'LIKE', '%' . $searchTerm . '%')
+            ->with([
+                'paneles' => function ($query) {
+                    $query->select('izena')->distinct();
+                }
+            ])
+            ->get();
 
         // Retornar los resultados como JSON
         return response()->json($results);
