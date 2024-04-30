@@ -57,7 +57,6 @@ class PanelakController extends Controller
             'panel_id' => $panel->id,
             'tek_id' => $tekinser->id,
             'tek_bertsioa' => $teknologiaBertsioa->id,
-            'fav' => 'false',
             'updated_at' => now(),
             'created_at' => now()
         ]);

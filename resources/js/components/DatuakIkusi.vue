@@ -76,19 +76,16 @@
           Guardar
         </button>
         <!-- Estrella -->
-        <button
-          v-if="!info.editing"
-          class="star-icon absolute bottom-2 right-2"
-          @click="toggleStar(info, info.id)"
-        >
-          <div v-if="info.fav">
-            <i class="fas fa-star text-yellow-500"></i>
-          </div>
-          <div v-else>
-            <i class="far fa-star"></i>
-          </div>
-        </button>
-        <div v-else></div>
+<!-- Dentro del bucle v-for donde renderizas cada tarjeta -->
+<button
+  v-if="!info.editing"
+  class="star-icon absolute bottom-2 right-2"
+  @click="toggleStar(info, info.id)"
+>
+  <i :class="{ 'fas fa-star text-yellow-500': info.usuarios_que_lo_favoritan.length > 0, 'far fa-star text-gray-400': info.usuarios_que_lo_favoritan.length === 0 }"></i>
+</button>
+
+       
       </div>
     </div>
 
@@ -166,7 +163,6 @@ export default {
           this.groupedInfo = data.map((info) => ({
             ...info,
             editing: false,
-            fav: JSON.parse(info.fav),
           }));
         })
         .catch((error) => {
@@ -241,7 +237,7 @@ export default {
           .then((response) => {
             if (response.ok) {
               // Si la actualización fue exitosa, recargar la página
-              //window.location.reload();
+              window.location.reload();
             } else {
               // Si hubo un error, puedes mostrar un mensaje de error o realizar otras acciones necesarias
               console.error("Error al actualizar el panel:", response.statusText);
@@ -309,7 +305,6 @@ export default {
       }
     },
     toggleStar: debounce(function (info, id) {
-      info.fav = !info.fav; // Cambiar el estado de fav al hacer clic en la estrella
 
       fetch(`/anadir-fav`, {
         method: "POST",
@@ -319,17 +314,17 @@ export default {
             .querySelector('meta[name="csrf-token"]')
             .getAttribute("content"),
         },
-        body: JSON.stringify({ id: id, fav: info.fav }), // Enviar el nuevo estado de fav al servidor
+        body: JSON.stringify({ id: id, userID: localStorage.getItem('username') }), // Enviar el nuevo estado de fav al servidor
       })
         .then((response) => {
           if (!response.ok) {
             throw new Error("Error al guardar el estado de la estrella");
           }
+          this.allDatos();
         })
         .catch((error) => {
           console.error("Error al guardar el estado de la estrella:", error);
           // Vuelve al estado anterior si hubo un error
-          info.fav = !info.fav;
         });
     }, 300),
     canGoNext() {
@@ -349,6 +344,7 @@ export default {
         this.currentPage--;
       }
     },
+    
   },
 };
 </script>

@@ -14,17 +14,20 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'password',
-        'is_admin', // Campo para indicar si el usuario es administrador
+        'administrator', // Campo para indicar si el usuario es administrador
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
-
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
+    public function iruzkinak()
+    {
+        return $this->hasMany(Iruzkina::class, 'user_id');
+    }
+    public function panelesFavoritos()
+    {
+        return $this->hasMany(UsuarioPanelFavorito::class, 'usuario_id');
+    }
 
 }

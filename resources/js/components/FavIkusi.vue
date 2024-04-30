@@ -48,9 +48,9 @@ export default {
             throw new Error("Error al obtener los datos: " + response.statusText);
           }
         })
-        .then((data) => {
-          // Si se obtuvieron los datos correctamente, asignarlos a la variable data
-          this.data = data;
+          .then((data) => {
+        // Filtrar los elementos que tienen un registro en usuarios_que_lo_favoritan
+        this.data = data.filter(item => item.usuarios_que_lo_favoritan.length > 0);
         })
         .catch((error) => {
           // Capturar cualquier error y mostrar un mensaje de error

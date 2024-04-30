@@ -12,6 +12,7 @@ use App\Http\Controllers\PanelUpdateController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\CambioContrasenaController;
 use App\Http\Controllers\PanelFavStarContoller;
+use App\Http\Controllers\IruzkinController;
 use App\Models\SisOperativo;
 
 
@@ -34,9 +35,11 @@ Route::view('/kontua-sortu', 'register');
 Route::post('/registrar', [CreateUserController::class, 'register'])->name('register');
 
 
-Route::view('/panel', 'panelMain');
+Route::view('/panel', 'panelMain')->middleware('auth');
 Route::get('/check-admin-status', [LoginController::class, 'checkAdminStatus']);
 
+Route::post('/add-iruzkin', [IruzkinController::class, 'addComment']);
+Route::get('/show-iruzkin', [IruzkinController::class, 'infoIruzkinak']);
 
 Route::get('/ultimas-modificaciones-panel-tek', [ModController::class, 'obtenerInformacionPanelTekActualizado']);
 
@@ -62,5 +65,5 @@ Route::post('/eliminar-panel', [PanelDeleteController::class, 'eliminar']);
 Route::post('/anadir-panel', [PanelTekController::class, 'anadir']);
 
 Route::post('/anadir-fav', [PanelFavStarContoller::class, 'anadirFavorito']);
-Route::get('/gustukoa-ikusi', [PanelFavStarContoller::class, 'showFav']);
+Route::get('/gustukoa-ikusi', [PanelTekController::class, 'obtenerInformacionPanelTek']);
 

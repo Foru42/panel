@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\PanelTek;
+use App\Models\User;
+use App\Models\UsuarioPanelFavorito;
 use Illuminate\Http\Request;
 
 class PanelFavStarContoller extends Controller
@@ -14,43 +16,36 @@ class PanelFavStarContoller extends Controller
 
         // Obtiene la ID del panel y el estado de la estrella desde la solicitud
         $panelId = $request->input('id');
-        $starred = $request->input('fav');
+        $userName = $request->input('userID');
 
-        // Deshabilita temporalmente las características de actualización de timestamps para el modelo PanelTek
-        PanelTek::disableTimestamps();
+        // Encuentra al usuario por su nombre de usuario
+        $user = User::where('username', $userName)->first();
 
-        try {
-            // Encuentra el panel por su ID
-            $panelTek = PanelTek::findOrFail($panelId);
-
-            // Actualiza el estado de la estrella del panel
-            if ($starred) {
-                $panelTek->fav = 'true';
-            } else {
-                $panelTek->fav = 'false';
-            }
-
-            // Guarda los cambios en la base de datos
-            $panelTek->save();
-            PanelTek::enableTimestamps();
-            // Retorna una respuesta indicando que el estado de la estrella ha sido actualizado con éxito
-            return response()->json(['message' => 'Estado de la estrella actualizado con éxito']);
-        } finally {
-            // Vuelve a habilitar las características de actualización de timestamps después de la operación
-            PanelTek::enableTimestamps();
+        // Verifica si el usuario existe
+        if (!$user) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
         }
-    }
-    public function showFav(Request $request)
-    {
 
+        // Verifica si el panel ya está marcado como favorito por el usuario
+        $panelFav = UsuarioPanelFavorito::where('usuario_id', $user->id)
+            ->where('panel_id', $panelId)
+            ->first();
 
+        // Si el panel ya está marcado como favorito, no hace nada
+        if ($panelFav) {
+            $panelFav->delete();
+            return response()->json(['message' => 'Panel eliminado de los favoritos del usuario'], 200);
+        }
 
-        $panelAcInfo = PanelTek::where('fav', 'true')
-            ->with('panel.sistemaOperativo', 'teknologia', 'bertsioa')
-            ->get();
+        // Crea una nueva entrada en la tabla de relación para marcar el panel como favorito del usuario
+        $nuevoPanelFav = new UsuarioPanelFavorito();
+        $nuevoPanelFav->usuario_id = $user->id;
+        $nuevoPanelFav->panel_id = $panelId;
+        $nuevoPanelFav->save();
 
-        return response()->json($panelAcInfo);
-
+        return response()->json([
+            'message' => 'Panel marcado como favorito correctamente'
+        ], 200);
     }
 
 }

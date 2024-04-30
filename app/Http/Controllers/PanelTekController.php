@@ -8,17 +8,30 @@ use Illuminate\Support\Facades\DB;
 use App\Models\PanelTek;
 use App\Models\Tekinser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class PanelTekController extends Controller
 {
 
     public function obtenerInformacionPanelTek()
     {
-        $panelTekInfo = PanelTek::with('panel.sistemaOperativo', 'teknologia', 'bertsioa')->get();
+        // Obtén el ID del usuario actual
+        $userId = Auth::id();
+
+        // Obtiene la información del panel Tek
+        $panelTekInfo = PanelTek::with([
+            'panel.sistemaOperativo',
+            'teknologia',
+            'bertsioa',
+            'usuariosQueLoFavoritan' => function ($query) use ($userId) {
+                // Filtra los usuarios que han marcado este panel como favorito
+                $query->where('usuario_id', $userId);
+            }
+        ])->get();
 
         return $panelTekInfo;
     }
-
 
 
     public function showPaneladmin()
@@ -28,7 +41,7 @@ class PanelTekController extends Controller
 
         // Verificar si se obtuvo la información correctamente
         if ($panelTekInfo->isNotEmpty()) {
-            // Devolver un JSON con la información obtenida y un status 200 (OK)
+
             return response()->json(
                 $panelTekInfo,
                 200
@@ -71,7 +84,6 @@ class PanelTekController extends Controller
                     $nuevoPanelTek->panel_id = $id;
                     $nuevoPanelTek->tek_id = $teknologia->id;
                     $nuevoPanelTek->tek_bertsioa = $bertsioa->id;
-                    $nuevoPanelTek->fav = 'false';
 
                     $nuevoPanelTek->save();
                 }

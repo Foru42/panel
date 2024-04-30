@@ -33,6 +33,10 @@ class PanelTek extends Model
         return $this->belongsTo(TeknologiaBertsioa::class, 'tek_bertsioa');
     }
 
+    public function usuariosQueLoFavoritan()
+    {
+        return $this->belongsToMany(User::class, 'usuario_panel_favorito', 'panel_id', 'usuario_id');
+    }
     /**
      * Deshabilita temporalmente los timestamps.
      *

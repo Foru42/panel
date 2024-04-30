@@ -14,6 +14,7 @@
       <a href="#" id="panel6" class="sidebar-menu-item hover:bg-gray-700 py-2 px-6 block" @click.prevent="showAldaketaIkusi">Aldaketak ikusi</a>
       <a v-if="isAdmin" href="#" id="panel7" class="sidebar-menu-item hover:bg-gray-700 py-2 px-6 block" @click.prevent="showFavIkusiIkusi">Gustuko Panela</a>
       <a href="#" id="panel8" class="sidebar-menu-item hover:bg-gray-700 py-2 px-6 block" @click.prevent="showGrafikoIkusi">Grafikoak Ikusi</a>
+      <a href="#" id="panel9" class="sidebar-menu-item hover:bg-gray-700 py-2 px-6 block" @click.prevent="showIruzkinIkusi">Iruzkinak Ikusi/Egin</a>
 
 
       <button @click="logout" class="w-full px-6 py-2 bg-red-600 text-white hover:bg-red-700 transition duration-300 mt-6">Logout</button>
@@ -27,7 +28,6 @@ import DatuakIkusi from "./DatuakIkusi.vue";
   export default {
     props: ['username', 'isAdmin'],
     components: {
-  
       DatuakIkusi
     },
     
@@ -86,6 +86,9 @@ import DatuakIkusi from "./DatuakIkusi.vue";
       },
       showGrafikoIkusi(){
         this.$emit('show_Grafiko_ikusi');
+      },   
+      showIruzkinIkusi(){
+        this.$emit('show_Iruzkin_ikusi');
       },   
        
     }

@@ -12,6 +12,7 @@
       @show_PasahitzaAldatu_ikusi="showPasahitzaAldatuIkusi"
       @show_FavIkusi_ikusi="showFavIkusiIkusi"
       @show_Grafiko_ikusi="showGrafikoIkusi"
+      @show_Iruzkin_ikusi="showIruzkinIkusi"
     />
 
     <div id="main-content" class="flex-1 container small-container red-container">
@@ -23,6 +24,7 @@
       <PasahitzaAldatu v-if="show_PasahitzaAldatu_ikusi"></PasahitzaAldatu>
       <FavIkusi v-if="show_FavIkusi_ikusi"></FavIkusi>
       <GrafikoakIkusi v-if="show_Grafiko_ikusi"></GrafikoakIkusi>
+      <Iruzkinak v-if="show_Iruzkin_ikusi"></Iruzkinak>
     </div>
   </div>
 </template>
@@ -37,6 +39,7 @@ import ErabiltzaileakIkusi from "./ErabiltzaileakIkusi.vue";
 import PasahitzaAldatu from "./PasahitzaAldatu.vue";
 import FavIkusi from "./FavIkusi.vue";
 import GrafikoakIkusi from "./GrafikoakIkusi.vue";
+import Iruzkinak from "./Iruzkinak.vue";
 
 export default {
   components: {
@@ -49,6 +52,7 @@ export default {
     PasahitzaAldatu,
     FavIkusi,
     GrafikoakIkusi,
+    Iruzkinak
   },
   data() {
     return {
@@ -61,6 +65,7 @@ export default {
       show_PasahitzaAldatu_ikusi: false,
       show_FavIkusi_ikusi: false,
       show_Grafiko_ikusi: false,
+      show_Iruzkin_ikusi: false,
       isAdmin: false,
     };
   },
@@ -79,6 +84,7 @@ export default {
       this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi= false;
       this.show_Grafiko_ikusi= false;
+      this.show_Iruzkin_ikusi= false;
     },
     showTeknologiakIkusi() {
       this.show_datuak_ikusi = false;
@@ -89,6 +95,7 @@ export default {
       this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi= false;
       this.show_Grafiko_ikusi= false;
+      this.show_Iruzkin_ikusi= false;
     },
     showPanelakGehitu() {
       this.show_datuak_ikusi = false;
@@ -99,6 +106,7 @@ export default {
       this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi= false;
       this.show_Grafiko_ikusi= false;
+      this.show_Iruzkin_ikusi= false;
     },
     showAldaketaIkusi() {
       this.show_datuak_ikusi = false;
@@ -109,6 +117,7 @@ export default {
       this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi= false;
       this.show_Grafiko_ikusi= false;
+      this.show_Iruzkin_ikusi= false;
     },
     showErabiltzaileakIkusi() {
       this.show_datuak_ikusi = false;
@@ -119,6 +128,7 @@ export default {
       this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi= false;
       this.show_Grafiko_ikusi= false;
+      this.show_Iruzkin_ikusi= false;
     },
     showPasahitzaAldatuIkusi() {
       this.show_datuak_ikusi = false;
@@ -129,6 +139,7 @@ export default {
       this.show_PasahitzaAldatu_ikusi = true;
       this.show_FavIkusi_ikusi= false;
       this.show_Grafiko_ikusi= false;
+      this.show_Iruzkin_ikusi= false;
     },
     showFavIkusiIkusi() {
       this.show_datuak_ikusi = false;
@@ -139,6 +150,7 @@ export default {
       this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi= true;
       this.show_Grafiko_ikusi= false;
+      this.show_Iruzkin_ikusi= false;
     },
     showGrafikoIkusi(){
       this.show_datuak_ikusi = false;
@@ -149,6 +161,18 @@ export default {
       this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi= false;
       this.show_Grafiko_ikusi= true;
+      this.show_Iruzkin_ikusi= false;
+    }, 
+    showIruzkinIkusi(){
+      this.show_datuak_ikusi = false;
+      this.show_teknologiak_ikusi = false;
+      this.show_panelakGehitu_ikusi = false;
+      this.show_AldaketakIkusi_ikusi = false;
+      this.show_ErabiltzaileakIkusi_ikusi = false;
+      this.show_PasahitzaAldatu_ikusi = false;
+      this.show_FavIkusi_ikusi= false;
+      this.show_Grafiko_ikusi= false;
+      this.show_Iruzkin_ikusi= true;
     },
     checkAdminStatus() {
       // Hacer una llamada al backend para verificar si el usuario es administrador

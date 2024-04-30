@@ -151,7 +151,8 @@ export default {
       var confirmacion = confirm("¿Seguru erabiltzailea aldatu nahi duzula?");
       if (confirmacion) {
         var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
-
+        localStorage.removeItem('username');
+        localStorage.setItem('username',nuevosValores.username);
         // Hacer la solicitud fetch para cambiar el usuario
         fetch("/cambiar-usuario", {
           method: "POST",

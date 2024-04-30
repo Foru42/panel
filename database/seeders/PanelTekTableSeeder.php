@@ -16,43 +16,43 @@ class PanelTekTableSeeder extends Seeder
                 'panel_id' => 1,
                 'tek_id' => 1,
                 'tek_bertsioa' => 1,
-                'fav' => 'false',
+
             ],
             [
                 'panel_id' => 2,
                 'tek_id' => 1,
                 'tek_bertsioa' => 3,
-                'fav' => 'false',
+
             ],
             [
                 'panel_id' => 3,
                 'tek_id' => 3,
                 'tek_bertsioa' => 3,
-                'fav' => 'false',
+
             ],
             [
                 'panel_id' => 4,
                 'tek_id' => 3,
                 'tek_bertsioa' => 4,
-                'fav' => 'false',
+
             ],
             [
                 'panel_id' => 5,
                 'tek_id' => 5,
                 'tek_bertsioa' => 4,
-                'fav' => 'false',
+
             ],
             [
                 'panel_id' => 6,
                 'tek_id' => 4,
                 'tek_bertsioa' => 6,
-                'fav' => 'false',
+
             ],
             [
                 'panel_id' => 5,
                 'tek_id' => 2,
                 'tek_bertsioa' => 3,
-                'fav' => 'false',
+
             ],
             // Agrega más datos según sea necesario
         ];
