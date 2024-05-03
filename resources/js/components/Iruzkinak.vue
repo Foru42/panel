@@ -1,19 +1,19 @@
 <template>
   <div>
     <!-- Botón para abrir el modal -->
-    <button @click="openModal" class="add-comment-button">Añadir Comentario</button>
+    <button @click="openModal" class="add-comment-button">Iruzkinak gehitu</button>
 
     <!-- Modal para agregar comentario -->
     <div v-if="showModal" class="modal">
       <div class="modal-content">
         <span class="close" @click="closeModal">&times;</span>
-        <h2>Añadir Comentario</h2>
+        <h2>Iruzkina Sartu</h2>
         <form @submit.prevent="addComment">
-          <label for="commentTitle">Título:</label><br>
-          <input type="text" id="commentTitle" v-model="commentTitle"><br>
-          <label for="commentDesk">Descripción:</label><br>
-          <textarea id="commentDesk" v-model="commentDesk"></textarea><br>
-          <button type="submit">Guardar</button>
+          <label for="commentTitle">Izena:</label><br>
+          <input type="text" id="commentTitle" v-model="commentTitle" required><br>
+          <label for="commentDesk">Deskripzioa:</label><br>
+          <textarea id="commentDesk" v-model="commentDesk" required></textarea><br>
+          <button type="submit" class=" bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Gorde</button>
         </form>
       </div>
     </div>
@@ -23,10 +23,41 @@
       <div class="comment-card" v-for="comment in comments" :key="comment.id">
         <div class="comment-header">
           <span class="username">{{ comment.username }}</span>
+          <button
+                class="flex items-center justify-center bg-blue-500 text-white font-bold rounded-full h-8 w-8 mr-2"
+                @click="MostrarEditar(comment.username)"
+              >
+                <i class="fas fa-pencil-alt"></i>
+              </button>
         </div>
-        <div v-for="iruzkin in comment.iruzkinak" :key="iruzkin.id" class="comment-body">
+        <div v-for="iruzkin in comment.iruzkinak" :key="iruzkin.id" class="comment-body" :id="iruzkin.id">
           <div>Title: {{ iruzkin.title }}</div>
           <div>Deskripzioa: {{ iruzkin.desk }}</div>
+          <div v-if="showDeleteIcons && comment.username === selectedUserId">
+            <button  @click="BorrarIruzkin(iruzkin.id)"
+                class=" items-center justify-center bg-red-500 text-white font-bold rounded-full  h-8 w-8 mr-2"
+              >
+                <i class="fas fa-trash-alt"></i>
+              </button>
+              <button @click="editComment(iruzkin.id, iruzkin.title, iruzkin.desk)"
+                class=" items-center justify-center bg-green-500 text-white font-bold rounded-full  h-8 w-8 "
+              >
+              <i class="fas fa-edit"></i>
+              </button>
+          </div>
+        </div>
+        <div v-if="showModalEdit" class="modal">
+        <div class="modal-content">
+          <span class="close" @click="closeModal">&times;</span>
+          <h2>Editatu Iruzkina</h2>
+          <form @submit.prevent="updateIruzkina">
+            <label for="editCommentTitle">Izena:</label><br>
+            <input type="text" id="editCommentTitle" v-model="editCommentTitle" required><br>
+            <label for="editCommentDesk">Deskripzioa:</label><br>
+            <textarea id="editCommentDesk" v-model="editCommentDesk" required></textarea><br>
+            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Gorde</button>
+          </form>
+        </div>
         </div>
       </div>
     </div>
@@ -40,7 +71,10 @@ export default {
       showModal: false,
       commentTitle: '',
       commentDesk: '',
-      comments: [] 
+      comments: [],
+      showDeleteIcons: false,
+      selectedUserId: null,
+      showModalEdit:false
     };
   },
   mounted() {
@@ -52,6 +86,7 @@ export default {
     },
     closeModal() {
       this.showModal = false;
+      this.showModalEdit = false;
     },
     addComment() {
       const userId = localStorage.getItem('username');
@@ -101,10 +136,83 @@ export default {
         console.error('Error:', error);
       });
     },
+    MostrarEditar(userId) {
+      this.selectedUserId = userId; // Establecer el ID del usuario seleccionado
+      this.showDeleteIcons = true; // Mostrar iconos de eliminación
+    },
+
     formatDate(dateString) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       return new Date(dateString).toLocaleDateString(undefined, options);
-    }
+    },
+    BorrarIruzkin(izenburu){
+      var confirmacion = confirm("¿Seguru Panela borratu nahi duzula?");
+      if (confirmacion) {
+        // Obtener el token CSRF de la meta etiqueta
+        var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
+
+        // Realizar la petición AJAX con el token CSRF incluido en la cabecera
+        fetch("/eliminar-iruzkin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfToken,
+          },
+          body: JSON.stringify({ id: izenburu }),
+        })
+          .then((response) => {
+            if (response.ok) {
+               this.fetchComments();
+            } else {
+              // Si hubo un error, mostrar un mensaje de error
+              console.error("Error al eliminar el panel:", response.statusText);
+            }
+          })
+          .catch((error) => {
+            console.error("Error al eliminar el panel:", error);
+          });
+      }
+
+    },
+    editComment(commentId, title, desk) {
+      // Mostrar el modal de edición
+      this.showModalEdit = true;
+      // Establecer los datos del comentario seleccionado en el modal
+      this.editCommentTitle = title;
+      this.editCommentDesk = desk;
+      // Establecer el ID del comentario seleccionado
+      this.selectedCommentId = commentId;
+    },
+    updateIruzkina() {
+      // Crear el objeto de datos del comentario actualizado
+      const updatedCommentData = {
+        id: this.selectedCommentId,
+        title: this.editCommentTitle,
+        desk: this.editCommentDesk
+      };
+
+      // Realizar la solicitud para actualizar el comentario
+      fetch('/update-comment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(updatedCommentData)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Ocurrió un error al actualizar el comentario.');
+        }
+        // Cerrar el modal de edición después de actualizar el comentario
+        this.closeModal();
+        // Volver a cargar los comentarios actualizados
+        this.fetchComments();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    },
   }
 };
 </script>

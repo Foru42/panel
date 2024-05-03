@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h1>Búsqueda de Extensiones</h1>
+    <h1>Luzapenen topaketa</h1>
     <input
       type="text"
       v-model="searchTerm"
       @keyup.enter="realizarBusqueda"
-      placeholder="Buscar extensiones..."
+      placeholder="Extensioak topatu..."
     />
     <div class="card mb-4 shadow-lg rounded-lg overflow-hidden" v-for="resultado in resultados" :key="resultado.izena">
       <div class="card-body">

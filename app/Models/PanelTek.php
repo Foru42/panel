@@ -20,12 +20,12 @@ class PanelTek extends Model
     // Relación con el modelo Panel
     public function panel()
     {
-        return $this->belongsTo(paneInser::class, 'panel_id');
+        return $this->belongsTo(Panelak::class, 'panel_id');
     }
 
     public function teknologia()
     {
-        return $this->belongsTo(Tekinser::class, 'tek_id');
+        return $this->belongsTo(Teknologiak::class, 'tek_id');
     }
 
     public function bertsioa()

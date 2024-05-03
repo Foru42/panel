@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UsuarioController extends Controller
 {
@@ -43,5 +44,27 @@ class UsuarioController extends Controller
 
         // Si necesitas devolver algún mensaje o datos al frontend, puedes hacerlo aquí
         return response()->json(['message' => 'Usuario actualizado correctamente'], 200);
+    }
+    public function cambiarContraseña(Request $request)
+    {
+        $request->validate([
+            'password_actual' => 'required',
+            'password_nueva' => 'required|string|confirmed',
+        ]);
+
+        $usuario = Auth::user();
+
+        // Hashear la contraseña actual proporcionada en el formulario
+        $password_actual_input = $request->password_actual;
+
+        if (!Hash::check($password_actual_input, $usuario->password)) {
+            return response()->json(['error' => 'La contraseña actual no es válida.'], 403);
+        }
+
+        // Si la contraseña actual es válida, procede a cambiarla
+        $usuario->password = Hash::make($request->password_nueva);
+        $usuario->save();
+
+        return response()->json(['message' => 'Contraseña actualizada correctamente'], 200);
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\paneInser;
+use App\Models\Panelak;
 use App\Models\TeknologiaBertsioa;
 use Illuminate\Support\Facades\DB;
 use App\Models\PanelTek;
-use App\Models\Tekinser;
+use App\Models\Teknologiak;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -67,9 +67,9 @@ class PanelTekController extends Controller
         $izena = trim($infoParts[0]);
         $desk = trim($infoParts[1]);
 
-        $teknologia = Tekinser::where('izena', $izena)->where('desk', $desk)->first();
+        $teknologia = Teknologiak::where('izena', $izena)->where('desk', $desk)->first();
 
-        $pane = paneInser::where('izena', $ize)->first();
+        $pane = Panelak::where('izena', $ize)->first();
 
         if ($pane) {
             $id = $pane->id;

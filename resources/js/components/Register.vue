@@ -1,59 +1,45 @@
 <template>
-  <div class="bg-gray-100 flex items-center justify-center h-screen">
-    <div
-      class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col justify-center"
-    >
-      <h1 class="text-center text-2xl font-bold mb-8">Erregistroa</h1>
+
+    <div class="bg-white shadow-md rounded-lg p-8 flex flex-col justify-center max-w-md w-full">
+      <h1 class="text-center text-3xl font-bold text-gray-800 mb-8">¡Erregistratu orain!</h1>
 
       <!-- Mostrar mensaje de error si existe -->
-      <div
-        v-if="error"
-        class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-5"
-        role="alert"
-      >
-        {{ error }}
+      <div v-if="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-5" role="alert">
+        <span class="block font-semibold">¡Ups!.</span>
+        <span>{{ error }}</span>
       </div>
 
-      <!-- Formulario de registro -->
-      <form class="space-y-4" @submit.prevent="register">
-        <div>
-          <label for="username" class="block text-gray-700 font-bold"
-            >Erabiltzailea</label
-          >
-          <input
-            v-model="username"
-            type="text"
-            id="username"
-            name="username"
-            class="form-control"
-            required
-            autofocus
-          />
-        </div>
+      <!-- Mostrar mensaje de éxito si existe -->
+      <div v-if="success" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-5" role="alert">
+        <span class="block font-semibold">¡Erregistro ondo!</span>
+        <span>{{ success }}</span>
+      </div>
 
-        <div>
-          <label for="password" class="block text-gray-700 font-bold">Pasahitza</label>
-          <input
-            v-model="password"
-            type="password"
-            id="password"
-            name="password"
-            class="form-control"
-            required
-          />
-        </div>
+      <!-- Formulario de registro con transiciones -->
+      <transition name="fade">
+        <form class="space-y-4" v-if="!success" @submit.prevent="register">
+          <div>
+            <label for="username" class="block text-gray-800 font-semibold">Erabiltzailea</label>
+            <input v-model="username" type="text" id="username" name="username"
+              class="form-input" required autofocus />
+          </div>
 
-        <div>
-          <button
-            type="submit"
-            class="w-full px-4 py-2 bg-blue-500 text-white hover:bg-blue-700 transition duration-300"
-          >
-            Gorde
-          </button>
-        </div>
-      </form>
+          <div>
+            <label for="password" class="block text-gray-800 font-semibold">Pasahitza</label>
+            <input v-model="password" type="password" id="password" name="password"
+              class="form-input" required />
+          </div>
+
+          <div>
+            <button type="submit" class="w-full px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:bg-purple-700 rounded-lg transition duration-300">
+              Erregistratu!
+            </button>
+          </div>
+          <p class="mt-4 text-center text-white text-sm"><a href="" @click.prevent="showLogin" class="font-medium text-blue-400 hover:text-blue-300 transition duration-300 ease-in-out">Bueltatu!</a></p>
+        </form>
+      </transition>
     </div>
-  </div>
+
 </template>
 
 <script>
@@ -68,14 +54,15 @@ export default {
     };
   },
   methods: {
+    showLogin() {
+    this.$emit('show-login'); // Emitir un evento para indicar al componente padre que debe mostrar el formulario de inicio de sesión
+  },
     register() {
       fetch("/registrar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute("content"),
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
         },
         body: JSON.stringify({
           username: this.username,
@@ -101,7 +88,7 @@ export default {
         })
         .catch((error) => {
           console.error("Error al registrar:", error);
-          this.error = "Error al registrar, por favor intenta de nuevo";
+          this.error = "Errorea erabiltzailea erregistratzen. Badago gure datubasean.";
           this.success = "";
         });
     },
@@ -110,69 +97,10 @@ export default {
 </script>
 
 <style>
-/* Estilos para el contenedor principal */
-.login-page {
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column; /* Alinea los elementos en columna */
-  justify-content: center; /* Centra verticalmente los elementos */
-  align-items: center; /* Centra horizontalmente los elementos */
-  height: 100vh;
-  margin: 0;
-  background-color: #f7f7f7;
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
 }
-
-/* Estilos para el contenedor del formulario de login */
-.login-container {
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Sombra */
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Centra los elementos horizontalmente */
-}
-
-/* Estilos para el título */
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  margin-top: 20px; /* Añade margen superior al título */
-}
-
-/* Estilos para el formulario */
-.form1 {
-  max-width: 300px;
-  margin: 0 auto;
-}
-
-.form1 label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.form1 input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-.form1 button {
-  max-width: 200px; /* Máximo ancho del botón para evitar que se extienda demasiado */
-  padding: 10px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 20px; /* Añadimos margen superior */
-}
-
-.form1 button:hover {
-  background-color: #45a049;
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -2,7 +2,7 @@
   <form id="pass" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
     <div class="mb-4">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="password_actual">
-        Contraseña actual
+        Zure pasahitza
       </label>
       <input
         v-model="password_actual"
@@ -19,7 +19,7 @@
 
     <div class="mb-4">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="password_nueva">
-        Nueva contraseña
+        Pasahitza berria
       </label>
       <input
         v-model="password_nueva"
@@ -36,7 +36,7 @@
         class="block text-gray-700 text-sm font-bold mb-2"
         for="password_nueva_confirmation"
       >
-        Confirmar nueva contraseña
+        Konfirmatu pasahitz berria
       </label>
       <input
         v-model="password_nueva_confirmation"
@@ -61,7 +61,7 @@
       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
       @click="cambiarContra"
     >
-      Cambiar contraseña
+      Pasahitza Aldatu
     </button>
   </form>
 </template>

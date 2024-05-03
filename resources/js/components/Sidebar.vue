@@ -1,6 +1,6 @@
 
 <template>
-  <div id="sidebar" class="bg-gray-800 text-white h-screen">
+   <div id="sidebar" class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white h-screen">
     <div class="sidebar-brand py-4 px-6">
       Kontrol Panela<br>
       <span class="block">Aupa {{ username }}</span>
@@ -17,7 +17,7 @@
       <a href="#" id="panel9" class="sidebar-menu-item hover:bg-gray-700 py-2 px-6 block" @click.prevent="showIruzkinIkusi">Iruzkinak Ikusi/Egin</a>
 
 
-      <button @click="logout" class="w-full px-6 py-2 bg-red-600 text-white hover:bg-red-700 transition duration-300 mt-6">Logout</button>
+      <button @click="logout" class="w-full rounded-full px-6 py-2 bg-purple-400 text-white hover:bg-purple-500 transition duration-300 mt-6">Logout</button>
     </div>
   </div>
 </template>

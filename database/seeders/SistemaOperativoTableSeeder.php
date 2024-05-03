@@ -12,12 +12,12 @@ class SistemaOperativoTableSeeder extends Seeder
         DB::table('sistema_operativo')->truncate(); // Elimina todos los registros de la tabla antes de insertar nuevos
 
         $sistemasOperativos = [
-            ['izena' => 'Ubuntu 18', 'desk' => 'Laravel montado en esta version'],
-            ['izena' => 'Docker', 'desk' => 'Para desarrollo y despliegue'],
-            ['izena' => 'Debian', 'desk' => 'Para la parte del servidor'],
-            ['izena' => 'Windows 10', 'desk' => 'Sistema operativo comúnmente utilizado por los usuarios finales'],
-            ['izena' => 'CentOS 7', 'desk' => 'Sistema operativo Linux utilizado en servidores'],
-            ['izena' => 'Android', 'desk' => 'Sistema operativo móvil utilizado en dispositivos como smartphones y tablets'],
+            ['izena' => 'Ubuntu 18', 'desk' => 'Laravel bertsio honetan muntatua'],
+            ['izena' => 'Docker', 'desk' => 'Garatzeko eta hedatzeko'],
+            ['izena' => 'Debian', 'desk' => 'Zerbitzariaren zatirako'],
+            ['izena' => 'Windows 10', 'desk' => 'Azken erabiltzaileek erabili ohi duten sistema eragilea'],
+            ['izena' => 'CentOS 7', 'desk' => 'Zerbitzarietan erabilitako Linux sistema eragilea'],
+            ['izena' => 'Android', 'desk' => 'Smartphone eta tabletak bezalako gailuetan erabiltzen den sistema eragile mugikorra'],
             // Agrega más datos según sea necesario
         ];
 

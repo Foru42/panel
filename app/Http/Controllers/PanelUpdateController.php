@@ -2,8 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\PanelTek;
-use App\Models\paneInser;
-use App\Models\Tekinser;
+use App\Models\Panelak;
+use App\Models\Teknologiak;
 use App\Models\TeknologiaBertsioa;
 use Illuminate\Http\Request;
 
@@ -20,7 +20,7 @@ class PanelUpdateController extends Controller
             ['izena' => $nuevosValores['bertsioa']['izena']]
         );
 
-        $nuevaTeknologia = Tekinser::where('izena', $nuevosValores['teknologia']['izena'])->first();
+        $nuevaTeknologia = Teknologiak::where('izena', $nuevosValores['teknologia']['izena'])->first();
 
         if ($nuevaTeknologia) {
             // Si la tecnología ya existe, actualiza el campo 'desk'
@@ -28,26 +28,26 @@ class PanelUpdateController extends Controller
             $nuevaTeknologia->save();
         } else {
             // Si no existe, crea una nueva entrada en la tabla Tekinser
-            $nuevaTeknologia = Tekinser::create([
+            $nuevaTeknologia = Teknologiak::create([
                 'izena' => $nuevosValores['teknologia']['izena'],
                 'desk' => $nuevosValores['teknologia']['desk']
             ]);
         }
 
-        $panelIMG = paneInser::where('izena', $nuevosValores['panel']['izena'])
+        $panelIMG = Panelak::where('izena', $nuevosValores['panel']['izena'])
             ->first();
 
         if ($panelIMG) {
             $imagen = $panelIMG->irudi;
         }
         // Verificar si el panel ya existe en la tabla paneInser
-        $panel = paneInser::where('izena', $nuevosValores['panel']['izena'])
+        $panel = Panelak::where('izena', $nuevosValores['panel']['izena'])
             ->where('desk', $nuevosValores['panel']['desk'])
             ->first();
 
         if (!$panel) {
             // Si no existe, crear un nuevo registro en paneInser
-            $panel = new paneInser();
+            $panel = new Panelak();
             $panel->izena = $nuevosValores['panel']['izena'];
             $panel->desk = $nuevosValores['panel']['desk'];
             $panel->irudi = $imagen;

@@ -27,6 +27,12 @@ class CreateUserController extends Controller
             return response()->json(['error' => $validator->errors()->first()], 422);
         }
 
+        // Verificar si el nombre de usuario ya existe
+        $existingUser = User::where('username', $request->username)->first();
+        if ($existingUser) {
+            return response()->json(['error' => 'El nombre de usuario ya está registrado'], 422);
+        }
+
         // Crear un nuevo usuario en la base de datos
         $user = new User();
         $user->username = $request->username;

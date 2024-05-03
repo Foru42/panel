@@ -14,11 +14,11 @@ class TeknologiakTableSeeder extends Seeder
         $teknologiak = [
             ['izena' => 'PHP', 'desk' => 'Php datu basearen konexiak egiteko'],
             ['izena' => 'JavaScript', 'desk' => 'JS Frontenda egiteko, botoien kontrolak...'],
-            ['izena' => 'Blade.php', 'desk' => 'Laraveleko View-ak egiteko'],
-            ['izena' => 'Python', 'desk' => 'Lenguaje de programación utilizado en diversos campos como desarrollo web, análisis de datos y machine learning'],
-            ['izena' => 'React', 'desk' => 'Biblioteca de JavaScript utilizada para construir interfaces de usuario interactivas'],
-            ['izena' => 'Django', 'desk' => 'Framework de desarrollo web de alto nivel en Python, que fomenta el desarrollo rápido y limpio'],
-            // Agrega más datos según sea necesario
+            ['izena' => 'Blade.php', 'desk' => 'Laraveleko View ak egiteko'],
+            ['izena' => 'Python', 'desk' => 'Hainbat eremutan erabiltzen den programazio-lengoaia, hala nola web-garapenean, datuen analisian eta machine learningean.'],
+            ['izena' => 'React', 'desk' => 'JavaScripten liburutegia, erabiltzaile-interfaze interaktiboak eraikitzeko erabiltzen dena'],
+            ['izena' => 'Django', 'desk' => 'Goi mailako web-garapeneko framework-a Python-en, garapen azkarra eta garbia sustatzen duena'],
+
         ];
 
         foreach ($teknologiak as $teknologia) {

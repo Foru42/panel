@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\paneInser;
-use App\Models\Tekinser;
+use App\Models\Panelak;
+use App\Models\Teknologiak;
 use App\Models\TeknologiaBertsioa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\PanelTek;
 
 class PanelakController extends Controller
 {
@@ -33,7 +34,7 @@ class PanelakController extends Controller
         $imagePath = 'img/' . $imageName;
 
         // Crear un nuevo panel en paneInser
-        $panel = paneInser::create([
+        $panel = Panelak::create([
             'izena' => $request->izenapane,
             'desk' => $request->desk,
             'irudi' => $imagePath, // Guardar la ruta de la imagen
@@ -41,7 +42,7 @@ class PanelakController extends Controller
         ]);
 
         // Crear un nuevo registro en Tekinser y obtener su ID
-        $tekinser = Tekinser::create([
+        $tekinser = Teknologiak::create([
             'izena' => $request->izenatek,
             'desk' => $request->desktek,
         ]);
@@ -63,5 +64,22 @@ class PanelakController extends Controller
 
         // Redireccionar a la vista del formulario con un mensaje de éxito
         return response()->json(['message' => 'Los datos se han guardado correctamente'], 200);
+    }
+    public function eliminar(Request $request)
+    {
+        $panelTekId = $request->input('panelTekId');
+        // Buscar el registro de PanelTek por su ID
+        $panelTek = PanelTek::find($panelTekId);
+
+
+
+        if ($panelTek) {
+            // Si se encuentra el registro, eliminarlo
+            $panelTek->delete();
+            return response()->json(['success' => true, 'message' => 'Registro de PanelTek eliminado correctamente']);
+        } else {
+            // Si no se encuentra el registro, devolver un mensaje de error
+            return response()->json(['success' => false, 'message' => 'El registro de PanelTek no existe']);
+        }
     }
 }

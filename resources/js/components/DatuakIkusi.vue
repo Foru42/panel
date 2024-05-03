@@ -2,18 +2,32 @@
   <div>
     <div v-if="groupedInfo && groupedInfo.length">
       <select v-model="selectedPanel">
-        <option disabled value="">Selecciona un panel</option>
+        <option disabled value="">Aukeratu panel bat</option>
         <option v-for="panel in uniquePanels" :value="panel">{{ panel }}</option>
       </select>
     </div>
     <div v-else>
-      <p>No hay datos disponibles</p>
+      <p>Ez dago daturik</p>
     </div>
-
+    <div class="pagination flex justify-center items-center mt-8">
+      <button
+        @click="previousPage"
+        :disabled="!canGoPrevious"
+        class="pagination-btn mr-2"
+      >
+        <i class="fas fa-angle-double-left"></i>
+      </button>
+      <span class="pagination-info"
+        >{{ currentPage }} <i class="fas fa-ellipsis-h"></i> {{ totalPages }}</span
+      >
+      <button @click="nextPage" :disabled="!canGoNext" class="pagination-btn ml-2">
+        <i class="fas fa-angle-double-right"></i>
+      </button>
+    </div>
+    <br />
     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <div
         v-for="(info, index) in paginatedInfo"
-      
         class="card mb-4 shadow-lg rounded-lg overflow-hidden w-full"
       >
         <div class="flex justify-between items-center mb-2">
@@ -73,28 +87,24 @@
           @click="guardarCambios(info.id, info.selectedSO)"
           v-show="info.editing"
         >
-          Guardar
+          Gorde
         </button>
         <!-- Estrella -->
-<!-- Dentro del bucle v-for donde renderizas cada tarjeta -->
-<button
-  v-if="!info.editing"
-  class="star-icon absolute bottom-2 right-2"
-  @click="toggleStar(info, info.id)"
->
-  <i :class="{ 'fas fa-star text-yellow-500': info.usuarios_que_lo_favoritan.length > 0, 'far fa-star text-gray-400': info.usuarios_que_lo_favoritan.length === 0 }"></i>
-</button>
-
-       
+        <!-- Dentro del bucle v-for donde renderizas cada tarjeta -->
+        <button
+          v-if="!info.editing"
+          class="star-icon absolute bottom-2 right-2"
+          @click="toggleStar(info, info.id)"
+        >
+          <i
+            :class="{
+              'fas fa-star text-yellow-500': info.usuarios_que_lo_favoritan.length > 0,
+              'far fa-star text-gray-400': info.usuarios_que_lo_favoritan.length === 0,
+            }"
+          ></i>
+        </button>
       </div>
     </div>
-
-    <div v-if="!selectedPanel && totalPages > 1">
-  <button @click="previousPage" :disabled="!canGoPrevious">Lehen </button>
-  <span> {{ currentPage }} / {{ totalPages }}</span>
-  <button @click="nextPage" :disabled="!canGoNext">Hurrengo</button>
-</div>
-
   </div>
 </template>
 
@@ -106,33 +116,32 @@ export default {
       groupedInfo: [],
       sistemasOperativos: [],
       selectedPanel: "",
-      currentPage:1 ,
+      currentPage: 1,
       pageSize: 3,
     };
   },
   computed: {
-        uniquePanels() {
-          return Array.from(new Set(this.groupedInfo.map((info) => info.panel.izena)));
-        },
-        filteredInfo() {
-          if (!this.selectedPanel) return this.groupedInfo;
-          return this.groupedInfo.filter((info) => info.panel.izena === this.selectedPanel);
-        },
-      totalPages() {
-      
-        if (!this.selectedPanel) {
-          return Math.ceil(this.filteredInfo.length / this.pageSize)+' ';
-    }else {
-    // Si hay un panel seleccionado, no hay paginación, así que solo hay una página
-    return 1;
-   }
+    uniquePanels() {
+      return Array.from(new Set(this.groupedInfo.map((info) => info.panel.izena)));
+    },
+    filteredInfo() {
+      if (!this.selectedPanel) return this.groupedInfo;
+      return this.groupedInfo.filter((info) => info.panel.izena === this.selectedPanel);
+    },
+    totalPages() {
+      if (!this.selectedPanel) {
+        return Math.ceil(this.filteredInfo.length / this.pageSize) + " ";
+      } else {
+        // Si hay un panel seleccionado, no hay paginación, así que solo hay una página
+        return 1;
+      }
     },
     paginatedInfo() {
       if (!this.selectedPanel) {
-      const startIndex = (this.currentPage - 1) * this.pageSize;
-      const endIndex = startIndex + this.pageSize;
-      return this.filteredInfo.slice(startIndex, endIndex);
-      }else{
+        const startIndex = (this.currentPage - 1) * this.pageSize;
+        const endIndex = startIndex + this.pageSize;
+        return this.filteredInfo.slice(startIndex, endIndex);
+      } else {
         return this.filteredInfo;
       }
     },
@@ -204,7 +213,7 @@ export default {
         const editingCards = this.groupedInfo.filter((item) => item.editing);
         // Si hay tarjetas en modo de edición, mostrar alerta y salir
         if (editingCards.length > 0) {
-          alert("No puedes editar dos tarjetas a la vez.");
+          alert("Ezin dituzu bi tarjeta batera editatu.");
           return;
         }
         // Establecer el valor seleccionado en el valor actual del sistema operativo
@@ -218,9 +227,6 @@ export default {
       const panelIndex = this.groupedInfo.findIndex((info) => info.id === panelId);
       if (panelIndex !== -1) {
         const panel = this.groupedInfo[panelIndex];
-        console.log("Valores antiguos:", panel);
-
-        // Desactivar la edición
         panel.editing = false;
 
         var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
@@ -267,7 +273,7 @@ export default {
       var Tek = tarjeta.querySelector(".teknologia").textContent;
       var Ber = tarjeta.querySelector(".bertsioa").textContent;
 
-      var cantidad = prompt("Por favor, introduce la cantidad de paneles a añadir:");
+      var cantidad = prompt("Mesedez jarri zenbat panel nahi dituzun gehitu.");
       // Verificar si el usuario canceló el prompt
       if (cantidad === null) {
         return; // No hacer nada si se cancela el prompt
@@ -289,8 +295,6 @@ export default {
         })
           .then((response) => {
             if (response.ok) {
-              // Si la adición fue exitosa, puedes realizar cualquier acción necesaria
-              console.log("Panel añadido exitosamente");
               window.location.reload(); // Recargar la página para mostrar los cambios
             } else {
               // Si hubo un error, mostrar un mensaje de error
@@ -301,11 +305,10 @@ export default {
             console.error("Error al añadir panel:", error);
           });
       } else {
-        alert("Por favor, introduce una cantidad menor a 11");
+        alert("Mesedez 11 baino txikiago");
       }
     },
     toggleStar: debounce(function (info, id) {
-
       fetch(`/anadir-fav`, {
         method: "POST",
         headers: {
@@ -314,7 +317,7 @@ export default {
             .querySelector('meta[name="csrf-token"]')
             .getAttribute("content"),
         },
-        body: JSON.stringify({ id: id, userID: localStorage.getItem('username') }), // Enviar el nuevo estado de fav al servidor
+        body: JSON.stringify({ id: id, userID: localStorage.getItem("username") }), // Enviar el nuevo estado de fav al servidor
       })
         .then((response) => {
           if (!response.ok) {
@@ -344,7 +347,6 @@ export default {
         this.currentPage--;
       }
     },
-    
   },
 };
 </script>
@@ -355,5 +357,8 @@ export default {
 
 .card {
   position: relative; /* Asegura que los elementos absolutamente posicionados dentro de la tarjeta sean relativos a ella */
+}
+.pagination {
+  left: 20%;
 }
 </style>

@@ -9,12 +9,14 @@ class Iruzkina extends Model
 {
     protected $table = 'iruzkinak';
     protected $fillable = [
+        'id',
+        'user_id',
         'title',
         'desk',
     ];
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->onDelete('cascade');
     }
 
 }
