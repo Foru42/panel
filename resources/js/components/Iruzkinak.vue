@@ -9,11 +9,16 @@
         <span class="close" @click="closeModal">&times;</span>
         <h2>Iruzkina Sartu</h2>
         <form @submit.prevent="addComment">
-          <label for="commentTitle">Izena:</label><br>
-          <input type="text" id="commentTitle" v-model="commentTitle" required><br>
-          <label for="commentDesk">Deskripzioa:</label><br>
-          <textarea id="commentDesk" v-model="commentDesk" required></textarea><br>
-          <button type="submit" class=" bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Gorde</button>
+          <label for="commentTitle">Izena:</label><br />
+          <input type="text" id="commentTitle" v-model="commentTitle" required /><br />
+          <label for="commentDesk">Deskripzioa:</label><br />
+          <textarea id="commentDesk" v-model="commentDesk" required></textarea><br />
+          <button
+            type="submit"
+            class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          >
+            Gorde
+          </button>
         </form>
       </div>
     </div>
@@ -24,40 +29,58 @@
         <div class="comment-header">
           <span class="username">{{ comment.username }}</span>
           <button
-                class="flex items-center justify-center bg-blue-500 text-white font-bold rounded-full h-8 w-8 mr-2"
-                @click="MostrarEditar(comment.username)"
-              >
-                <i class="fas fa-pencil-alt"></i>
-              </button>
+            class="flex items-center justify-center bg-blue-500 text-white font-bold rounded-full h-8 w-8 mr-2"
+            @click="MostrarEditar(comment.username)"
+          >
+            <i class="fas fa-pencil-alt"></i>
+          </button>
         </div>
-        <div v-for="iruzkin in comment.iruzkinak" :key="iruzkin.id" class="comment-body" :id="iruzkin.id">
+        <div
+          v-for="iruzkin in comment.iruzkinak"
+          :key="iruzkin.id"
+          class="comment-body"
+          :id="iruzkin.id"
+        >
           <div>Title: {{ iruzkin.title }}</div>
           <div>Deskripzioa: {{ iruzkin.desk }}</div>
           <div v-if="showDeleteIcons && comment.username === selectedUserId">
-            <button  @click="BorrarIruzkin(iruzkin.id)"
-                class=" items-center justify-center bg-red-500 text-white font-bold rounded-full  h-8 w-8 mr-2"
-              >
-                <i class="fas fa-trash-alt"></i>
-              </button>
-              <button @click="editComment(iruzkin.id, iruzkin.title, iruzkin.desk)"
-                class=" items-center justify-center bg-green-500 text-white font-bold rounded-full  h-8 w-8 "
-              >
+            <button
+              @click="BorrarIruzkin(iruzkin.id)"
+              class="items-center justify-center bg-red-500 text-white font-bold rounded-full h-8 w-8 mr-2"
+            >
+              <i class="fas fa-trash-alt"></i>
+            </button>
+            <button
+              @click="editComment(iruzkin.id, iruzkin.title, iruzkin.desk)"
+              class="items-center justify-center bg-green-500 text-white font-bold rounded-full h-8 w-8"
+            >
               <i class="fas fa-edit"></i>
-              </button>
+            </button>
           </div>
         </div>
         <div v-if="showModalEdit" class="modal">
-        <div class="modal-content">
-          <span class="close" @click="closeModal">&times;</span>
-          <h2>Editatu Iruzkina</h2>
-          <form @submit.prevent="updateIruzkina">
-            <label for="editCommentTitle">Izena:</label><br>
-            <input type="text" id="editCommentTitle" v-model="editCommentTitle" required><br>
-            <label for="editCommentDesk">Deskripzioa:</label><br>
-            <textarea id="editCommentDesk" v-model="editCommentDesk" required></textarea><br>
-            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Gorde</button>
-          </form>
-        </div>
+          <div class="modal-content">
+            <span class="close" @click="closeModal">&times;</span>
+            <h2>Editatu Iruzkina</h2>
+            <form @submit.prevent="updateIruzkina">
+              <label for="editCommentTitle">Izena:</label><br />
+              <input
+                type="text"
+                id="editCommentTitle"
+                v-model="editCommentTitle"
+                required
+              /><br />
+              <label for="editCommentDesk">Deskripzioa:</label><br />
+              <textarea id="editCommentDesk" v-model="editCommentDesk" required></textarea
+              ><br />
+              <button
+                type="submit"
+                class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+              >
+                Gorde
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -69,12 +92,12 @@ export default {
   data() {
     return {
       showModal: false,
-      commentTitle: '',
-      commentDesk: '',
+      commentTitle: "",
+      commentDesk: "",
       comments: [],
       showDeleteIcons: false,
       selectedUserId: null,
-      showModalEdit:false
+      showModalEdit: false,
     };
   },
   mounted() {
@@ -89,52 +112,56 @@ export default {
       this.showModalEdit = false;
     },
     addComment() {
-      const userId = localStorage.getItem('username');
+      const userId = localStorage.getItem("username");
       const commentData = {
         title: this.commentTitle,
         desk: this.commentDesk,
-        username: userId
+        username: userId,
       };
 
-      fetch('/add-iruzkin', {
-        method: 'POST',
+      fetch("/add-iruzkin", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
         },
-        body: JSON.stringify(commentData)
+        body: JSON.stringify(commentData),
       })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Ocurrió un error al procesar la solicitud.');
-        }
-        this.closeModal();
-        this.fetchComments();
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Ocurrió un error al procesar la solicitud.");
+          }
+          this.closeModal();
+          this.fetchComments();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     },
     fetchComments() {
-      fetch('/show-iruzkin', {
-        method: 'GET',
+      fetch("/show-iruzkin", {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
         },
       })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Ocurrió un error al procesar la solicitud.');
-        }
-        return response.json();
-      })
-      .then(data => {
-        this.comments = data;
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Ocurrió un error al procesar la solicitud.");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          this.comments = data;
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     },
     MostrarEditar(userId) {
       this.selectedUserId = userId; // Establecer el ID del usuario seleccionado
@@ -142,10 +169,10 @@ export default {
     },
 
     formatDate(dateString) {
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const options = { year: "numeric", month: "long", day: "numeric" };
       return new Date(dateString).toLocaleDateString(undefined, options);
     },
-    BorrarIruzkin(izenburu){
+    BorrarIruzkin(izenburu) {
       var confirmacion = confirm("¿Seguru Panela borratu nahi duzula?");
       if (confirmacion) {
         // Obtener el token CSRF de la meta etiqueta
@@ -162,7 +189,7 @@ export default {
         })
           .then((response) => {
             if (response.ok) {
-               this.fetchComments();
+              this.fetchComments();
             } else {
               // Si hubo un error, mostrar un mensaje de error
               console.error("Error al eliminar el panel:", response.statusText);
@@ -172,7 +199,6 @@ export default {
             console.error("Error al eliminar el panel:", error);
           });
       }
-
     },
     editComment(commentId, title, desk) {
       // Mostrar el modal de edición
@@ -188,46 +214,48 @@ export default {
       const updatedCommentData = {
         id: this.selectedCommentId,
         title: this.editCommentTitle,
-        desk: this.editCommentDesk
+        desk: this.editCommentDesk,
       };
 
       // Realizar la solicitud para actualizar el comentario
-      fetch('/update-comment', {
-        method: 'POST',
+      fetch("/update-comment", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
         },
-        body: JSON.stringify(updatedCommentData)
+        body: JSON.stringify(updatedCommentData),
       })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Ocurrió un error al actualizar el comentario.');
-        }
-        // Cerrar el modal de edición después de actualizar el comentario
-        this.closeModal();
-        // Volver a cargar los comentarios actualizados
-        this.fetchComments();
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Ocurrió un error al actualizar el comentario.");
+          }
+          // Cerrar el modal de edición después de actualizar el comentario
+          this.closeModal();
+          // Volver a cargar los comentarios actualizados
+          this.fetchComments();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     },
-  }
+  },
 };
 </script>
 
 <style>
 /* Estilos para el modal */
 .modal {
-  position: fixed; 
-  z-index: 2; 
+  position: fixed;
+  z-index: 2;
   left: 0;
   top: 0;
-  width: 100%; 
-  height: 100%; 
-  overflow: auto; 
-  background-color: rgba(0,0,0,0.4);
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
@@ -290,7 +318,7 @@ export default {
   margin-bottom: 0;
 }
 .add-comment-button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border: none;
   color: white;
   padding: 10px 20px;

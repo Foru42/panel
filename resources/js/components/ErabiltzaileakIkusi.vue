@@ -1,5 +1,11 @@
 <template>
-  <div id="pertsonak" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+  <div id="pertsonak">
+    <button
+      @click="addErabiltzaile"
+      class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+    >
+      Erabiltzailea Gehitu
+    </button>
     <table
       id="tablaUsuarios"
       class="w-full divide-y divide-gray-200 shadow-md rounded-lg"
@@ -76,27 +82,37 @@
     </table>
 
     <!-- Botón para abrir el modal -->
-    <button @click="addErabiltzaile" class="fixed right-5 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-     Erabiltzailea Gehitu
-    </button>
+
     <transition name="modal-slide">
       <div v-if="showModal" class="fixed inset-0 flex items-center justify-center z-50">
         <div class="fixed inset-0 bg-black opacity-50"></div>
-        <div class="bg-white rounded-lg p-8 max-w-md w-full transform transition-transform ease-out duration-300">
-          <label for="UsuErab">Erabiltzailea:</label><br>
-          <input type="text" id="UsuErab" v-model="erabil"><br>
-          <label for="UsuPass">Pasahitza:</label><br>
-          <input type="text" id="UsuPass" v-model="pass"><br>
+        <div
+          class="bg-white rounded-lg p-8 max-w-md w-full transform transition-transform ease-out duration-300"
+        >
+          <label for="UsuErab">Erabiltzailea:</label><br />
+          <input type="text" id="UsuErab" v-model="erabil" /><br />
+          <label for="UsuPass">Pasahitza:</label><br />
+          <input type="text" id="UsuPass" v-model="pass" /><br />
 
           <!-- Mostrar mensaje de error -->
           <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
 
           <!-- Aquí va el formulario para añadir usuario -->
           <div class="flex justify-end mt-4">
-            <button @click="storeErabiltzaile" class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-500">Gehitu</button>
-            <button @click="closeModal" class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500 ml-2">Sarratu</button>
+            <button
+              @click="storeErabiltzaile"
+              class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-500"
+            >
+              Gehitu
+            </button>
+            <button
+              @click="closeModal"
+              class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500 ml-2"
+            >
+              Sarratu
+            </button>
           </div>
-      </div>
+        </div>
       </div>
     </transition>
   </div>
@@ -107,10 +123,10 @@ export default {
   data() {
     return {
       usuarios: [],
-      erabil: '',
-      pass: '',
+      erabil: "",
+      pass: "",
       showModal: false,
-      errorMessage: '',
+      errorMessage: "",
     };
   },
   mounted() {
@@ -180,8 +196,8 @@ export default {
       var confirmacion = confirm("¿Seguru erabiltzailea aldatu nahi duzula?");
       if (confirmacion) {
         var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
-        localStorage.removeItem('username');
-        localStorage.setItem('username',nuevosValores.username);
+        localStorage.removeItem("username");
+        localStorage.setItem("username", nuevosValores.username);
         // Hacer la solicitud fetch para cambiar el usuario
         fetch("/cambiar-usuario", {
           method: "POST",
@@ -210,63 +226,64 @@ export default {
           });
       }
     },
-    addErabiltzaile(){
+    addErabiltzaile() {
       this.showModal = true;
     },
     closeModal() {
       this.showModal = false;
     },
     storeErabiltzaile() {
-    var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
+      var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
 
-    // Preparar los datos del nuevo usuario
-    const userData = {
-      username: this.erabil,
-      password: this.pass,
-      // Otros datos del usuario si es necesario
-      // Por ejemplo: isAdmin: true/false
-    };
+      // Preparar los datos del nuevo usuario
+      const userData = {
+        username: this.erabil,
+        password: this.pass,
+        // Otros datos del usuario si es necesario
+        // Por ejemplo: isAdmin: true/false
+      };
 
-    // Hacer la solicitud fetch para registrar al nuevo usuario
-    fetch("/registrar", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": csrfToken,
-      },
-      body: JSON.stringify(userData),
-    })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error al registrar el usuario");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      // Si hay un error, mostrar el mensaje de error en el modal
-      if (data.error) {
-        this.errorMessage = data.error;
-      } else {
-        this.showModal = false;
-        window.location.reload();
-      }
-    })
-    .catch((error) => {
-      // Manejar los errores si ocurren durante el registro
-      this.errorMessage = "Usuario ya registrado";
-      console.error("Error al registrar el usuario:", error);
-    });
-  },
-
+      // Hacer la solicitud fetch para registrar al nuevo usuario
+      fetch("/registrar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": csrfToken,
+        },
+        body: JSON.stringify(userData),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error al registrar el usuario");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // Si hay un error, mostrar el mensaje de error en el modal
+          if (data.error) {
+            this.errorMessage = data.error;
+          } else {
+            this.showModal = false;
+            window.location.reload();
+          }
+        })
+        .catch((error) => {
+          // Manejar los errores si ocurren durante el registro
+          this.errorMessage = "Usuario ya registrado";
+          console.error("Error al registrar el usuario:", error);
+        });
+    },
   },
 };
 </script>
 
 <style>
-.modal-slide-enter-active, .modal-slide-leave-active {
+.modal-slide-enter-active,
+.modal-slide-leave-active {
   transition: transform 0.5s ease-out;
 }
-.modal-slide-enter, .modal-slide-leave-to {
+.modal-slide-enter,
+.modal-slide-leave-to {
   transform: translateY(-100%);
 }
 </style>

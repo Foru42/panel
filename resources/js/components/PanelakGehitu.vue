@@ -117,7 +117,7 @@ export default {
     };
   },
   mounted() {
-    // Llama a la función para cargar los datos de los sistemas operativos
+    this.changePaneTextColor();
     this.cargarSistemasOperativos();
   },
   methods: {
@@ -182,6 +182,14 @@ export default {
         .catch((error) => {
           console.error("Error al obtener los sistemas operativos", error);
         });
+    },
+    changePaneTextColor() {
+      const koloreak = localStorage.getItem("anadir");
+
+      const element = document.getElementById("anadir");
+      if (koloreak) {
+        element.style.color = koloreak;
+      }
     },
   },
 };

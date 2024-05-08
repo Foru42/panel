@@ -9,7 +9,7 @@
     <div v-else>
       <p>Ez dago daturik</p>
     </div>
-    <div class="pagination flex justify-center items-center mt-8">
+    <div id="paginador" class="pagination flex justify-center items-center mt-8">
       <button
         @click="previousPage"
         :disabled="!canGoPrevious"
@@ -149,6 +149,7 @@ export default {
   mounted() {
     this.allDatos();
     this.obtenerSistemasOperativos();
+    this.ChangeColor();
   },
   methods: {
     allDatos() {
@@ -345,6 +346,15 @@ export default {
     previousPage() {
       if (this.canGoPrevious()) {
         this.currentPage--;
+      }
+    },
+    ChangeColor() {
+      const koloreak = localStorage.getItem("datuakIkusi");
+
+      const element = document.getElementById("paginador");
+
+      if (koloreak) {
+        element.style.color = koloreak;
       }
     },
   },

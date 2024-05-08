@@ -1,13 +1,17 @@
 <template>
   <div>
-    <h1>Luzapenen topaketa</h1>
+    <h1 id="Topatek">Luzapenen topaketa</h1>
     <input
       type="text"
       v-model="searchTerm"
       @keyup.enter="realizarBusqueda"
       placeholder="Extensioak topatu..."
     />
-    <div class="card mb-4 shadow-lg rounded-lg overflow-hidden" v-for="resultado in resultados" :key="resultado.izena">
+    <div
+      class="card mb-4 shadow-lg rounded-lg overflow-hidden"
+      v-for="resultado in resultados"
+      :key="resultado.izena"
+    >
       <div class="card-body">
         <h5 class="card-title">{{ resultado.izena }}</h5>
         <p class="card-text"><strong>Panelak:</strong></p>
@@ -27,9 +31,12 @@ export default {
       resultados: [],
     };
   },
+  mounted() {
+    this.ChangeColor();
+  },
   methods: {
     realizarBusqueda(event) {
-      if (event.key === 'Enter') {
+      if (event.key === "Enter") {
         this.buscarExtensiones();
       }
     },
@@ -55,6 +62,13 @@ export default {
         .catch((error) => {
           console.error("Error al buscar extensiones:", error);
         });
+    },
+    ChangeColor() {
+      const koloreak = localStorage.getItem("tek");
+      const element = document.getElementById("Topatek");
+      if (koloreak) {
+        element.style.color = koloreak;
+      }
     },
   },
 };

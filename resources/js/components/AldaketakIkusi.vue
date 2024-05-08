@@ -1,14 +1,27 @@
 <template>
   <div id="aldaketak" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-    <div v-for="item in data" :key="item.id" class="md:flex md:justify-center md:items-center mb-8">
-      <div class="card mb-4 shadow-lg rounded-lg overflow-hidden w-full">
-        <img :src="item.panel.irudi" class="w-full h-64 object-cover" :alt="item.panel.izena">
+    <div
+      v-for="item in data"
+      :key="item.id"
+      class="md:flex md:justify-center md:items-center mb-8"
+    >
+      <div class="card mb-4 shadow-lg rounded-lg overflow-hidden w-full car">
+        <img
+          :src="item.panel.irudi"
+          class="w-full object-cover"
+          :alt="item.panel.izena"
+        />
         <div class="px-6 py-4">
           <div class="font-bold text-xl mb-2">{{ item.panel.izena }}</div>
           <p class="text-gray-700 text-base mb-2">{{ item.panel.desk }}</p>
-          <p class="text-gray-700 text-base mb-2">{{ item.teknologia.izena }} - {{ item.teknologia.desk }}</p>
+          <p class="text-gray-700 text-base mb-2">
+            {{ item.teknologia.izena }} - {{ item.teknologia.desk }}
+          </p>
           <p class="text-gray-700 text-base mb-2">{{ item.bertsioa.izena }}</p>
-          <p class="text-gray-700 text-base mb-2">{{ item.panel.sistema_operativo.izena }} - {{ item.panel.sistema_operativo.desk }}</p>
+          <p class="text-gray-700 text-base mb-2">
+            {{ item.panel.sistema_operativo.izena }} -
+            {{ item.panel.sistema_operativo.desk }}
+          </p>
         </div>
       </div>
     </div>
@@ -63,5 +76,7 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos */
+.car {
+  min-height: 100%; /* Puedes ajustar este valor según tus necesidades */
+}
 </style>
