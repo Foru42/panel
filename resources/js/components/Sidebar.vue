@@ -1,13 +1,15 @@
 <template>
   <div>
-    <!-- Icono para abrir el sidebar -->
-    <button @click="toggleSidebar" class="open-sidebar-icon">☰</button>
+    <!-- Botón para abrir/cerrar el sidebar -->
+    <button id="sidebaricon" @click="toggleSidebar" class="open-sidebar-icon">☰</button>
 
+    <!-- Contenido del sidebar -->
     <div id="sidebar" :class="{ 'sidebar-hidden': !showSidebar }" class="h-screen">
       <div class="sidebar-brand py-4 px-6">
         Kontrol Panela<br />
         <span class="block">Aupa {{ username }}</span>
       </div>
+
       <div class="sidebar-menu transition duration-300">
         <a
           v-if="isAdmin"
@@ -82,6 +84,12 @@
           @click.prevent="showKoloreAldaketaIkusi"
           >Koloreak aldatu</a
         >
+        <button
+          @click="logout"
+          class="w-full rounded-full px-6 py-2 bg-red-400 text-white hover:bg-red-500 transition duration-300 mt-6"
+        >
+          Logout
+        </button>
       </div>
     </div>
   </div>
@@ -103,9 +111,7 @@ export default {
       showSidebar: true,
     };
   },
-  mounted() {
-    this.KoloreaKargatu();
-  },
+
   methods: {
     toggleSidebar() {
       // Cambia el valor de showSidebar para mostrar u ocultar el sidebar
@@ -124,7 +130,7 @@ export default {
         .then((response) => {
           if (response.ok) {
             console.log("Has cerrado sesion correctamente");
-            localStorage.removeItem("username");
+            localStorage.removeItem("encryptedUsername");
             // Redirige al usuario a la página de inicio de sesión
             window.location.href = "/login";
           } else {
@@ -165,17 +171,6 @@ export default {
     showKoloreAldaketaIkusi() {
       this.$emit("show_KoloreAldaketa_ikusi");
     },
-    KoloreaKargatu() {
-      const koloreak = localStorage.getItem("sidebar");
-      const koloreakText = localStorage.getItem("sidebar-text");
-      const element = document.getElementById("sidebar");
-      if (koloreak) {
-        element.style.background = koloreak;
-      }
-      if (koloreakText) {
-        element.style.color = koloreakText;
-      }
-    },
   },
 };
 </script>
@@ -183,21 +178,15 @@ export default {
 <style scoped>
 .sidebar-hidden {
   width: 0 !important;
+  max-width: none !important; /* Elimina el máximo ancho */
 }
 .open-sidebar-icon {
   position: fixed;
   top: 20px;
   left: 20px;
-  z-index: 1001; /* Asegúrate de que esté sobre el sidebar */
   background: none;
   border: none;
   cursor: pointer;
   font-size: 24px; /* Tamaño del icono */
-}
-@media (max-width: 768px) {
-  #sidebar {
-    width: 0;
-    margin-left: 0; /* Oculta el sidebar */
-  }
 }
 </style>

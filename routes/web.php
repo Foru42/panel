@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\KoloreakController;
 use App\Models\Teknologiak;
+use App\Models\UserKoloreak;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PanelTekController;
@@ -64,3 +66,6 @@ Route::get('/technologies', function () {
 Route::post('/anadir-fav', [PanelFavStarContoller::class, 'anadirFavorito']);
 Route::get('/gustukoa-ikusi', [PanelTekController::class, 'obtenerInformacionPanelTek']);
 
+
+Route::post('/koloreak', [KoloreakController::class, 'sartuKoloreak']);
+Route::post('/koloreakKargatu', [KoloreakController::class, 'KargatuKoloreak']);

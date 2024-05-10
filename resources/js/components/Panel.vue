@@ -1,9 +1,8 @@
 <template>
-  <div class="flex contenedor-a-borrar">
+  <div class="flex">
     <Sidebar
       :username="username"
       :isAdmin="isAdmin"
-      @logout="handleLogout"
       @show-datuak-ikusi="showDatuakIkusi"
       @show-teknologiak-ikusi="showTeknologiakIkusi"
       @show_panelakGehitu_ikusi="showPanelakGehitu"
@@ -28,17 +27,12 @@
       <Iruzkinak v-if="show_Iruzkin_ikusi"></Iruzkinak>
       <KoloreakAldatu
         v-if="show_KoloreAldaketa_ikusi"
-        @change-sidebar-color="changeSidebarColor"
         @change-panel-color="changePanelColor"
-        @change-sidebar-text-color="changeTextColor"
-        @change-panel-text-color="changePaneTextColor"
-        @change-tek-text-color="changeTekTextColor"
-        @change-datuakIkusi-text-color="changedatuakIkusiTextColor"
       ></KoloreakAldatu>
 
       <div
         v-if="show_portada"
-        class="h-screen flex flex-col items-center justify-center bg-cover bg-center"
+        class="flex flex-col portada items-center justify-center bg-cover bg-center"
         style="
           background-image: url('https://source.unsplash.com/random/?technology,computer,programming');
         "
@@ -50,7 +44,7 @@
             Ongi etorri Kontrol Panelera!
           </h1>
           <p class="text-lg text-gray-300 mb-8 animate__animated animate__fadeInUp">
-            Manage your web applications with ease and style.
+            Zure web aplikazioak erraztasunez eta estiloz kudeatu.
           </p>
         </div>
       </div>
@@ -70,6 +64,7 @@ import FavIkusi from "./FavIkusi.vue";
 import GrafikoakIkusi from "./GrafikoakIkusi.vue";
 import Iruzkinak from "./Iruzkinak.vue";
 import KoloreakAldatu from "./KoloreakAldatu.vue";
+import CryptoJS from "crypto-js";
 
 export default {
   components: {
@@ -103,8 +98,8 @@ export default {
     };
   },
   mounted() {
-    // Recuperar el nombre de usuario del localStorage al cargar el componente
-    this.username = localStorage.getItem("username");
+    
+    this.username = this.decryptUsername();
     this.checkAdminStatus();
     this.KoloreaKargatu();
   },
@@ -239,6 +234,17 @@ export default {
       this.show_KoloreAldaketa_ikusi = true;
       this.show_portada = false;
     },
+    decryptUsername() {
+      const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // La misma clave secreta que se utilizó para encriptar
+      const encryptedUsername = localStorage.getItem("encryptedUsername");
+      if (encryptedUsername) {
+        const bytes  = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
+        const decryptedUsername = bytes.toString(CryptoJS.enc.Utf8);
+        return decryptedUsername;
+      } else {
+        return null; 
+      }
+    },
     checkAdminStatus() {
       // Hacer una llamada al backend para verificar si el usuario es administrador
       fetch("/check-admin-status", {
@@ -261,50 +267,55 @@ export default {
           console.error("Error al verificar el estado de administrador:", error);
         });
     },
-    handleLogout() {
-      // Método para el logout
-    },
-    changeSidebarColor(color) {
-      localStorage.setItem("sidebar", color);
-    },
-    changePanelColor(color) {
-      localStorage.setItem("main-content", color);
-    },
-    changeTextColor(color) {
-      localStorage.setItem("sidebar-text", color);
-    },
-    changePaneTextColor(color) {
-      localStorage.setItem("anadir", color);
-    },
-    changeTekTextColor(color) {
-      localStorage.setItem("tek", color);
-    },
-    changedatuakIkusiTextColor(color) {
-      localStorage.setItem("datuakIkusi", color);
-    },
     KoloreaKargatu() {
-      const koloreak = localStorage.getItem("main-content");
-      const element = document.getElementById("main-content");
-      if (koloreak) {
-        element.style.background = koloreak;
-      }
+      const userId = this.decryptUsername();
+      fetch("/koloreakKargatu", {
+        method: "POST",
+        body: JSON.stringify({ login_id: userId }),
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Error al enviar el formulario");
+          }
+        })
+        .then((data) => {
+          const elementS = document.getElementById("sidebar");
+          const elementP = document.getElementById("main-content");
+          const textoSidebar = this.textColor(data.sidebar);
+          elementS.style.background = data.sidebar;
+          elementS.style.color = textoSidebar;
+          document.getElementById("sidebaricon").style.color = textoSidebar;
+          const textoPanel = this.textColor(data.panel);
+          elementP.style.background = data.panel;
+          elementP.style.color = textoPanel;
+        })
+        .catch((error) => {
+          console.error("Error formulario", error);
+        });
+    },
+    textColor(color) {
+      let r = parseInt(color.substring(1, 3), 16);
+      let g = parseInt(color.substring(3, 5), 16);
+      let b = parseInt(color.substring(5, 7), 16);
+
+      let luminosity = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+
+      return luminosity > 0.5 ? "#000" : "#fff";
     },
   },
 };
 </script>
 
 <style scoped>
-/* Estilos */
-.min-w-sidebar {
-  min-width: 300px;
-}
-.small-container {
-  margin-left: 300px; /* Ancho del sidebar */
-}
-
-@media (max-width: 768px) {
-  .small-container {
-    margin-left: auto;
-  }
+.portada {
+  height: 95vh;
 }
 </style>

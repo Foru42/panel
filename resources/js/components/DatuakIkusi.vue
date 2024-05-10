@@ -54,7 +54,7 @@
         </div>
         <img :src="info.panel.irudi" class="card-img-top" :alt="info.panel.izena" />
         <div class="card-body" :id="info.id">
-          <h5 class="card-title panel-izena">{{ info.panel.izena }}</h5>
+          <p class="card-text panel-izena font-bold">{{ info.panel.izena }}</p>
           <p v-if="!info.editing" class="card-text panel-desk">{{ info.panel.desk }}</p>
           <input v-else class="card-text panel-desk-input" v-model="info.panel.desk" />
           <p v-if="!info.editing" class="card-text teknologia">
@@ -110,6 +110,8 @@
 
 <script>
 import { debounce } from "lodash";
+import CryptoJS from "crypto-js";
+
 export default {
   data() {
     return {
@@ -149,7 +151,6 @@ export default {
   mounted() {
     this.allDatos();
     this.obtenerSistemasOperativos();
-    this.ChangeColor();
   },
   methods: {
     allDatos() {
@@ -318,7 +319,7 @@ export default {
             .querySelector('meta[name="csrf-token"]')
             .getAttribute("content"),
         },
-        body: JSON.stringify({ id: id, userID: localStorage.getItem("username") }), // Enviar el nuevo estado de fav al servidor
+        body: JSON.stringify({ id: id, userID: this.decryptUsername() }), // Enviar el nuevo estado de fav al servidor
       })
         .then((response) => {
           if (!response.ok) {
@@ -331,6 +332,18 @@ export default {
           // Vuelve al estado anterior si hubo un error
         });
     }, 300),
+
+    decryptUsername() {
+      const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // La misma clave secreta que se utilizó para encriptar
+      const encryptedUsername = localStorage.getItem("encryptedUsername");
+      if (encryptedUsername) {
+        const bytes  = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
+        const decryptedUsername = bytes.toString(CryptoJS.enc.Utf8);
+        return decryptedUsername;
+      } else {
+        return null; 
+      }
+    },
     canGoNext() {
       return this.currentPage < this.totalPages;
     },
@@ -348,15 +361,7 @@ export default {
         this.currentPage--;
       }
     },
-    ChangeColor() {
-      const koloreak = localStorage.getItem("datuakIkusi");
 
-      const element = document.getElementById("paginador");
-
-      if (koloreak) {
-        element.style.color = koloreak;
-      }
-    },
   },
 };
 </script>

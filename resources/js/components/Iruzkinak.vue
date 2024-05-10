@@ -1,7 +1,9 @@
 <template>
   <div>
     <!-- Botón para abrir el modal -->
-    <button @click="openModal" class="add-comment-button">Iruzkinak gehitu</button>
+    <button @click="openModal" class="rounded-full add-comment-button">
+      Iruzkinak gehitu
+    </button>
 
     <!-- Modal para agregar comentario -->
     <div v-if="showModal" class="modal">
@@ -24,7 +26,7 @@
     </div>
 
     <!-- Contenedor para mostrar las tarjetas de comentarios -->
-    <div class="comment-container">
+    <div class="comment-container text-black">
       <div class="comment-card" v-for="comment in comments" :key="comment.id">
         <div class="comment-header">
           <span class="username">{{ comment.username }}</span>
@@ -88,6 +90,8 @@
 </template>
 
 <script>
+import CryptoJS from "crypto-js";
+
 export default {
   data() {
     return {
@@ -111,8 +115,19 @@ export default {
       this.showModal = false;
       this.showModalEdit = false;
     },
+    decryptUsername() {
+      const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // La misma clave secreta que se utilizó para encriptar
+      const encryptedUsername = localStorage.getItem("encryptedUsername");
+      if (encryptedUsername) {
+        const bytes  = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
+        const decryptedUsername = bytes.toString(CryptoJS.enc.Utf8);
+        return decryptedUsername;
+      } else {
+        return null; 
+      }
+    },
     addComment() {
-      const userId = localStorage.getItem("username");
+      const userId = this.decryptUsername();
       const commentData = {
         title: this.commentTitle,
         desk: this.commentDesk,

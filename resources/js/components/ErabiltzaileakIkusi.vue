@@ -32,7 +32,7 @@
           </th>
         </tr>
       </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
+      <tbody class="bg-white divide-y divide-gray-200 text-black">
         <tr v-for="usuario in usuarios" :key="usuario.id">
           <td>
             <template v-if="!usuario.editando">
@@ -119,6 +119,8 @@
 </template>
 
 <script>
+import CryptoJS from "crypto-js";
+
 export default {
   data() {
     return {
@@ -196,8 +198,8 @@ export default {
       var confirmacion = confirm("¿Seguru erabiltzailea aldatu nahi duzula?");
       if (confirmacion) {
         var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
-        localStorage.removeItem("username");
-        localStorage.setItem("username", nuevosValores.username);
+        localStorage.removeItem("encryptedUsername");
+        this.encryptAndSaveUsername(nuevosValores.username);
         // Hacer la solicitud fetch para cambiar el usuario
         fetch("/cambiar-usuario", {
           method: "POST",
@@ -226,6 +228,14 @@ export default {
           });
       }
     },
+    encryptAndSaveUsername(username) {
+      const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // Clave secreta para la encriptación (asegúrate de mantenerla segura)
+      const encryptedUsername = CryptoJS.AES.encrypt(
+        username,
+        secretKey
+      ).toString();
+      localStorage.setItem("encryptedUsername", encryptedUsername);
+    },
     addErabiltzaile() {
       this.showModal = true;
     },
@@ -239,8 +249,6 @@ export default {
       const userData = {
         username: this.erabil,
         password: this.pass,
-        // Otros datos del usuario si es necesario
-        // Por ejemplo: isAdmin: true/false
       };
 
       // Hacer la solicitud fetch para registrar al nuevo usuario

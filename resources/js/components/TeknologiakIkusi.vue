@@ -1,7 +1,8 @@
 <template>
-  <div>
+  <div  class="text-black">
     <h1 id="Topatek">Luzapenen topaketa</h1>
     <input
+     
       type="text"
       v-model="searchTerm"
       @keyup.enter="realizarBusqueda"
@@ -32,7 +33,6 @@ export default {
     };
   },
   mounted() {
-    this.ChangeColor();
   },
   methods: {
     realizarBusqueda(event) {
@@ -63,13 +63,7 @@ export default {
           console.error("Error al buscar extensiones:", error);
         });
     },
-    ChangeColor() {
-      const koloreak = localStorage.getItem("tek");
-      const element = document.getElementById("Topatek");
-      if (koloreak) {
-        element.style.color = koloreak;
-      }
-    },
+
   },
 };
 </script>

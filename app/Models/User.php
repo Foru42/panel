@@ -29,5 +29,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(UsuarioPanelFavorito::class, 'usuario_id');
     }
-
+    public function userKoloreak()
+    {
+        return $this->hasOne(UserKoloreak::class, 'login_id');
+    }
 }

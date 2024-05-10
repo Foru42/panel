@@ -52,6 +52,7 @@
   </div>
 </template>
 <script>
+import CryptoJS from "crypto-js";
 import Register from "./Register.vue";
 
 export default {
@@ -110,7 +111,7 @@ export default {
         .then((data) => {
           // Verificar si la respuesta contiene la propiedad 'success'
           if (data && data.success) {
-            localStorage.setItem("username", this.username);
+           this.encryptAndSaveUsername(this.username);
             // Redirigir solo si el inicio de sesión es exitoso
             window.location.href = "/panel";
           } else {
@@ -123,12 +124,6 @@ export default {
         });
     },
     logout() {
-      localStorage.removeItem("anadir");
-      localStorage.removeItem("main-content");
-      localStorage.removeItem("sidebar");
-      localStorage.removeItem("sidebar-text");
-      localStorage.removeItem("tek");
-      localStorage.removeItem("datuakIkusi");
 
       fetch("/logout", {
         method: "POST",
@@ -153,6 +148,15 @@ export default {
     },
     showRegister() {
       this.Show = true; // Modifica el valor de Show en lugar de asignar a una variable no definida
+    },
+
+    encryptAndSaveUsername(username) {
+      const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // Clave secreta para la encriptación (asegúrate de mantenerla segura)
+      const encryptedUsername = CryptoJS.AES.encrypt(
+        username,
+        secretKey
+      ).toString();
+      localStorage.setItem("encryptedUsername", encryptedUsername);
     },
   },
 };

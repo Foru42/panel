@@ -94,7 +94,7 @@
 
       <button
         type="submit"
-        class="w-full px-4 py-2 bg-blue-500 text-white hover:bg-blue-700 transition duration-300"
+        class="w-full px-4 py-2 bg-blue-500 text-white hover:bg-blue-700 transition duration-300 rounded-full"
       >
         Gorde
       </button>
@@ -117,7 +117,6 @@ export default {
     };
   },
   mounted() {
-    this.changePaneTextColor();
     this.cargarSistemasOperativos();
   },
   methods: {
@@ -182,14 +181,6 @@ export default {
         .catch((error) => {
           console.error("Error al obtener los sistemas operativos", error);
         });
-    },
-    changePaneTextColor() {
-      const koloreak = localStorage.getItem("anadir");
-
-      const element = document.getElementById("anadir");
-      if (koloreak) {
-        element.style.color = koloreak;
-      }
     },
   },
 };

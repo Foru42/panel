@@ -24,9 +24,7 @@
           <div
             class="color-option rounded-lg p-4 border border-gray-200 hover:border-purple-500"
           >
-            <p :style="{ color: textColor(PaneColor) }" class="color-text mt-2 font-bold">
-              Sidebar Kolorea
-            </p>
+            <p class="text-black mt-2 font-bold">Sidebar Kolorea</p>
             <div class="input-container flex justify-center items-center">
               <input
                 type="color"
@@ -36,22 +34,19 @@
               />
             </div>
           </div>
-          <button @click="closeColorPicker" class="color-text mt-2 font-bold">
+          <button @click="closeColorPicker" class="text-black mt-2 font-bold">
             Sarratu
           </button>
           <div
             class="color-option rounded-lg p-4 border border-gray-200 hover:border-purple-500 transition duration-300"
           >
-            <p :style="{ color: textColor(PaneColor) }" class="color-text mt-2 font-bold">
-              Panel printzipal
-            </p>
+            <p class="text-black mt-2 font-bold">Panel printzipal</p>
             <div class="input-container flex justify-center items-center">
               <input
                 type="color"
                 v-model="PaneColor"
                 @change="changePaneColor(PaneColor)"
                 @click.stop
-                class=""
               />
             </div>
           </div>
@@ -61,59 +56,80 @@
   </div>
 </template>
 <script>
+import CryptoJS from "crypto-js";
 export default {
   data() {
     return {
       SidebarColor: "",
-      PaneColor: "#9C9C9C",
-      colorPickerOpen: false, // Estado del modal del selector de color
+      PaneColor: "",
+      colorPickerOpen: false,
     };
   },
   methods: {
-    // Función para abrir el selector de color y bloquear interacciones con la página
+    decryptUsername() {
+      const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // La misma clave secreta que se utilizó para encriptar
+      const encryptedUsername = localStorage.getItem("encryptedUsername");
+      if (encryptedUsername) {
+        const bytes  = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
+        const decryptedUsername = bytes.toString(CryptoJS.enc.Utf8);
+        return decryptedUsername;
+      } else {
+        return null; 
+      }
+    },
     openColorPicker() {
       this.colorPickerOpen = true;
-      // Bloquear la interacción con el resto de la página
       document.body.style.overflow = "hidden";
     },
-    // Función para cerrar el selector de color y permitir interacciones con la página
+
     closeColorPicker() {
       this.colorPickerOpen = false;
-      // Permitir la interacción con el resto de la página
       document.body.style.overflow = "";
       window.location.reload();
     },
-    changeSidebarColor(color) {
-      this.SidebarColor = color;
-      this.$emit("change-sidebar-color", color);
-      this.$emit("change-sidebar-text-color", this.textColor(color));
-      this.closeColorPicker(); // Cerrar el selector de color después de seleccionar un color
-    },
     changePaneColor(color) {
       this.PaneColor = color;
-      this.$emit("change-panel-color", color);
-      this.$emit("change-panel-text-color", this.textColor(color));
-      this.$emit("change-tek-text-color", this.textColor(color));
-      this.$emit("change-datuakIkusi-text-color", this.textColor(color));
-      this.closeColorPicker(); // Cerrar el selector de color después de seleccionar un color
+      const tipo = "panel";
+      this.fetcheskaera(color, tipo);
     },
-    textColor(color) {
-      let r = parseInt(color.substring(1, 3), 16);
-      let g = parseInt(color.substring(3, 5), 16);
-      let b = parseInt(color.substring(5, 7), 16);
-
-      let luminosity = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-
-      return luminosity > 0.5 ? "#000" : "#fff";
+    changeSidebarColor(color) {
+      this.SidebarColor = color;
+      const tipo = "sidebar";
+      this.fetcheskaera(color, tipo);
+    },
+    fetcheskaera(color, tipo) {
+      const userId = this.decryptUsername();
+      fetch("/koloreak", {
+        method: "POST",
+        body: JSON.stringify({ color: color, login_id: userId, tipo: tipo }),
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log("bien echo ");
+          } else {
+            throw new Error("Error al enviar el formulario");
+          }
+        })
+        .catch((error) => {
+          console.error("Error formulario", error);
+        });
     },
     defaultChanger() {
-      localStorage.removeItem("anadir");
-      localStorage.removeItem("main-content");
-      localStorage.removeItem("sidebar");
-      localStorage.removeItem("sidebar-text");
-      localStorage.removeItem("tek");
-      localStorage.removeItem("datuakIkusi");
-      window.location.reload();
+      let color = "#3584e4";
+      let tipo = "sidebar";
+      this.fetcheskaera(color, tipo);
+      color = "#f6f5f4";
+      tipo = "panel";
+      this.fetcheskaera(color, tipo);
+      setTimeout(function () {
+        window.location.reload();
+      }, 500);
     },
   },
 };
@@ -152,4 +168,3 @@ export default {
   margin-top: 10px;
 }
 </style>
-@change-sidebar-text-color="changeTextColor"
