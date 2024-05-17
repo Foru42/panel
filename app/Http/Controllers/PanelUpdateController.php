@@ -14,6 +14,7 @@ class PanelUpdateController extends Controller
         $panelId = $request->input('panelId');
         $nuevosValores = $request->input('nuevosValores');
         $sisOpe = $request->input('soId');
+        $usuario = $request->input('userID');
 
         // Buscar o crear una nueva entrada en la tabla TeknologiaBertsioa
         $nuevaTeknologiaBertsioa = TeknologiaBertsioa::firstOrCreate(
@@ -22,7 +23,7 @@ class PanelUpdateController extends Controller
 
         $nuevaTeknologia = Teknologiak::where('izena', $nuevosValores['teknologia']['izena'])->first();
 
-        if ($nuevaTeknologia) {
+        if ($nuevaTeknologia && ($nuevaTeknologia->desk == $nuevosValores['teknologia']['desk'])) {
             // Si la tecnología ya existe, actualiza el campo 'desk'
             $nuevaTeknologia->desk = $nuevosValores['teknologia']['desk'];
             $nuevaTeknologia->save();
@@ -69,6 +70,8 @@ class PanelUpdateController extends Controller
             $panelTek->tek_bertsioa = $nuevaTeknologiaBertsioa->id;
             $panelTek->tek_id = $nuevaTeknologia->id;
             $panelTek->panel_id = $panel->id;
+            $panelTek->name = $usuario;
+
             $panelTek->save();
 
             return response()->json(['message' => 'Panel actualizado correctamente'], 200);

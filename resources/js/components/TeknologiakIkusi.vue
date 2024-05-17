@@ -1,8 +1,8 @@
 <template>
-  <div  class="text-black">
+  <div class="padd" >
     <h1 id="Topatek">Luzapenen topaketa</h1>
     <input
-     
+     class="text-black"
       type="text"
       v-model="searchTerm"
       @keyup.enter="realizarBusqueda"
@@ -13,7 +13,7 @@
       v-for="resultado in resultados"
       :key="resultado.izena"
     >
-      <div class="card-body">
+      <div class="card-body text-black">
         <h5 class="card-title">{{ resultado.izena }}</h5>
         <p class="card-text"><strong>Panelak:</strong></p>
         <ul>

@@ -11,8 +11,11 @@
           class="w-full object-cover"
           :alt="item.panel.izena"
         />
-        <div class="px-6 py-4">
+        <div class="px-6 py-4 flex justify-between">
           <div class="font-bold text-xl mb-2">{{ item.panel.izena }}</div>
+          <p class="text-gray-700 text-base mb-2">{{ item.name }}</p>
+        </div>
+        <div class="px-6 py-4">
           <p class="text-gray-700 text-base mb-2">{{ item.panel.desk }}</p>
           <p class="text-gray-700 text-base mb-2">
             {{ item.teknologia.izena }} - {{ item.teknologia.desk }}

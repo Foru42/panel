@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('panel_id');
             $table->unsignedBigInteger('tek_id');
             $table->unsignedBigInteger('tek_bertsioa');
+            $table->string('name')->nullable();
             $table->timestamps();
 
             $table->foreign('panel_id')->references('id')->on('panelak')->onDelete('cascade');

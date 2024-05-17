@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="">
     <div v-if="groupedInfo && groupedInfo.length">
-      <select v-model="selectedPanel">
+      <select v-model="selectedPanel" class="text-black">
         <option disabled value="">Aukeratu panel bat</option>
         <option v-for="panel in uniquePanels" :value="panel">{{ panel }}</option>
       </select>
@@ -30,7 +30,7 @@
         v-for="(info, index) in paginatedInfo"
         class="card mb-4 shadow-lg rounded-lg overflow-hidden w-full"
       >
-        <div class="flex justify-between items-center mb-2">
+        <div class="flex justify-between items-center mb-2" v-if="this.isAdmin">
           <button
             class="btn-eliminar flex items-center justify-center bg-red-500 text-white font-bold rounded-full h-8 w-8"
             @click="eliminarPanel(info.id)"
@@ -113,6 +113,7 @@ import { debounce } from "lodash";
 import CryptoJS from "crypto-js";
 
 export default {
+  props: ["isAdmin"],
   data() {
     return {
       groupedInfo: [],
@@ -240,7 +241,7 @@ export default {
             "Content-Type": "application/json",
             "X-CSRF-TOKEN": csrfToken,
           },
-          body: JSON.stringify({ panelId: panelId, soId: soID, nuevosValores: panel }),
+          body: JSON.stringify({ panelId: panelId, soId: soID, nuevosValores: panel ,userID: this.decryptUsername()}),
         })
           .then((response) => {
             if (response.ok) {
@@ -293,6 +294,7 @@ export default {
             teknologiaIzena: Tek,
             teknologiaBertsioa: Ber,
             cantidad: cantidad,
+            userID: this.decryptUsername()
           }),
         })
           .then((response) => {
@@ -375,5 +377,8 @@ export default {
 }
 .pagination {
   left: 20%;
+}
+button{
+  box-shadow: 0 0 0px rgba(0, 0, 0, 0);
 }
 </style>

@@ -62,6 +62,7 @@ class PanelTekController extends Controller
         $Datubertsioa = $request->input('teknologiaBertsioa');
         $ize = $request->input('izenapanela');
         $kant = $request->input('cantidad');
+        $usuario = $request->input('userID');
 
         $infoParts = explode('-', $info);
         $izena = trim($infoParts[0]);
@@ -84,6 +85,7 @@ class PanelTekController extends Controller
                     $nuevoPanelTek->panel_id = $id;
                     $nuevoPanelTek->tek_id = $teknologia->id;
                     $nuevoPanelTek->tek_bertsioa = $bertsioa->id;
+                    $nuevoPanelTek->name = $usuario;
 
                     $nuevoPanelTek->save();
                 }

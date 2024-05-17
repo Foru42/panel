@@ -10,13 +10,16 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <style>
+
+    </style>
     @vite('resources/css/app.css')
 </head>
 
 <body>
     <div id="app">
         <panel />
-        <sidebar></sidebar>
+        <sidebar />
     </div>
 
     @vite('resources/js/app.js')

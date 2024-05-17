@@ -11,7 +11,7 @@ class UsuarioController extends Controller
 {
     public function index()
     {
-        $usuarios = User::all(['id', 'username', 'password', 'administrador']);
+        $usuarios = User::all(['id', 'username', 'password', 'administrador', 'mail', 'argazki']);
         return response()->json($usuarios);
     }
     public function eliminar(Request $request)
@@ -66,5 +66,11 @@ class UsuarioController extends Controller
         $usuario->save();
 
         return response()->json(['message' => 'Contraseña actualizada correctamente'], 200);
+    }
+    public function mostrarPorNombre(Request $request)
+    {
+        $nombre = $request->input('userId');
+        $usuarios = User::where('username', $nombre)->get();
+        return response()->json($usuarios);
     }
 }

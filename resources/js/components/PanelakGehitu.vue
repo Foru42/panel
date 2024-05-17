@@ -2,7 +2,7 @@
   <div id="anadir">
     <!-- Formulario -->
     <div id="grouped_info" :data-info="groupedInfo"></div>
-    <form @submit.prevent="submitForm" enctype="multipart/form-data">
+    <form @submit.prevent="submitForm" enctype="multipart/form-data" >
       <div class="form-group">
         <label for="izenapane">Izena Panela:</label>
         <input
@@ -103,7 +103,9 @@
 </template>
 
 <script>
+import CryptoJS from "crypto-js";
 export default {
+  
   data() {
     return {
       groupedInfo: null,
@@ -121,40 +123,44 @@ export default {
   },
   methods: {
     submitForm() {
-      const formData = new FormData();
-      formData.append("izenapane", this.izenapane);
-      formData.append("desk", this.desk);
-      formData.append("izenatek", this.izenatek);
-      formData.append("desktek", this.desktek);
-      formData.append("vertek", this.vertek);
-      formData.append("So_id", this.So_id);
-      formData.append("irudi", this.$refs.irudi.files[0]); // Añade el archivo de imagen
+  const formData = new FormData();
+  formData.append("izenapane", this.izenapane);
+  formData.append("desk", this.desk);
+  formData.append("izenatek", this.izenatek);
+  formData.append("desktek", this.desktek);
+  formData.append("vertek", this.vertek);
+  formData.append("So_id", this.So_id);
+  formData.append("usuario", this.decryptUsername());
 
-      fetch("/panelakGehi", {
-        method: "POST",
-        body: formData,
-        headers: {
-          "X-CSRF-TOKEN": document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute("content"),
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error("Error al enviar el formulario");
-          }
-        })
-        .then((data) => {
-          // Manejar la respuesta del servidor si es necesario
-          //console.log(data);
-          window.location.href = "/panel";
-        })
-        .catch((error) => {
-          console.error("Error formulario", error);
-        });
+  const file = this.$refs.irudi.files[0];
+  const fileName = file.name; // Generar un nombre único para la imagen
+  formData.append("irudi", file, fileName); // Adjuntar el archivo con el nuevo nombre único
+
+  fetch("/panelakGehi", {
+    method: "POST",
+    body: formData,
+    headers: {
+      "X-CSRF-TOKEN": document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content"),
     },
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error("Error al enviar el formulario");
+      }
+    })
+    .then((data) => {
+      // Manejar la respuesta del servidor si es necesario
+      //console.log(data);
+      window.location.href = "/panel";
+    })
+    .catch((error) => {
+      console.error("Error formulario", error);
+    });
+},
 
     cargarSistemasOperativos() {
       // Realizar la petición para obtener los sistemas operativos
@@ -182,10 +188,24 @@ export default {
           console.error("Error al obtener los sistemas operativos", error);
         });
     },
+    decryptUsername() {
+      const secretKey = "LaClaveDelDiosEspacioal1.·¬";
+      const encryptedUsername = localStorage.getItem("encryptedUsername");
+      if (encryptedUsername) {
+        const bytes = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
+        const decryptedUsername = bytes.toString(CryptoJS.enc.Utf8);
+        return decryptedUsername;
+      } else {
+        return null;
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
-/* Estilos */
+textarea,
+input{
+  color: black;
+}
 </style>

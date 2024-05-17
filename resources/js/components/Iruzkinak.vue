@@ -6,7 +6,7 @@
     </button>
 
     <!-- Modal para agregar comentario -->
-    <div v-if="showModal" class="modal">
+    <div v-if="showModal" class="modal text-black">
       <div class="modal-content">
         <span class="close" @click="closeModal">&times;</span>
         <h2>Iruzkina Sartu</h2>
@@ -29,8 +29,17 @@
     <div class="comment-container text-black">
       <div class="comment-card" v-for="comment in comments" :key="comment.id">
         <div class="comment-header">
-          <span class="username">{{ comment.username }}</span>
-          <button
+          <span class="user-photo">
+            <img
+              :src="comment.argazki"
+              alt="Foto de Perfil"
+              class="w-10 h-10 rounded-full mx-auto mb-4 border-4 border-gray-200"
+            />
+          </span>
+          <span class="username">
+            {{ comment.username }}
+          </span>
+          <button v-if="this.isAdmin"
             class="flex items-center justify-center bg-blue-500 text-white font-bold rounded-full h-8 w-8 mr-2"
             @click="MostrarEditar(comment.username)"
           >
@@ -52,11 +61,11 @@
             >
               <i class="fas fa-trash-alt"></i>
             </button>
-            <button
+            <button   
               @click="editComment(iruzkin.id, iruzkin.title, iruzkin.desk)"
               class="items-center justify-center bg-green-500 text-white font-bold rounded-full h-8 w-8"
             >
-              <i class="fas fa-edit"></i>
+              <i  class="fas fa-edit"></i>
             </button>
           </div>
         </div>
@@ -65,7 +74,7 @@
             <span class="close" @click="closeModal">&times;</span>
             <h2>Editatu Iruzkina</h2>
             <form @submit.prevent="updateIruzkina">
-              <label for="editCommentTitle">Izena:</label><br />
+              <label for="editCommentTitle">Izenburu:</label><br />
               <input
                 type="text"
                 id="editCommentTitle"
@@ -93,6 +102,7 @@
 import CryptoJS from "crypto-js";
 
 export default {
+  props: ["isAdmin"],
   data() {
     return {
       showModal: false,
@@ -105,6 +115,7 @@ export default {
     };
   },
   mounted() {
+   
     this.fetchComments();
   },
   methods: {
@@ -119,11 +130,11 @@ export default {
       const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // La misma clave secreta que se utilizó para encriptar
       const encryptedUsername = localStorage.getItem("encryptedUsername");
       if (encryptedUsername) {
-        const bytes  = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
+        const bytes = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
         const decryptedUsername = bytes.toString(CryptoJS.enc.Utf8);
         return decryptedUsername;
       } else {
-        return null; 
+        return null;
       }
     },
     addComment() {
@@ -317,21 +328,11 @@ export default {
   font-weight: bold;
 }
 
-.date {
-  color: #666;
-}
 
 .comment-body {
   padding: 10px;
 }
 
-.comment-body h3 {
-  margin-top: 0;
-}
-
-.comment-body p {
-  margin-bottom: 0;
-}
 .add-comment-button {
   background-color: #4caf50;
   border: none;
@@ -344,4 +345,5 @@ export default {
   margin-bottom: 20px;
   cursor: pointer;
 }
+
 </style>

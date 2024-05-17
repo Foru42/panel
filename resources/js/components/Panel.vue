@@ -1,53 +1,31 @@
 <template>
   <div class="flex">
     <Sidebar
+      class="pantalla h-screen"
       :username="username"
       :isAdmin="isAdmin"
       @show-datuak-ikusi="showDatuakIkusi"
       @show-teknologiak-ikusi="showTeknologiakIkusi"
       @show_panelakGehitu_ikusi="showPanelakGehitu"
       @show_AldaketakIkusi_ikusi="showAldaketaIkusi"
-      @show_ErabiltzaileakIkusi_ikusi="showErabiltzaileakIkusi"
-      @show_PasahitzaAldatu_ikusi="showPasahitzaAldatuIkusi"
       @show_FavIkusi_ikusi="showFavIkusiIkusi"
       @show_Grafiko_ikusi="showGrafikoIkusi"
       @show_Iruzkin_ikusi="showIruzkinIkusi"
       @show_KoloreAldaketa_ikusi="showKoloreAldaketaIkusi"
+      @show_SuperUser_ikusi="showSuserIkusi"
     />
 
     <div id="main-content" class="flex-1 container small-container red-container">
-      <DatuakIkusi v-if="show_datuak_ikusi"></DatuakIkusi>
+      <DatuakIkusi v-if="show_datuak_ikusi" :isAdmin="isAdmin"></DatuakIkusi>
       <TeknologiakIkusi v-if="show_teknologiak_ikusi"></TeknologiakIkusi>
       <PanelakGehitu v-if="show_panelakGehitu_ikusi"></PanelakGehitu>
       <AldaketakIkusi v-if="show_AldaketakIkusi_ikusi"></AldaketakIkusi>
-      <ErabiltzaileakIkusi v-if="show_ErabiltzaileakIkusi_ikusi"></ErabiltzaileakIkusi>
-      <PasahitzaAldatu v-if="show_PasahitzaAldatu_ikusi"></PasahitzaAldatu>
       <FavIkusi v-if="show_FavIkusi_ikusi"></FavIkusi>
       <GrafikoakIkusi v-if="show_Grafiko_ikusi"></GrafikoakIkusi>
-      <Iruzkinak v-if="show_Iruzkin_ikusi"></Iruzkinak>
-      <KoloreakAldatu
-        v-if="show_KoloreAldaketa_ikusi"
-        @change-panel-color="changePanelColor"
-      ></KoloreakAldatu>
-
-      <div
-        v-if="show_portada"
-        class="flex flex-col portada items-center justify-center bg-cover bg-center"
-        style="
-          background-image: url('https://source.unsplash.com/random/?technology,computer,programming');
-        "
-      >
-        <div class="text-center">
-          <h1
-            class="text-5xl font-bold text-white mb-8 animate__animated animate__fadeInDown"
-          >
-            Ongi etorri Kontrol Panelera!
-          </h1>
-          <p class="text-lg text-gray-300 mb-8 animate__animated animate__fadeInUp">
-            Zure web aplikazioak erraztasunez eta estiloz kudeatu.
-          </p>
-        </div>
-      </div>
+      <Iruzkinak v-if="show_Iruzkin_ikusi" :isAdmin="isAdmin"></Iruzkinak>
+      <LoginPanela v-if="show_KoloreAldaketa_ikusi"></LoginPanela>
+      <Portada v-if="show_portada"></Portada>
+      <SuperUser v-if="show_SuperUser_ikusi"></SuperUser>
     </div>
   </div>
 </template>
@@ -58,13 +36,15 @@ import DatuakIkusi from "./DatuakIkusi.vue";
 import TeknologiakIkusi from "./TeknologiakIkusi.vue";
 import PanelakGehitu from "./PanelakGehitu.vue";
 import AldaketakIkusi from "./AldaketakIkusi.vue";
-import ErabiltzaileakIkusi from "./ErabiltzaileakIkusi.vue";
 import PasahitzaAldatu from "./PasahitzaAldatu.vue";
 import FavIkusi from "./FavIkusi.vue";
 import GrafikoakIkusi from "./GrafikoakIkusi.vue";
 import Iruzkinak from "./Iruzkinak.vue";
-import KoloreakAldatu from "./KoloreakAldatu.vue";
+import LoginPanela from "./LoginPanela.vue";
+import Portada from "./Portada.vue";
+import SuperUser from "./SuperUser.vue";
 import CryptoJS from "crypto-js";
+import tinycolor from "tinycolor2";
 
 export default {
   components: {
@@ -73,12 +53,13 @@ export default {
     TeknologiakIkusi,
     PanelakGehitu,
     AldaketakIkusi,
-    ErabiltzaileakIkusi,
     PasahitzaAldatu,
     FavIkusi,
     GrafikoakIkusi,
     Iruzkinak,
-    KoloreakAldatu,
+    Portada,
+    SuperUser,
+    LoginPanela,
   },
   data() {
     return {
@@ -87,18 +68,16 @@ export default {
       show_teknologiak_ikusi: false,
       show_panelakGehitu_ikusi: false, // Inicialmente no mostrar PanelakGehitu
       show_AldaketakIkusi_ikusi: false,
-      show_ErabiltzaileakIkusi_ikusi: false,
-      show_PasahitzaAldatu_ikusi: false,
       show_FavIkusi_ikusi: false,
       show_Grafiko_ikusi: false,
       show_Iruzkin_ikusi: false,
       isAdmin: false,
       show_KoloreAldaketa_ikusi: false,
       show_portada: true,
+      show_SuperUser_ikusi: false,
     };
   },
   mounted() {
-    
     this.username = this.decryptUsername();
     this.checkAdminStatus();
     this.KoloreaKargatu();
@@ -109,140 +88,131 @@ export default {
       this.show_teknologiak_ikusi = false;
       this.show_panelakGehitu_ikusi = false;
       this.show_AldaketakIkusi_ikusi = false;
-      this.show_ErabiltzaileakIkusi_ikusi = false;
-      this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi = false;
       this.show_Grafiko_ikusi = false;
       this.show_Iruzkin_ikusi = false;
       this.show_KoloreAldaketa_ikusi = false;
       this.show_portada = false;
+      this.show_SuperUser_ikusi = false;
     },
     showTeknologiakIkusi() {
       this.show_datuak_ikusi = false;
       this.show_teknologiak_ikusi = true;
       this.show_panelakGehitu_ikusi = false;
       this.show_AldaketakIkusi_ikusi = false;
-      this.show_ErabiltzaileakIkusi_ikusi = false;
-      this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi = false;
       this.show_Grafiko_ikusi = false;
       this.show_Iruzkin_ikusi = false;
       this.show_KoloreAldaketa_ikusi = false;
       this.show_portada = false;
+      this.show_SuperUser_ikusi = false;
     },
     showPanelakGehitu() {
       this.show_datuak_ikusi = false;
       this.show_teknologiak_ikusi = false;
       this.show_panelakGehitu_ikusi = true;
       this.show_AldaketakIkusi_ikusi = false;
-      this.show_ErabiltzaileakIkusi_ikusi = false;
-      this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi = false;
       this.show_Grafiko_ikusi = false;
       this.show_Iruzkin_ikusi = false;
       this.show_KoloreAldaketa_ikusi = false;
       this.show_portada = false;
+      this.show_SuperUser_ikusi = false;
     },
     showAldaketaIkusi() {
       this.show_datuak_ikusi = false;
       this.show_teknologiak_ikusi = false;
       this.show_panelakGehitu_ikusi = false;
       this.show_AldaketakIkusi_ikusi = true;
-      this.show_ErabiltzaileakIkusi_ikusi = false;
-      this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi = false;
       this.show_Grafiko_ikusi = false;
       this.show_Iruzkin_ikusi = false;
       this.show_KoloreAldaketa_ikusi = false;
       this.show_portada = false;
+      this.show_SuperUser_ikusi = false;
     },
     showErabiltzaileakIkusi() {
       this.show_datuak_ikusi = false;
       this.show_teknologiak_ikusi = false;
       this.show_panelakGehitu_ikusi = false;
       this.show_AldaketakIkusi_ikusi = false;
-      this.show_ErabiltzaileakIkusi_ikusi = true;
-      this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi = false;
       this.show_Grafiko_ikusi = false;
       this.show_Iruzkin_ikusi = false;
       this.show_KoloreAldaketa_ikusi = false;
       this.show_portada = false;
+      this.show_SuperUser_ikusi = false;
     },
-    showPasahitzaAldatuIkusi() {
-      this.show_datuak_ikusi = false;
-      this.show_teknologiak_ikusi = false;
-      this.show_panelakGehitu_ikusi = false;
-      this.show_AldaketakIkusi_ikusi = false;
-      this.show_ErabiltzaileakIkusi_ikusi = false;
-      this.show_PasahitzaAldatu_ikusi = true;
-      this.show_FavIkusi_ikusi = false;
-      this.show_Grafiko_ikusi = false;
-      this.show_Iruzkin_ikusi = false;
-      this.show_KoloreAldaketa_ikusi = false;
-      this.show_portada = false;
-    },
+
     showFavIkusiIkusi() {
       this.show_datuak_ikusi = false;
       this.show_teknologiak_ikusi = false;
       this.show_panelakGehitu_ikusi = false;
       this.show_AldaketakIkusi_ikusi = false;
-      this.show_ErabiltzaileakIkusi_ikusi = false;
-      this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi = true;
       this.show_Grafiko_ikusi = false;
       this.show_Iruzkin_ikusi = false;
       this.show_KoloreAldaketa_ikusi = false;
       this.show_portada = false;
+      this.show_SuperUser_ikusi = false;
     },
     showGrafikoIkusi() {
       this.show_datuak_ikusi = false;
       this.show_teknologiak_ikusi = false;
       this.show_panelakGehitu_ikusi = false;
       this.show_AldaketakIkusi_ikusi = false;
-      this.show_ErabiltzaileakIkusi_ikusi = false;
-      this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi = false;
       this.show_Grafiko_ikusi = true;
       this.show_Iruzkin_ikusi = false;
       this.show_KoloreAldaketa_ikusi = false;
       this.show_portada = false;
+      this.show_SuperUser_ikusi = false;
     },
     showIruzkinIkusi() {
       this.show_datuak_ikusi = false;
       this.show_teknologiak_ikusi = false;
       this.show_panelakGehitu_ikusi = false;
       this.show_AldaketakIkusi_ikusi = false;
-      this.show_ErabiltzaileakIkusi_ikusi = false;
-      this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi = false;
       this.show_Grafiko_ikusi = false;
       this.show_Iruzkin_ikusi = true;
       this.show_KoloreAldaketa_ikusi = false;
       this.show_portada = false;
+      this.show_SuperUser_ikusi = false;
     },
     showKoloreAldaketaIkusi() {
       this.show_datuak_ikusi = false;
       this.show_teknologiak_ikusi = false;
       this.show_panelakGehitu_ikusi = false;
       this.show_AldaketakIkusi_ikusi = false;
-      this.show_ErabiltzaileakIkusi_ikusi = false;
-      this.show_PasahitzaAldatu_ikusi = false;
       this.show_FavIkusi_ikusi = false;
       this.show_Grafiko_ikusi = false;
       this.show_Iruzkin_ikusi = false;
       this.show_KoloreAldaketa_ikusi = true;
       this.show_portada = false;
+      this.show_SuperUser_ikusi = false;
+    },
+    showSuserIkusi() {
+      this.show_datuak_ikusi = false;
+      this.show_teknologiak_ikusi = false;
+      this.show_panelakGehitu_ikusi = false;
+      this.show_AldaketakIkusi_ikusi = false;
+      this.show_FavIkusi_ikusi = false;
+      this.show_Grafiko_ikusi = false;
+      this.show_Iruzkin_ikusi = false;
+      this.show_KoloreAldaketa_ikusi = false;
+      this.show_portada = false;
+      this.show_SuperUser_ikusi = true;
     },
     decryptUsername() {
       const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // La misma clave secreta que se utilizó para encriptar
       const encryptedUsername = localStorage.getItem("encryptedUsername");
       if (encryptedUsername) {
-        const bytes  = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
+        const bytes = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
         const decryptedUsername = bytes.toString(CryptoJS.enc.Utf8);
         return decryptedUsername;
       } else {
-        return null; 
+        return null;
       }
     },
     checkAdminStatus() {
@@ -289,13 +259,18 @@ export default {
         .then((data) => {
           const elementS = document.getElementById("sidebar");
           const elementP = document.getElementById("main-content");
+
           const textoSidebar = this.textColor(data.sidebar);
           elementS.style.background = data.sidebar;
           elementS.style.color = textoSidebar;
           document.getElementById("sidebaricon").style.color = textoSidebar;
+
           const textoPanel = this.textColor(data.panel);
           elementP.style.background = data.panel;
           elementP.style.color = textoPanel;
+
+          const colorReducido = tinycolor(data.panel).lighten(10).toString();
+          document.getElementById("app").style.background = colorReducido;
         })
         .catch((error) => {
           console.error("Error formulario", error);

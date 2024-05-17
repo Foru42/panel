@@ -7,6 +7,7 @@ use App\Models\Teknologiak;
 use App\Models\TeknologiaBertsioa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Models\PanelTek;
 
 class PanelakController extends Controller
@@ -28,10 +29,22 @@ class PanelakController extends Controller
             'irudi' => 'required|image|mimes:jpeg,png,jpg,gif',
         ]);
 
-        // Procesar y guardar la imagen
-        $imageName = time() . '.' . $request->irudi->extension();
-        $request->irudi->move(public_path('img'), $imageName);
-        $imagePath = 'img/' . $imageName;
+        // Obtener el nombre del archivo original enviado desde el cliente
+        $imageName = $request->file('irudi')->getClientOriginalName();
+
+        // Verificar si ya existe un archivo con el mismo nombre
+        $existingImage = Panelak::where('irudi', 'like', '%' . $imageName . '%')->first();
+
+        if ($existingImage) {
+            // Si existe, utilizar la ruta existente
+            $imagePath = $existingImage->irudi;
+        } else {
+            // Si no existe, generar un nombre único para el archivo
+
+            // Mover y guardar la imagen en el sistema de archivos con el nombre único
+            $request->file('irudi')->move(public_path('img'), $imageName);
+            $imagePath = 'img/' . $imageName;
+        }
 
         // Crear un nuevo panel en paneInser
         $panel = Panelak::create([
@@ -58,6 +71,7 @@ class PanelakController extends Controller
             'panel_id' => $panel->id,
             'tek_id' => $tekinser->id,
             'tek_bertsioa' => $teknologiaBertsioa->id,
+            'name' => $request->usuario,
             'updated_at' => now(),
             'created_at' => now()
         ]);
@@ -65,13 +79,12 @@ class PanelakController extends Controller
         // Redireccionar a la vista del formulario con un mensaje de éxito
         return response()->json(['message' => 'Los datos se han guardado correctamente'], 200);
     }
+
     public function eliminar(Request $request)
     {
         $panelTekId = $request->input('panelTekId');
         // Buscar el registro de PanelTek por su ID
         $panelTek = PanelTek::find($panelTekId);
-
-
 
         if ($panelTek) {
             // Si se encuentra el registro, eliminarlo

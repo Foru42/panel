@@ -83,11 +83,11 @@
 
     <!-- Botón para abrir el modal -->
 
-    <transition name="modal-slide">
+    <transition name="modal-slide text-black">
       <div v-if="showModal" class="fixed inset-0 flex items-center justify-center z-50">
         <div class="fixed inset-0 bg-black opacity-50"></div>
         <div
-          class="bg-white rounded-lg p-8 max-w-md w-full transform transition-transform ease-out duration-300"
+          class="bg-white rounded-lg p-8 max-w-md w-full transform transition-transform ease-out duration-300 text-black"
         >
           <label for="UsuErab">Erabiltzailea:</label><br />
           <input type="text" id="UsuErab" v-model="erabil" /><br />

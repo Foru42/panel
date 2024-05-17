@@ -4,15 +4,14 @@
     <button id="sidebaricon" @click="toggleSidebar" class="open-sidebar-icon">☰</button>
 
     <!-- Contenido del sidebar -->
-    <div id="sidebar" :class="{ 'sidebar-hidden': !showSidebar }" class="h-screen">
+    <div id="sidebar" :class="{ 'sidebar-hidden': !showSidebar }"  >
       <div class="sidebar-brand py-4 px-6">
-        Kontrol Panela<br />
+        Kontrol Panela<br>
         <span class="block">Aupa {{ username }}</span>
       </div>
 
       <div class="sidebar-menu transition duration-300">
         <a
-          v-if="isAdmin"
           href="#"
           id="panel1"
           class="sidebar-menu-item hover:bg-gray-700 py-2 px-6 block"
@@ -33,21 +32,7 @@
           @click.prevent="showPanelakGehitu"
           >Panelak gehitu</a
         >
-        <a
-          v-if="isAdmin"
-          href="#"
-          id="panel4"
-          class="sidebar-menu-item hover:bg-gray-700 py-2 px-6 block"
-          @click.prevent="showErabiltzaileakIkusi"
-          >Erabiltzaileak ikusi/aldatu</a
-        >
-        <a
-          href="#"
-          id="panel5"
-          class="sidebar-menu-item hover:bg-gray-700 py-2 px-6 block"
-          @click.prevent="showPasahitzaAldatuIkusi"
-          >Zure Pasahitza aldatu</a
-        >
+
         <a
           href="#"
           id="panel6"
@@ -56,7 +41,6 @@
           >Aldaketak ikusi</a
         >
         <a
-          v-if="isAdmin"
           href="#"
           id="panel7"
           class="sidebar-menu-item hover:bg-gray-700 py-2 px-6 block"
@@ -82,7 +66,15 @@
           id="panel10"
           class="sidebar-menu-item hover:bg-gray-700 py-2 px-6 block"
           @click.prevent="showKoloreAldaketaIkusi"
-          >Koloreak aldatu</a
+          >Profila</a
+        >
+        <a 
+          v-if="isAdmin"
+          href="#"
+          id="panel11"
+          class="sidebar-menu-item hover:bg-gray-700 py-2 px-6 block"
+          @click.prevent="showSuperUserIkusi"
+          >Super Erabiltzailea</a
         >
         <button
           @click="logout"
@@ -116,6 +108,12 @@ export default {
     toggleSidebar() {
       // Cambia el valor de showSidebar para mostrar u ocultar el sidebar
       this.showSidebar = !this.showSidebar;
+
+      if (this.showSidebar) {
+        document.getElementById("sidebaricon").style.color = "white";
+      } else {
+        document.getElementById("sidebaricon").style.color = "black";
+      }
     },
     logout() {
       fetch("/logout", {
@@ -131,6 +129,8 @@ export default {
           if (response.ok) {
             console.log("Has cerrado sesion correctamente");
             localStorage.removeItem("encryptedUsername");
+            localStorage.removeItem("koloreP");
+            localStorage.removeItem("koloreS");
             // Redirige al usuario a la página de inicio de sesión
             window.location.href = "/login";
           } else {
@@ -153,12 +153,6 @@ export default {
     showAldaketaIkusi() {
       this.$emit("show_AldaketakIkusi_ikusi");
     },
-    showErabiltzaileakIkusi() {
-      this.$emit("show_ErabiltzaileakIkusi_ikusi");
-    },
-    showPasahitzaAldatuIkusi() {
-      this.$emit("show_PasahitzaAldatu_ikusi");
-    },
     showFavIkusiIkusi() {
       this.$emit("show_FavIkusi_ikusi");
     },
@@ -170,6 +164,9 @@ export default {
     },
     showKoloreAldaketaIkusi() {
       this.$emit("show_KoloreAldaketa_ikusi");
+    },
+    showSuperUserIkusi() {
+      this.$emit("show_SuperUser_ikusi");
     },
   },
 };
@@ -189,4 +186,5 @@ export default {
   cursor: pointer;
   font-size: 24px; /* Tamaño del icono */
 }
+
 </style>

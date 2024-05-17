@@ -11,6 +11,10 @@ return new class extends Migration {
             $table->string('username')->unique();
             $table->string('password');
             $table->string('administrador');
+            $table->string('mail')->nullable();
+            $table->string('argazki')->nullable()->default('img/egg_profila.jpg');
+
+
             $table->timestamps();
         });
     }
