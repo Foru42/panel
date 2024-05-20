@@ -201,7 +201,7 @@ export default {
           body: JSON.stringify({
             username: nuevosValores.username,
             panelId: nuevosValores.id,
-            roles: newRoles, // Enviamos los nuevos roles
+            roles: newRoles,
             _token: csrfToken,
           }),
         })

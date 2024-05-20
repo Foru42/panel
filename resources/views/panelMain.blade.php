@@ -19,7 +19,6 @@
 <body>
     <div id="app">
         <panel />
-        <sidebar />
     </div>
 
     @vite('resources/js/app.js')

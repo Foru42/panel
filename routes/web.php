@@ -24,6 +24,7 @@ Route::get('/reset-database', function () {
     Artisan::call('db:seed');
     // Devolver una respuesta
     return 'Datu basea Sortuta :)';
+
 });
 //Datuak
 Route::get('/data', [PanelTekController::class, 'showPaneladmin']);

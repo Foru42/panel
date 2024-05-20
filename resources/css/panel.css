@@ -32,8 +32,9 @@
       background-color: #fff;
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      
       overflow: hidden;
-      margin: 10px auto; /* Margen en todas las direcciones */
+      margin: 10px ; /* Margen en todas las direcciones */
       transition: transform 0.3s ease-in-out;
       margin-bottom: 20px; /* Margen inferior adicional para separar las tarjetas */
   }
@@ -51,7 +52,7 @@
   }
   
   .card-body {
-      
+
       padding: 20px;
   }
   

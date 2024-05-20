@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PanelTek;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,9 +38,21 @@ class UsuarioController extends Controller
         // Buscar el usuario por su ID
         $usuario = User::findOrFail($panelId);
 
+        $nameOld = $usuario->username;
+
+        // Buscar todos los registros de PanelTek asociados al usuario
+        $paneTek = PanelTek::where('name', $nameOld)->get();
+
+        // Iterar sobre cada registro y actualizar el nombre
+        foreach ($paneTek as $panel) {
+            $panel->name = $username;
+            $panel->save();
+        }
+
         // Actualizar los datos del usuario
         $usuario->username = $username;
         $usuario->save();
+
         if ($roles) {
             // Si hay roles, asignar el rol "admin" al usuario
             $usuario->assignRole('admin');
@@ -47,9 +60,11 @@ class UsuarioController extends Controller
             // Si no hay roles asignados, eliminar cualquier asignación previa del rol "admin"
             $usuario->removeRole('admin');
         }
-        // Si necesitas devolver algún mensaje o datos al frontend, puedes hacerlo aquí
+
+        // Devolver un mensaje al frontend
         return response()->json(['message' => 'Usuario actualizado correctamente'], 200);
     }
+
     public function cambiarContraseña(Request $request)
     {
         $request->validate([

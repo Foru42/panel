@@ -1,17 +1,19 @@
 <template>
-  <div class="carousel relative">
-    <transition name="fade" mode="out-in">
-      <img
-        :key="currentCardIndex"
-        :src="currentCard"
-        alt="carousel image"
-        class="carousel-image"
-      />
-    </transition>
-  </div>
-  <div class="controls flex justify-center mt-4">
-    <button @click="prevCard" class="text-3xl mr-4">&lt;</button>
-    <button @click="nextCard" class="text-3xl">&gt;</button>
+  <div class="carousel-container">
+    <div class="carousel relative">
+      <transition name="fade" mode="out-in">
+        <img
+          :key="currentCardIndex"
+          :src="currentCard"
+          alt="carousel image"
+          class="carousel-image"
+        />
+      </transition>
+    </div>
+    <div class="controls flex justify-center mt-4">
+      <button @click="prevCard" class="text-3xl mr-4">&lt;</button>
+      <button @click="nextCard" class="text-3xl">&gt;</button>
+    </div>
   </div>
 </template>
 

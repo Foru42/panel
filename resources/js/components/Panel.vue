@@ -1,35 +1,41 @@
 <template>
-  <div class="flex">
-    <Sidebar
-      class="pantalla h-screen"
-      :username="username"
-      :isAdmin="isAdmin"
-      @show-datuak-ikusi="showDatuakIkusi"
-      @show-teknologiak-ikusi="showTeknologiakIkusi"
-      @show_panelakGehitu_ikusi="showPanelakGehitu"
-      @show_AldaketakIkusi_ikusi="showAldaketaIkusi"
-      @show_FavIkusi_ikusi="showFavIkusiIkusi"
-      @show_Grafiko_ikusi="showGrafikoIkusi"
-      @show_Iruzkin_ikusi="showIruzkinIkusi"
-      @show_KoloreAldaketa_ikusi="showKoloreAldaketaIkusi"
-      @show_SuperUser_ikusi="showSuserIkusi"
-    />
-
-    <div id="main-content" class="flex-1 container small-container red-container">
-      <DatuakIkusi v-if="show_datuak_ikusi" :isAdmin="isAdmin"></DatuakIkusi>
-      <TeknologiakIkusi v-if="show_teknologiak_ikusi"></TeknologiakIkusi>
-      <PanelakGehitu v-if="show_panelakGehitu_ikusi"></PanelakGehitu>
-      <AldaketakIkusi v-if="show_AldaketakIkusi_ikusi"></AldaketakIkusi>
-      <FavIkusi v-if="show_FavIkusi_ikusi"></FavIkusi>
-      <GrafikoakIkusi v-if="show_Grafiko_ikusi"></GrafikoakIkusi>
-      <Iruzkinak v-if="show_Iruzkin_ikusi" :isAdmin="isAdmin"></Iruzkinak>
-      <LoginPanela v-if="show_KoloreAldaketa_ikusi"></LoginPanela>
-      <Portada v-if="show_portada"></Portada>
-      <SuperUser v-if="show_SuperUser_ikusi" :IdUsu="IdUsu"></SuperUser>
+  <div class="flex flex-col min-h-screen">
+    <div class="flex flex-1">
+      <div>
+        <Sidebar
+          class="h-full"
+          :username="username"
+          :isAdmin="isAdmin"
+          @show-datuak-ikusi="showDatuakIkusi"
+          @show-teknologiak-ikusi="showTeknologiakIkusi"
+          @show_panelakGehitu_ikusi="showPanelakGehitu"
+          @show_AldaketakIkusi_ikusi="showAldaketaIkusi"
+          @show_FavIkusi_ikusi="showFavIkusiIkusi"
+          @show_Grafiko_ikusi="showGrafikoIkusi"
+          @show_Iruzkin_ikusi="showIruzkinIkusi"
+          @show_KoloreAldaketa_ikusi="showKoloreAldaketaIkusi"
+          @show_SuperUser_ikusi="showSuserIkusi"
+        />
+      </div>
+      <div id="main-content" class="flex-1 p-4 flex justify-center items-center">
+        <!-- Nuevo contenedor interior -->
+        <div id="content-container" class="content-container">
+          <!-- Contenido de las diferentes vistas -->
+          <DatuakIkusi v-if="show_datuak_ikusi" :isAdmin="isAdmin"></DatuakIkusi>
+          <TeknologiakIkusi v-if="show_teknologiak_ikusi"></TeknologiakIkusi>
+          <PanelakGehitu v-if="show_panelakGehitu_ikusi"></PanelakGehitu>
+          <AldaketakIkusi v-if="show_AldaketakIkusi_ikusi"></AldaketakIkusi>
+          <FavIkusi v-if="show_FavIkusi_ikusi"></FavIkusi>
+          <GrafikoakIkusi v-if="show_Grafiko_ikusi"></GrafikoakIkusi>
+          <Iruzkinak v-if="show_Iruzkin_ikusi" :isAdmin="isAdmin"></Iruzkinak>
+          <LoginPanela v-if="show_KoloreAldaketa_ikusi"></LoginPanela>
+          <Portada v-if="show_portada"></Portada>
+          <SuperUser v-if="show_SuperUser_ikusi" :IdUsu="IdUsu"></SuperUser>
+        </div>
+      </div>
     </div>
   </div>
 </template>
-
 <script>
 import Sidebar from "./Sidebar.vue";
 import DatuakIkusi from "./DatuakIkusi.vue";
@@ -267,7 +273,7 @@ export default {
           elementP.style.color = textoPanel;
 
           const colorReducido = tinycolor(data.panel).lighten(10).toString();
-          document.getElementById("app").style.background = colorReducido;
+          document.getElementById("content-container").style.background = colorReducido;
           this.IdUsu = data.login_id;
         })
         .catch((error) => {
@@ -290,5 +296,12 @@ export default {
 <style scoped>
 .portada {
   height: 95vh;
+}
+.content-container {
+  max-width: auto; /* Ancho máximo del contenedor */
+  padding: 20px; /* Espacio interno */
+  border: 1px solid #ccc; /* Borde */
+  border-radius: 8px; /* Bordes redondeados */
+
 }
 </style>

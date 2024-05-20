@@ -8,13 +8,12 @@ class PanelTek extends Model
 {
     protected $table = 'panel_tek';
 
-
     protected $fillable = [
         'id',
         'panel_id',
         'tek_id',
         'tek_bertsioa',
-        'fav',
+        'name',
     ];
 
     // Relación con el modelo Panel
@@ -60,6 +59,5 @@ class PanelTek extends Model
             $model->timestamps = true;
         });
     }
-
 
 }

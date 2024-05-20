@@ -1,5 +1,5 @@
 <template>
-  <div id="aldaketak" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 text-black">
+  <div id="aldaketak" class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 text-black">
     <div
       v-for="item in data"
       :key="item.id"
@@ -68,6 +68,7 @@ export default {
         .then((data) => {
           // Si se obtuvieron los datos correctamente, asignarlos a la variable data
           this.data = data;
+          //console.log(data)
         })
         .catch((error) => {
           // Capturar cualquier error y mostrar un mensaje de error

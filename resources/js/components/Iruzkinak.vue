@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="coment">
     <!-- Botón para abrir el modal -->
     <button @click="openModal" class="rounded-full add-comment-button">
       Iruzkinak gehitu
@@ -309,6 +309,7 @@ export default {
 }
 
 .comment-card {
+  width: 100vh;
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);

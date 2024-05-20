@@ -28,7 +28,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <div
         v-for="(info, index) in paginatedInfo"
-        class="card mb-4 shadow-lg rounded-lg overflow-hidden w-full"
+        class="card mb-4 shadow-lg rounded-lg s w-full"
       >
         <div class="flex justify-between items-center mb-2" v-if="this.isAdmin">
           <button
@@ -241,7 +241,12 @@ export default {
             "Content-Type": "application/json",
             "X-CSRF-TOKEN": csrfToken,
           },
-          body: JSON.stringify({ panelId: panelId, soId: soID, nuevosValores: panel ,userID: this.decryptUsername()}),
+          body: JSON.stringify({
+            panelId: panelId,
+            soId: soID,
+            nuevosValores: panel,
+            userID: this.decryptUsername(),
+          }),
         })
           .then((response) => {
             if (response.ok) {
@@ -294,7 +299,7 @@ export default {
             teknologiaIzena: Tek,
             teknologiaBertsioa: Ber,
             cantidad: cantidad,
-            userID: this.decryptUsername()
+            userID: this.decryptUsername(),
           }),
         })
           .then((response) => {
@@ -339,11 +344,11 @@ export default {
       const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // La misma clave secreta que se utilizó para encriptar
       const encryptedUsername = localStorage.getItem("encryptedUsername");
       if (encryptedUsername) {
-        const bytes  = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
+        const bytes = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
         const decryptedUsername = bytes.toString(CryptoJS.enc.Utf8);
         return decryptedUsername;
       } else {
-        return null; 
+        return null;
       }
     },
     canGoNext() {
@@ -363,7 +368,6 @@ export default {
         this.currentPage--;
       }
     },
-
   },
 };
 </script>
@@ -378,7 +382,7 @@ export default {
 .pagination {
   left: 20%;
 }
-button{
+button {
   box-shadow: 0 0 0px rgba(0, 0, 0, 0);
 }
 </style>

@@ -76,6 +76,7 @@
           @click.prevent="showSuperUserIkusi"
           >Super Erabiltzailea</a
         >
+        <div class="logout-container">
         <button
           @click="logout"
           class="w-full rounded-full px-6 py-2 bg-red-400 text-white hover:bg-red-500 transition duration-300 mt-6"
@@ -84,6 +85,7 @@
         </button>
       </div>
     </div>
+  </div>
   </div>
 </template>
 <script>
