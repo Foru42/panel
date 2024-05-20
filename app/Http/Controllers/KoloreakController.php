@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserKoloreak;
 use App\Models\User;
-use App\Models\PanelTek;
-
+use App\Models\UserKoloreak;
 use Illuminate\Http\Request;
 
 class KoloreakController extends Controller

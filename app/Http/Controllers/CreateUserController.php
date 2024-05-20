@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class CreateUserController extends Controller
@@ -37,12 +35,10 @@ class CreateUserController extends Controller
         $user = new User();
         $user->username = $request->username;
         $user->password = bcrypt($request->password);
-        $user->administrador = '0';
         $user->save();
 
         // Retornar una respuesta JSON para indicar que el registro fue exitoso
         return response()->json(['success' => true], 200);
     }
-
 
 }

@@ -14,7 +14,7 @@
     <button type="submit">Iniciar sesión</button>
   </form>
   <div v-if="show_Suser_ikusi">
-    <ErabiltzaileakIkusi/>
+    <ErabiltzaileakIkusi :IdUsu="IdUsu"></ErabiltzaileakIkusi>
   </div>
 </template>
 
@@ -22,6 +22,7 @@
 import ErabiltzaileakIkusi from "./ErabiltzaileakIkusi.vue";
 
 export default {
+  props: ["IdUsu"],
   data() {
     return {
       username: '',

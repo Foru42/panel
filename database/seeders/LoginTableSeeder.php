@@ -16,17 +16,14 @@ class LoginTableSeeder extends Seeder
             [
                 'username' => 'kepa',
                 'password' => Hash::make('111'),
-                'administrador' => '1',
             ],
             [
                 'username' => 'mikel',
                 'password' => Hash::make('222'),
-                'administrador' => '0',
             ],
             [
                 'username' => 'antxon',
                 'password' => Hash::make('333'),
-                'administrador' => '1',
             ],
         ];
 

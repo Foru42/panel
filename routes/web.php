@@ -1,21 +1,21 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Models\Teknologiak;
-use App\Models\SisOperativo;
-use App\Http\Controllers\KoloreakController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\PanelTekController;
-use App\Http\Controllers\ModController;
-use App\Http\Controllers\CreateUserController;
 use App\Http\Controllers\BuscarExtensionesController;
-use App\Http\Controllers\PanelakController;
-use App\Http\Controllers\PanelUpdateController;
-use App\Http\Controllers\UsuarioController;
-use App\Http\Controllers\PanelFavStarContoller;
+use App\Http\Controllers\CreateUserController;
 use App\Http\Controllers\IruzkinController;
+use App\Http\Controllers\KoloreakController;
 use App\Http\Controllers\LdapLoginController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ModController;
+use App\Http\Controllers\PanelakController;
+use App\Http\Controllers\PanelFavStarContoller;
+use App\Http\Controllers\PanelTekController;
+use App\Http\Controllers\PanelUpdateController;
 use App\Http\Controllers\ProfilaController;
+use App\Http\Controllers\UsuarioController;
+use App\Models\SisOperativo;
+use App\Models\Teknologiak;
+use Illuminate\Support\Facades\Route;
 
 //Datubasea
 Route::get('/reset-database', function () {
@@ -23,10 +23,11 @@ Route::get('/reset-database', function () {
     Artisan::call('migrate');
     Artisan::call('db:seed');
     // Devolver una respuesta
-    return 'Base de datos reiniciada';
+    return 'Datu basea Sortuta :)';
 });
 //Datuak
 Route::get('/data', [PanelTekController::class, 'showPaneladmin']);
+Route::get('/roles', [UsuarioController::class, 'asignarRol']);
 
 //Login partea eta Erabiltzaileak
 Route::view('/', 'logeatu');
@@ -65,7 +66,6 @@ Route::post('/panelakGehi', [PanelakController::class, 'store']);
 Route::post('/anadir-fav', [PanelFavStarContoller::class, 'anadirFavorito']);
 Route::get('/gustukoa-ikusi', [PanelTekController::class, 'obtenerInformacionPanelTek']);
 
-
 //Iruzkin Kudeaketa
 Route::post('/add-iruzkin', [IruzkinController::class, 'addComment']);
 Route::get('/show-iruzkin', [IruzkinController::class, 'infoIruzkinak']);
@@ -80,4 +80,3 @@ Route::get('/technologies', function () {
 //Erabiltzailearen Koloreak
 Route::post('/koloreak', [KoloreakController::class, 'sartuKoloreak']);
 Route::post('/koloreakKargatu', [KoloreakController::class, 'KargatuKoloreak']);
-

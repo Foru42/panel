@@ -43,14 +43,12 @@
             </template>
           </td>
           <td v-if="!usuario.editando">
-            {{
-              usuario.administrador === "1" || usuario.administrador === 1 ? "Bai" : "Ez"
-            }}
+            {{ usuario.roles.some((role) => role.name === "admin") ? "Bai" : "Ez" }}
           </td>
           <td v-else>
-            <select v-model="usuario.administrador">
-              <option value="1">Bai</option>
-              <option value="0">Ez</option>
+            <select v-model="usuario.isAdmin">
+              <option :value="true">Bai</option>
+              <option :value="false">Ez</option>
             </select>
           </td>
           <td class="relative">
@@ -81,8 +79,6 @@
       </tbody>
     </table>
 
-    <!-- Botón para abrir el modal -->
-
     <transition name="modal-slide text-black">
       <div v-if="showModal" class="fixed inset-0 flex items-center justify-center z-50">
         <div class="fixed inset-0 bg-black opacity-50"></div>
@@ -94,10 +90,8 @@
           <label for="UsuPass">Pasahitza:</label><br />
           <input type="text" id="UsuPass" v-model="pass" /><br />
 
-          <!-- Mostrar mensaje de error -->
           <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
 
-          <!-- Aquí va el formulario para añadir usuario -->
           <div class="flex justify-end mt-4">
             <button
               @click="storeErabiltzaile"
@@ -122,6 +116,7 @@
 import CryptoJS from "crypto-js";
 
 export default {
+  props: ["IdUsu"],
   data() {
     return {
       usuarios: [],
@@ -132,6 +127,7 @@ export default {
     };
   },
   mounted() {
+    console.log(this.IdUsu);
     this.mostrarUsuarios();
   },
   methods: {
@@ -147,6 +143,7 @@ export default {
           this.usuarios = data.map((usuario) => ({
             ...usuario,
             editando: false, // Agregar propiedad editando a cada usuario
+            isAdmin: usuario.roles.some((role) => role.name === "admin"),
           }));
         })
         .catch((error) => {
@@ -154,15 +151,13 @@ export default {
         });
     },
     eliminarUsuario(id) {
-      // Obtener el token CSRF del meta tag
       var confirmacion = confirm("¿Estás seguro de eliminar este usuario?");
       if (!confirmacion) {
-        return; // Si el usuario cancela, salir de la función sin hacer nada
+        return;
       }
 
       var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
 
-      // Hacer la solicitud AJAX para eliminar el usuario
       fetch("/eliminar-usuario", {
         method: "POST",
         headers: {
@@ -176,11 +171,9 @@ export default {
             throw new Error("Error al eliminar el usuario");
           }
           console.log("Usuario eliminado exitosamente");
-          // Por ejemplo, podrías recargar la página para mostrar la tabla actualizada
-          window.location.reload();
+          this.mostrarUsuarios();
         })
         .catch((error) => {
-          // Maneja los errores si ocurren durante la eliminación
           console.error("Error al eliminar el usuario:", error);
         });
     },
@@ -192,15 +185,13 @@ export default {
         return;
       }
 
-      usuario.editando = !usuario.editando; // Alternar el estado de edición
+      usuario.editando = !usuario.editando;
     },
     cambiarUsuario(nuevosValores) {
       var confirmacion = confirm("¿Seguru erabiltzailea aldatu nahi duzula?");
       if (confirmacion) {
         var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
-        localStorage.removeItem("encryptedUsername");
-        this.encryptAndSaveUsername(nuevosValores.username);
-        // Hacer la solicitud fetch para cambiar el usuario
+        const newRoles = nuevosValores.isAdmin ? [{ name: "admin" }] : [];
         fetch("/cambiar-usuario", {
           method: "POST",
           headers: {
@@ -209,9 +200,9 @@ export default {
           },
           body: JSON.stringify({
             username: nuevosValores.username,
-            administrador: nuevosValores.administrador,
             panelId: nuevosValores.id,
-            _token: csrfToken, // Incluir el token CSRF en los datos de la solicitud
+            roles: newRoles, // Enviamos los nuevos roles
+            _token: csrfToken,
           }),
         })
           .then((response) => {
@@ -219,22 +210,36 @@ export default {
               throw new Error("Error al actualizar el usuario");
             }
             console.log("Usuario actualizado exitosamente");
-            // Por ejemplo, podrías recargar la página para mostrar la tabla actualizada
-            window.location.reload(); // Otra opción es actualizar la lista de usuarios sin recargar la página
+
+            // Actualizar nombre de usuario en el localStorage si el usuario actual cambia su propio nombre
+
+            if (this.IdUsu === nuevosValores.id) {
+              this.encryptAndSaveUsername(nuevosValores.username);
+            }
+
+            //this.mostrarUsuarios();
+            window.location.reload();
           })
           .catch((error) => {
-            // Maneja los errores si ocurren durante la actualización
             console.error("Error al actualizar el usuario:", error);
           });
       }
     },
     encryptAndSaveUsername(username) {
-      const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // Clave secreta para la encriptación (asegúrate de mantenerla segura)
-      const encryptedUsername = CryptoJS.AES.encrypt(
-        username,
-        secretKey
-      ).toString();
+      const secretKey = "LaClaveDelDiosEspacioal1.·¬";
+      const encryptedUsername = CryptoJS.AES.encrypt(username, secretKey).toString();
       localStorage.setItem("encryptedUsername", encryptedUsername);
+    },
+    decryptUsername() {
+      const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // La misma clave secreta que se utilizó para encriptar
+      const encryptedUsername = localStorage.getItem("encryptedUsername");
+      if (encryptedUsername) {
+        const bytes = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
+        const decryptedUsername = bytes.toString(CryptoJS.enc.Utf8);
+        return decryptedUsername;
+      } else {
+        return null;
+      }
     },
     addErabiltzaile() {
       this.showModal = true;
@@ -245,13 +250,11 @@ export default {
     storeErabiltzaile() {
       var csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
 
-      // Preparar los datos del nuevo usuario
       const userData = {
         username: this.erabil,
         password: this.pass,
       };
 
-      // Hacer la solicitud fetch para registrar al nuevo usuario
       fetch("/registrar", {
         method: "POST",
         headers: {
@@ -267,16 +270,14 @@ export default {
           return response.json();
         })
         .then((data) => {
-          // Si hay un error, mostrar el mensaje de error en el modal
           if (data.error) {
             this.errorMessage = data.error;
           } else {
             this.showModal = false;
-            window.location.reload();
+            this.mostrarUsuarios();
           }
         })
         .catch((error) => {
-          // Manejar los errores si ocurren durante el registro
           this.errorMessage = "Usuario ya registrado";
           console.error("Error al registrar el usuario:", error);
         });

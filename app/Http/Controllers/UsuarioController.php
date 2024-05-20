@@ -11,7 +11,7 @@ class UsuarioController extends Controller
 {
     public function index()
     {
-        $usuarios = User::all(['id', 'username', 'password', 'administrador', 'mail', 'argazki']);
+        $usuarios = User::with('roles')->get(['id', 'username', 'mail', 'argazki']);
         return response()->json($usuarios);
     }
     public function eliminar(Request $request)
@@ -31,17 +31,22 @@ class UsuarioController extends Controller
     {
         // Obtener los datos del formulario
         $username = $request->input('username');
-        $administrador = $request->input('administrador');
         $panelId = $request->input('panelId');
+        $roles = $request->input('roles');
 
         // Buscar el usuario por su ID
         $usuario = User::findOrFail($panelId);
 
         // Actualizar los datos del usuario
         $usuario->username = $username;
-        $usuario->administrador = $administrador;
         $usuario->save();
-
+        if ($roles) {
+            // Si hay roles, asignar el rol "admin" al usuario
+            $usuario->assignRole('admin');
+        } else {
+            // Si no hay roles asignados, eliminar cualquier asignación previa del rol "admin"
+            $usuario->removeRole('admin');
+        }
         // Si necesitas devolver algún mensaje o datos al frontend, puedes hacerlo aquí
         return response()->json(['message' => 'Usuario actualizado correctamente'], 200);
     }
@@ -72,5 +77,17 @@ class UsuarioController extends Controller
         $nombre = $request->input('userId');
         $usuarios = User::where('username', $nombre)->get();
         return response()->json($usuarios);
+    }
+
+    public function asignarRol(Request $request)
+    {
+        // Obtener el usuario Kepa
+        $user = User::where('username', 'kepa')->first();
+        $user->assignRole('admin');
+        $user = User::where('username', 'antxon')->first();
+        $user->assignRole('admin');
+
+        // Devolver una respuesta
+        return 'Rol asignado correctamente a Kepa';
     }
 }

@@ -29,12 +29,11 @@ class LoginController extends Controller
 
     public function checkAdminStatus(Request $request)
     {
-        // Verificar si el usuario actual es administrador
-        $isAdmin = $request->user()->administrador == 1;
+        $user = Auth::user();
+        $isAdmin = $user->hasRole('admin');
 
         return response()->json(['isAdmin' => $isAdmin]);
     }
-
 
     public function logout(Request $request)
     {

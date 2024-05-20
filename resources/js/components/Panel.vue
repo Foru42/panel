@@ -25,7 +25,7 @@
       <Iruzkinak v-if="show_Iruzkin_ikusi" :isAdmin="isAdmin"></Iruzkinak>
       <LoginPanela v-if="show_KoloreAldaketa_ikusi"></LoginPanela>
       <Portada v-if="show_portada"></Portada>
-      <SuperUser v-if="show_SuperUser_ikusi"></SuperUser>
+      <SuperUser v-if="show_SuperUser_ikusi" :IdUsu="IdUsu"></SuperUser>
     </div>
   </div>
 </template>
@@ -64,6 +64,7 @@ export default {
   data() {
     return {
       username: "",
+      IdUsu: "",
       show_datuak_ikusi: false, // Inicialmente mostrar DatuakIkusi
       show_teknologiak_ikusi: false,
       show_panelakGehitu_ikusi: false, // Inicialmente no mostrar PanelakGehitu
@@ -79,6 +80,7 @@ export default {
   },
   mounted() {
     this.username = this.decryptUsername();
+    console.log("Usuario actual:", this.decryptUsername());
     this.checkAdminStatus();
     this.KoloreaKargatu();
   },
@@ -225,13 +227,8 @@ export default {
       })
         .then((response) => response.json())
         .then((data) => {
-          if (data && data.isAdmin) {
-            console.log("El usuario es administrador.");
-            this.isAdmin = true;
-          } else {
-            console.log("El usuario no es administrador.");
-            this.isAdmin = false;
-          }
+          this.isAdmin = data.isAdmin; // Asigna el valor basado en la respuesta del backend
+          console.log(this.isAdmin);
         })
         .catch((error) => {
           console.error("Error al verificar el estado de administrador:", error);
@@ -271,6 +268,7 @@ export default {
 
           const colorReducido = tinycolor(data.panel).lighten(10).toString();
           document.getElementById("app").style.background = colorReducido;
+          this.IdUsu = data.login_id;
         })
         .catch((error) => {
           console.error("Error formulario", error);
