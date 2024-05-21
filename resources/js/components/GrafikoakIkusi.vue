@@ -1,6 +1,10 @@
 <template>
   <div class="flex justify-center flex-wrap">
-    <div v-for="technology in technologiesWithData" :key="technology.technology" class="m-4">
+    <div
+      v-for="technology in technologiesWithData"
+      :key="technology.technology"
+      class="m-4"
+    >
       <canvas :id="'myChart-' + technology.technology" style="max-width: 300px"></canvas>
     </div>
   </div>
@@ -97,8 +101,8 @@ export default {
             };
           });
 
-          this.technologiesWithData = chartData.filter(
-            (tech) => Object.values(tech.data).some((val) => val > 0)
+          this.technologiesWithData = chartData.filter((tech) =>
+            Object.values(tech.data).some((val) => val > 0)
           );
 
           this.$nextTick(() => {
@@ -106,9 +110,7 @@ export default {
               const xValues = Object.keys(technologyData.data);
               const yValues = Object.values(technologyData.data);
 
-              const ctx = document.getElementById(
-                "myChart-" + technologyData.technology
-              );
+              const ctx = document.getElementById("myChart-" + technologyData.technology);
               if (ctx) {
                 // Destruir el gráfico anterior si existe
                 Chart.getChart(ctx)?.destroy();
@@ -128,8 +130,7 @@ export default {
                     plugins: {
                       title: {
                         display: true,
-                        text:
-                          technologyData.technology + " Teknologiak Panel bakoitzean",
+                        text: technologyData.technology + " Teknologiak Panel bakoitzean",
                       },
                     },
                   },

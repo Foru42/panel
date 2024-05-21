@@ -4,9 +4,9 @@
     <button id="sidebaricon" @click="toggleSidebar" class="open-sidebar-icon">☰</button>
 
     <!-- Contenido del sidebar -->
-    <div id="sidebar" :class="{ 'sidebar-hidden': !showSidebar }"  >
+    <div id="sidebar" :class="{ 'sidebar-hidden': !showSidebar }">
       <div class="sidebar-brand py-4 px-6">
-        Kontrol Panela<br>
+        Kontrol Panela<br />
         <span class="block">Aupa {{ username }}</span>
       </div>
 
@@ -68,7 +68,7 @@
           @click.prevent="showKoloreAldaketaIkusi"
           >Profila</a
         >
-        <a 
+        <a
           v-if="isAdmin"
           href="#"
           id="panel11"
@@ -77,15 +77,15 @@
           >Super Erabiltzailea</a
         >
         <div class="logout-container">
-        <button
-          @click="logout"
-          class="w-full rounded-full px-6 py-2 bg-red-400 text-white hover:bg-red-500 transition duration-300 mt-6"
-        >
-          Logout
-        </button>
+          <button
+            @click="logout"
+            class="w-full rounded-full px-6 py-2 bg-red-400 text-white hover:bg-red-500 transition duration-300 mt-6"
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
 <script>
@@ -188,5 +188,4 @@ export default {
   cursor: pointer;
   font-size: 24px; /* Tamaño del icono */
 }
-
 </style>

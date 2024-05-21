@@ -234,7 +234,7 @@ export default {
         .then((response) => response.json())
         .then((data) => {
           this.isAdmin = data.isAdmin; // Asigna el valor basado en la respuesta del backend
-          console.log(this.isAdmin);
+          //console.log(this.isAdmin);
         })
         .catch((error) => {
           console.error("Error al verificar el estado de administrador:", error);
@@ -300,8 +300,7 @@ export default {
 .content-container {
   max-width: auto; /* Ancho máximo del contenedor */
   padding: 20px; /* Espacio interno */
-  border: 1px solid #ccc; 
+  border: 1px solid #ccc;
   border-radius: 8px; /* Bordes redondeados */
-
 }
 </style>

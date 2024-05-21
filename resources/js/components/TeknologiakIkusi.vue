@@ -1,8 +1,8 @@
 <template>
-  <div class="padd" >
+  <div class="padd">
     <h1 id="Topatek">Luzapenen topaketa</h1>
     <input
-     class="text-black"
+      class="text-black"
       type="text"
       v-model="searchTerm"
       @keyup.enter="realizarBusqueda"
@@ -32,8 +32,7 @@ export default {
       resultados: [],
     };
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     realizarBusqueda(event) {
       if (event.key === "Enter") {
@@ -63,7 +62,6 @@ export default {
           console.error("Error al buscar extensiones:", error);
         });
     },
-
   },
 };
 </script>

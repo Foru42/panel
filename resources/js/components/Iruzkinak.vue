@@ -39,7 +39,8 @@
           <span class="username">
             {{ comment.username }}
           </span>
-          <button v-if="this.isAdmin"
+          <button
+            v-if="this.isAdmin"
             class="flex items-center justify-center bg-blue-500 text-white font-bold rounded-full h-8 w-8 mr-2"
             @click="MostrarEditar(comment.username)"
           >
@@ -61,11 +62,11 @@
             >
               <i class="fas fa-trash-alt"></i>
             </button>
-            <button   
+            <button
               @click="editComment(iruzkin.id, iruzkin.title, iruzkin.desk)"
               class="items-center justify-center bg-green-500 text-white font-bold rounded-full h-8 w-8"
             >
-              <i  class="fas fa-edit"></i>
+              <i class="fas fa-edit"></i>
             </button>
           </div>
         </div>
@@ -115,7 +116,6 @@ export default {
     };
   },
   mounted() {
-   
     this.fetchComments();
   },
   methods: {
@@ -328,7 +328,6 @@ export default {
   font-weight: bold;
 }
 
-
 .comment-body {
   padding: 10px;
 }
@@ -348,14 +347,12 @@ export default {
 
 @media (max-width: 1048px) {
   .comment-card {
-  width: 50vh;
-
+    width: 50vh;
   }
 }
 @media (max-width: 784px) {
   .comment-card {
-  width: 100%;
-
+    width: 100%;
   }
 }
 </style>

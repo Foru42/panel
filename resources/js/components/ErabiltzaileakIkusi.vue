@@ -127,7 +127,7 @@ export default {
     };
   },
   mounted() {
-    console.log(this.IdUsu);
+    //console.log(this.IdUsu);
     this.mostrarUsuarios();
   },
   methods: {
@@ -209,7 +209,7 @@ export default {
             if (!response.ok) {
               throw new Error("Error al actualizar el usuario");
             }
-            console.log("Usuario actualizado exitosamente");
+            //console.log("Usuario actualizado exitosamente");
 
             // Actualizar nombre de usuario en el localStorage si el usuario actual cambia su propio nombre
 

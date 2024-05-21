@@ -121,7 +121,7 @@ export default {
     },
     saveChanges() {
       const file = this.$refs.irudi.files[0]; // Obtener el archivo de imagen
-      const mail = document.getElementById('gmail').value ; // Obtener el nombre de usuario
+      const mail = document.getElementById("gmail").value; // Obtener el nombre de usuario
 
       // Verificar si la imagen o el nombre de usuario no están vacíos
       if (file || mail) {
@@ -154,8 +154,8 @@ export default {
           })
           .then((data) => {
             // Manejar la respuesta del servidor si es necesario
-            console.log(data);
-           window.location.reload();
+            //console.log(data);
+            window.location.reload();
           })
           .catch((error) => {
             console.error("Error formulario", error);

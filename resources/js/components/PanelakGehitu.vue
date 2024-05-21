@@ -2,7 +2,7 @@
   <div id="anadir">
     <!-- Formulario -->
     <div id="grouped_info" :data-info="groupedInfo"></div>
-    <form @submit.prevent="submitForm" enctype="multipart/form-data" >
+    <form @submit.prevent="submitForm" enctype="multipart/form-data">
       <div class="form-group">
         <label for="izenapane">Izena Panela:</label>
         <input
@@ -105,7 +105,6 @@
 <script>
 import CryptoJS from "crypto-js";
 export default {
-  
   data() {
     return {
       groupedInfo: null,
@@ -123,44 +122,44 @@ export default {
   },
   methods: {
     submitForm() {
-  const formData = new FormData();
-  formData.append("izenapane", this.izenapane);
-  formData.append("desk", this.desk);
-  formData.append("izenatek", this.izenatek);
-  formData.append("desktek", this.desktek);
-  formData.append("vertek", this.vertek);
-  formData.append("So_id", this.So_id);
-  formData.append("usuario", this.decryptUsername());
+      const formData = new FormData();
+      formData.append("izenapane", this.izenapane);
+      formData.append("desk", this.desk);
+      formData.append("izenatek", this.izenatek);
+      formData.append("desktek", this.desktek);
+      formData.append("vertek", this.vertek);
+      formData.append("So_id", this.So_id);
+      formData.append("usuario", this.decryptUsername());
 
-  const file = this.$refs.irudi.files[0];
-  const fileName = file.name; // Generar un nombre único para la imagen
-  formData.append("irudi", file, fileName); // Adjuntar el archivo con el nuevo nombre único
+      const file = this.$refs.irudi.files[0];
+      const fileName = file.name; // Generar un nombre único para la imagen
+      formData.append("irudi", file, fileName); // Adjuntar el archivo con el nuevo nombre único
 
-  fetch("/panelakGehi", {
-    method: "POST",
-    body: formData,
-    headers: {
-      "X-CSRF-TOKEN": document
-        .querySelector('meta[name="csrf-token"]')
-        .getAttribute("content"),
+      fetch("/panelakGehi", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Error al enviar el formulario");
+          }
+        })
+        .then((data) => {
+          // Manejar la respuesta del servidor si es necesario
+          //console.log(data);
+          window.location.href = "/panel";
+        })
+        .catch((error) => {
+          console.error("Error formulario", error);
+        });
     },
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("Error al enviar el formulario");
-      }
-    })
-    .then((data) => {
-      // Manejar la respuesta del servidor si es necesario
-      //console.log(data);
-      window.location.href = "/panel";
-    })
-    .catch((error) => {
-      console.error("Error formulario", error);
-    });
-},
 
     cargarSistemasOperativos() {
       // Realizar la petición para obtener los sistemas operativos
@@ -205,7 +204,7 @@ export default {
 
 <style scoped>
 textarea,
-input{
+input {
   color: black;
 }
 </style>

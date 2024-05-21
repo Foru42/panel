@@ -274,7 +274,7 @@ export default {
         });
     },
     sumarPanel(id) {
-      console.log(id);
+      //console.log(id);
       var tarjeta = document.getElementById(id);
 
       var ize = tarjeta.querySelector(".panel-izena").textContent;

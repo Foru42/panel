@@ -1,7 +1,5 @@
 <template>
-  
   <div>
-  
     <button
       @click="openColorPicker"
       class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mb-4 mr-4"
@@ -10,7 +8,7 @@
       <span class="text-2xl">&#x1F308;</span>
       <!-- Icono de paleta de colores -->
     </button>
-    
+
     <button
       @click="defaultChanger"
       class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mb-4"
@@ -22,9 +20,12 @@
     <!-- Modal para el selector de color -->
     <div v-if="colorPickerOpen" class="modal">
       <div class="modal-content">
-        <button @click="closeColor" class=" top-0  mt-2 mr-2 text-gray-700 focus:outline-none">
-      <span class="text-2xl">&#x2716;</span>
-    </button>
+        <button
+          @click="closeColor"
+          class="top-0 mt-2 mr-2 text-gray-700 focus:outline-none"
+        >
+          <span class="text-2xl">&#x2716;</span>
+        </button>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <!-- Opciones de colores -->
           <div
@@ -64,13 +65,11 @@
 <script>
 import CryptoJS from "crypto-js";
 
-
 export default {
-
   data() {
     return {
-      SidebarColor: localStorage.getItem('koloreS'),
-      PaneColor: localStorage.getItem('koloreP'),
+      SidebarColor: localStorage.getItem("koloreS"),
+      PaneColor: localStorage.getItem("koloreP"),
       colorPickerOpen: false,
     };
   },
@@ -79,11 +78,11 @@ export default {
       const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // La misma clave secreta que se utilizó para encriptar
       const encryptedUsername = localStorage.getItem("encryptedUsername");
       if (encryptedUsername) {
-        const bytes  = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
+        const bytes = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
         const decryptedUsername = bytes.toString(CryptoJS.enc.Utf8);
         return decryptedUsername;
       } else {
-        return null; 
+        return null;
       }
     },
     openColorPicker() {
@@ -101,12 +100,12 @@ export default {
       document.body.style.overflow = "";
     },
     changePaneColor(color) {
-      localStorage.setItem('koloreP',color);
+      localStorage.setItem("koloreP", color);
       const tipo = "panel";
       this.fetcheskaera(color, tipo);
     },
     changeSidebarColor(color) {
-      localStorage.setItem('koloreS',color);
+      localStorage.setItem("koloreS", color);
       const tipo = "sidebar";
       this.fetcheskaera(color, tipo);
     },
@@ -136,11 +135,11 @@ export default {
     defaultChanger() {
       let color = "#3584e4";
       let tipo = "sidebar";
-      localStorage.setItem('koloreS',color);
+      localStorage.setItem("koloreS", color);
       this.fetcheskaera(color, tipo);
       color = "#f6f5f4";
       tipo = "panel";
-      localStorage.setItem('koloreP',color);
+      localStorage.setItem("koloreP", color);
       this.fetcheskaera(color, tipo);
       setTimeout(function () {
         window.location.reload();

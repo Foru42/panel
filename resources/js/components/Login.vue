@@ -111,7 +111,7 @@ export default {
         .then((data) => {
           // Verificar si la respuesta contiene la propiedad 'success'
           if (data && data.success) {
-           this.encryptAndSaveUsername(this.username);
+            this.encryptAndSaveUsername(this.username);
             // Redirigir solo si el inicio de sesión es exitoso
             window.location.href = "/panel";
           } else {
@@ -124,7 +124,6 @@ export default {
         });
     },
     logout() {
-
       fetch("/logout", {
         method: "POST",
         headers: {
@@ -152,10 +151,7 @@ export default {
 
     encryptAndSaveUsername(username) {
       const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // Clave secreta para la encriptación (asegúrate de mantenerla segura)
-      const encryptedUsername = CryptoJS.AES.encrypt(
-        username,
-        secretKey
-      ).toString();
+      const encryptedUsername = CryptoJS.AES.encrypt(username, secretKey).toString();
       localStorage.setItem("encryptedUsername", encryptedUsername);
     },
   },
