@@ -3,13 +3,12 @@ namespace App\Models;
 
 class LoginLdapAuto
 {
-    private static $instance = NULL;
+    private static $instance = null;
 
-    private static $options =
-        [
-            LDAP_OPT_PROTOCOL_VERSION => 3,
-            LDAP_OPT_REFERRALS => 0
-        ];
+    private static $options = [
+        LDAP_OPT_PROTOCOL_VERSION => 3,
+        LDAP_OPT_REFERRALS => 0,
+    ];
 
     // .env
     private static $domain = '';
@@ -36,8 +35,9 @@ class LoginLdapAuto
         foreach ($servers as $server) {
             $ldap = ldap_connect("ldap://{$server}");
             if ($ldap) {
-                foreach (self::$options as $key => $value)
+                foreach (self::$options as $key => $value) {
                     ldap_set_option($ldap, $key, $value);
+                }
 
                 if (ldap_bind($ldap)) {
                     $connection = true;
@@ -56,8 +56,9 @@ class LoginLdapAuto
 
     public static function getInstance()
     {
-        if (!self::$instance)
+        if (!self::$instance) {
             self::connect();
+        }
 
         return self::$instance;
     }
@@ -68,8 +69,10 @@ class LoginLdapAuto
         if ($instance) {
             if (@ldap_bind($instance, $user . "@" . self::$domain, $passwd)) {
                 $dns = self::getDN($user);
-                if (isset($dns, $dns['dn']) && self::checkGroup($instance, $dns['dn']))
+                if (isset($dns, $dns['dn']) && self::checkGroup($instance, $dns['dn'])) {
                     return true;
+                }
+
             }
         }
         return false;
@@ -80,13 +83,15 @@ class LoginLdapAuto
         $instance = self::getInstance();
         $result = ldap_search($instance, self::$basedn, "(samaccountname={$samaccountname})", self::$attributes);
 
-        if ($result === FALSE)
+        if ($result === false) {
             return false;
+        }
 
         $entries = ldap_get_entries($instance, $result);
 
-        if ($entries['count'] > 0)
+        if ($entries['count'] > 0) {
             return self::prepareEntry($entries[0]);
+        }
 
         return false;
     }
@@ -95,8 +100,9 @@ class LoginLdapAuto
     {
         $attributes = ['memberof'];
         $result = ldap_read($ad, $userdn, '(memberof=*)', $attributes);
-        if ($result === false)
+        if ($result === false) {
             return false;
+        }
 
         $entries = ldap_get_entries($ad, $result);
         if ($entries['count'] > 0 && isset($entries[0], $entries[0]['memberof'], $entries[0]['memberof']['count'])) {
@@ -106,8 +112,10 @@ class LoginLdapAuto
                 $group = preg_match("/^CN=([^,]+)/", $entries[0]['memberof'][$i], $m);
                 if (isset($m) && isset($m[1])) {
                     $group = $m[1];
-                    if (in_array($group, self::$groups))
+                    if (in_array($group, self::$groups)) {
                         return true;
+                    }
+
                 }
             }
         }
@@ -123,12 +131,16 @@ class LoginLdapAuto
                 $key = $value;
                 $value = $entry[$value];
                 unset($value['count']);
-                if (count($value) === 1)
+                if (count($value) === 1) {
                     $value = $value[0];
+                }
+
             }
             // if is utf-8
-            if (preg_match('//u', serialize($value)))
+            if (preg_match('//u', serialize($value))) {
                 $result[$key] = $value;
+            }
+
         }
         return $result;
     }

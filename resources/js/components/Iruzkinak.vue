@@ -313,7 +313,6 @@ export default {
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  transition: 0.3s;
   margin-bottom: 20px;
 }
 
@@ -347,4 +346,16 @@ export default {
   cursor: pointer;
 }
 
+@media (max-width: 1048px) {
+  .comment-card {
+  width: 50vh;
+
+  }
+}
+@media (max-width: 784px) {
+  .comment-card {
+  width: 100%;
+
+  }
+}
 </style>
