@@ -300,7 +300,7 @@ export default {
 .content-container {
   max-width: auto; /* Ancho máximo del contenedor */
   padding: 20px; /* Espacio interno */
-  border: 1px solid #ccc; /* Borde */
+  border: 1px solid #ccc; 
   border-radius: 8px; /* Bordes redondeados */
 
 }
