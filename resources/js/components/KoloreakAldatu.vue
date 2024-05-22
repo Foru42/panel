@@ -1,21 +1,19 @@
 <template>
-  <div>
+  <div class="flex flex-col items-center">
     <button
       @click="openColorPicker"
-      class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mb-4 mr-4"
+      class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mb-4 transition duration-300 flex items-center"
     >
       <span class="mr-2">Aukeratu Kolorea</span>
       <span class="text-2xl">&#x1F308;</span>
-      <!-- Icono de paleta de colores -->
     </button>
 
     <button
       @click="defaultChanger"
-      class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mb-4"
+      class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mb-4 transition duration-300 flex items-center"
     >
       <span class="mr-2">Default</span>
       <span class="text-2xl">&#x1F37F;</span>
-      <!-- Icono de botella de licor -->
     </button>
     <!-- Modal para el selector de color -->
     <div v-if="colorPickerOpen" class="modal">
@@ -26,11 +24,9 @@
         >
           <span class="text-2xl">&#x2716;</span>
         </button>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Opciones de colores -->
-          <div
-            class="color-option rounded-lg p-4 border border-gray-200 hover:border-purple-500"
-          >
+          <div class="color-option rounded-lg p-4 border border-gray-200 hover:border-purple-500 transition duration-300">
             <p class="text-black mt-2 font-bold">Sidebar Kolorea</p>
             <div class="input-container flex justify-center items-center">
               <input
@@ -38,15 +34,11 @@
                 v-model="SidebarColor"
                 @change="changeSidebarColor(SidebarColor)"
                 @click.stop
+                class="cursor-pointer"
               />
             </div>
           </div>
-          <button @click="closeColorPicker" class="text-black mt-2 font-bold">
-            Gorde Koloreak
-          </button>
-          <div
-            class="color-option rounded-lg p-4 border border-gray-200 hover:border-purple-500 transition duration-300"
-          >
+          <div class="color-option rounded-lg p-4 border border-gray-200 hover:border-purple-500 transition duration-300">
             <p class="text-black mt-2 font-bold">Panel printzipal</p>
             <div class="input-container flex justify-center items-center">
               <input
@@ -54,10 +46,14 @@
                 v-model="PaneColor"
                 @change="changePaneColor(PaneColor)"
                 @click.stop
+                class="cursor-pointer"
               />
             </div>
           </div>
         </div>
+        <button @click="closeColorPicker" class=" text-black mt-4 font-bold bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300">
+          Gorde Koloreak
+        </button>
       </div>
     </div>
   </div>
@@ -166,7 +162,8 @@ export default {
 .modal-content {
   background-color: white;
   padding: 20px;
-  border-radius: 5px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .color-option {

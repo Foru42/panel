@@ -1,24 +1,25 @@
 <template>
-  <div
-    id="aldaketak"
-    class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 text-black"
-  >
+  <div id="aldaketak" class="container mx-auto px-4 py-8">
+    <div v-if="data.length === 0" class="text-red-500 text-center mb-4">
+      Aukeratu gustuko panel bat
+    </div>
     <div
-      v-for="item in data"
-      :key="item.id"
-      class="md:flex md:justify-center md:items-center mb-8"
+      v-else
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6"
     >
-      <div class="card mb-4 shadow-lg rounded-lg overflow-hidden w-full car">
+      <div
+        v-for="item in data"
+        :key="item.id"
+        class="card shadow-lg rounded-lg overflow-hidden"
+      >
         <img
           :src="item.panel.irudi"
-          class="w-full object-cover"
+          class="w-full h-48 object-cover"
           :alt="item.panel.izena"
         />
-        <div class="px-6 py-4 flex justify-between">
+        <div class="p-6">
           <div class="font-bold text-xl mb-2">{{ item.panel.izena }}</div>
           <p class="text-gray-700 text-base mb-2">{{ item.name }}</p>
-        </div>
-        <div class="px-6 py-4">
           <p class="text-gray-700 text-base mb-2">{{ item.panel.desk }}</p>
           <p class="text-gray-700 text-base mb-2">
             {{ item.teknologia.izena }} - {{ item.teknologia.desk }}
@@ -33,7 +34,6 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {
   data() {

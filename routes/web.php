@@ -22,13 +22,16 @@ Route::get('/reset-database', function () {
     Artisan::call('migrate:fresh');
     Artisan::call('migrate');
     Artisan::call('db:seed');
+
+    // Llamar al método asignarRol del UsuarioController
+    app()->call('App\Http\Controllers\UsuarioController@asignarRol');
+
     // Devolver una respuesta
     return 'Datu basea Sortuta :)';
-
 });
+
 //Datuak
 Route::get('/data', [PanelTekController::class, 'showPaneladmin']);
-Route::get('/roles', [UsuarioController::class, 'asignarRol']);
 
 //Login partea eta Erabiltzaileak
 Route::view('/', 'logeatu');

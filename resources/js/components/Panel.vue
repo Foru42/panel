@@ -28,7 +28,7 @@
           <FavIkusi v-if="show_FavIkusi_ikusi"></FavIkusi>
           <GrafikoakIkusi v-if="show_Grafiko_ikusi"></GrafikoakIkusi>
           <Iruzkinak v-if="show_Iruzkin_ikusi" :isAdmin="isAdmin"></Iruzkinak>
-          <LoginPanela v-if="show_KoloreAldaketa_ikusi"></LoginPanela>
+          <Profila v-if="show_KoloreAldaketa_ikusi"></Profila>
           <Portada v-if="show_portada"></Portada>
           <SuperUser v-if="show_SuperUser_ikusi" :IdUsu="IdUsu"></SuperUser>
         </div>
@@ -46,7 +46,7 @@ import PasahitzaAldatu from "./PasahitzaAldatu.vue";
 import FavIkusi from "./FavIkusi.vue";
 import GrafikoakIkusi from "./GrafikoakIkusi.vue";
 import Iruzkinak from "./Iruzkinak.vue";
-import LoginPanela from "./LoginPanela.vue";
+import Profila from "./Profila.vue";
 import Portada from "./Portada.vue";
 import SuperUser from "./SuperUser.vue";
 import CryptoJS from "crypto-js";
@@ -65,7 +65,7 @@ export default {
     Iruzkinak,
     Portada,
     SuperUser,
-    LoginPanela,
+    Profila,
   },
   data() {
     return {

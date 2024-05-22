@@ -17,11 +17,8 @@ class LoginController extends Controller
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
-            $user = Auth::user();
 
-            $isAdmin = $user->administrador == 1 ? true : false;
-
-            return response()->json(['success' => true, 'isAdmin' => $isAdmin]); // Inicio de sesión exitoso
+            return response()->json(['success' => true]); // Inicio de sesión exitoso
         } else {
             return response()->json(['error' => 'Credenciales incorrectas'], 401); // Credenciales incorrectas
         }
