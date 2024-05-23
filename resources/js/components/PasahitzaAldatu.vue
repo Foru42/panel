@@ -9,7 +9,7 @@
         <div class="modal-content">
           <span @click="togglePasswordForm" class="close">&times;</span>
           <form id="pass" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <div class="mb-4">
+            <div class="mb-4 relative">
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
                 for="password_actual"
@@ -18,8 +18,8 @@
               </label>
               <input
                 v-model="password_actual"
+                :type="showPasswordActual ? 'text' : 'password'"
                 id="password_actual"
-                type="password"
                 name="password_actual"
                 required
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -27,9 +27,12 @@
               <span v-if="errors.password_actual" class="text-red-500 text-xs">{{
                 errors.password_actual
               }}</span>
+              <span class="absolute right-3 top-9 cursor-pointer" @click="toggleShowPassword('actual')">
+                <i :class="showPasswordActual ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+              </span>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 relative">
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
                 for="password_nueva"
@@ -38,15 +41,18 @@
               </label>
               <input
                 v-model="password_nueva"
+                :type="showPasswordNueva ? 'text' : 'password'"
                 id="password_nueva"
-                type="password"
                 name="password_nueva"
                 required
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
+              <span class="absolute right-3 top-9 cursor-pointer" @click="toggleShowPassword('nueva')">
+                <i :class="showPasswordNueva ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+              </span>
             </div>
 
-            <div class="mb-6">
+            <div class="mb-6 relative">
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
                 for="password_nueva_confirmation"
@@ -55,8 +61,8 @@
               </label>
               <input
                 v-model="password_nueva_confirmation"
+                :type="showPasswordNuevaConfirmation ? 'text' : 'password'"
                 id="password_nueva_confirmation"
-                type="password"
                 name="password_nueva_confirmation"
                 required
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -64,6 +70,9 @@
               <span v-if="errors.password_confirmation" class="text-red-500 text-xs">{{
                 error
               }}</span>
+              <span class="absolute right-3 top-9 cursor-pointer" @click="toggleShowPassword('nueva_confirmation')">
+                <i :class="showPasswordNuevaConfirmation ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+              </span>
             </div>
 
             <div v-if="error" class="mb-4">
@@ -73,7 +82,7 @@
             <div class="flex justify-center">
               <button
                 type="button"
-                @click="changePassword"
+                @click="cambiarContra"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300"
               >
                 Gorde
@@ -87,6 +96,7 @@
 </template>
 
 
+
 <script>
 export default {
   data() {
@@ -97,6 +107,9 @@ export default {
       errors: {},
       error: "",
       showPasswordForm: false,
+      showPasswordActual: false,
+      showPasswordNueva: false,
+      showPasswordNuevaConfirmation: false,
     };
   },
   methods: {
@@ -113,9 +126,7 @@ export default {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute("content"),
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
         },
         body: JSON.stringify({
           password_actual: this.password_actual,
@@ -130,27 +141,40 @@ export default {
           return response.json();
         })
         .then((data) => {
-          console.log(data.message);
-          window.location.reload();
+          this.showPasswordForm = !this.showPasswordForm;
+          this.resetForm();
         })
         .catch((error) => {
           if (error.response && error.response.status === 403) {
-            // Si el error tiene una respuesta y el estado es 403 (Forbidden)
             alert("La contraseña actual no es válida.");
           } else {
-            // En caso de cualquier otro error, muestra un mensaje genérico
             this.error = "Errorea, pasahitza ez da erabiltzailearen pasahitza.";
           }
         });
     },
+    resetForm() {
+      this.password_actual = "";
+      this.password_nueva = "";
+      this.password_nueva_confirmation = "";
+    },
+    toggleShowPassword(field) {
+      if (field === 'actual') {
+        this.showPasswordActual = !this.showPasswordActual;
+      } else if (field === 'nueva') {
+        this.showPasswordNueva = !this.showPasswordNueva;
+      } else if (field === 'nueva_confirmation') {
+        this.showPasswordNuevaConfirmation = !this.showPasswordNuevaConfirmation;
+      }
+    }
   },
 };
 </script>
+
 <style scoped>
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+.fade-enter, .fade-leave-to {
   opacity: 0;
 }
 .modal {
@@ -200,5 +224,17 @@ export default {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>

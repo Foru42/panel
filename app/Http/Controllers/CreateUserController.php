@@ -18,6 +18,7 @@ class CreateUserController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required|unique:users',
             'password' => 'required',
+            'gmail' => 'required',
         ]);
 
         // Verificar si la validación falla
@@ -35,6 +36,7 @@ class CreateUserController extends Controller
         $user = new User();
         $user->username = $request->username;
         $user->password = bcrypt($request->password);
+        $user->Gmail = $request->gmail;
         $user->save();
 
         // Retornar una respuesta JSON para indicar que el registro fue exitoso

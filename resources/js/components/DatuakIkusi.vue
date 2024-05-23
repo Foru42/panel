@@ -58,7 +58,7 @@
           <p v-if="!info.editing" class="card-text panel-desk">{{ info.panel.desk }}</p>
           <input v-else class="card-text panel-desk-input" v-model="info.panel.desk" />
           <p v-if="!info.editing" class="card-text teknologia">
-            {{ info.teknologia.izena }} - {{ info.teknologia.desk }}
+            {{ info.teknologia.izena }} | {{ info.teknologia.desk }}
           </p>
           <div v-else>
             <input class="card-text teknologia-izena" v-model="info.teknologia.izena" />
@@ -198,7 +198,7 @@ export default {
         })
           .then((response) => {
             if (response.ok) {
-              window.location.reload();
+            this.allDatos();
             } else {
               // Si hubo un error, mostrar un mensaje de error
               console.error("Error al eliminar el panel:", response.statusText);
@@ -251,7 +251,7 @@ export default {
           .then((response) => {
             if (response.ok) {
               // Si la actualización fue exitosa, recargar la página
-              window.location.reload();
+             this.allDatos();
             } else {
               // Si hubo un error, puedes mostrar un mensaje de error o realizar otras acciones necesarias
               console.error("Error al actualizar el panel:", response.statusText);
@@ -304,7 +304,7 @@ export default {
         })
           .then((response) => {
             if (response.ok) {
-              window.location.reload(); // Recargar la página para mostrar los cambios
+             this.allDatos();
             } else {
               // Si hubo un error, mostrar un mensaje de error
               console.error("Error al añadir panel:", response.statusText);

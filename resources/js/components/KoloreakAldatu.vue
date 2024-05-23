@@ -60,7 +60,7 @@
 </template>
 <script>
 import CryptoJS from "crypto-js";
-
+import tinycolor from "tinycolor2";
 export default {
   data() {
     return {
@@ -89,7 +89,7 @@ export default {
     closeColorPicker() {
       this.colorPickerOpen = false;
       document.body.style.overflow = "";
-      window.location.reload();
+      this.KoloreaKargatu();
     },
     closeColor() {
       this.colorPickerOpen = false;
@@ -137,9 +137,56 @@ export default {
       tipo = "panel";
       localStorage.setItem("koloreP", color);
       this.fetcheskaera(color, tipo);
-      setTimeout(function () {
-        window.location.reload();
-      }, 500);
+      this.KoloreaKargatu();
+    },
+    KoloreaKargatu() {
+      const userId = this.decryptUsername();
+      fetch("/koloreakKargatu", {
+        method: "POST",
+        body: JSON.stringify({ login_id: userId }),
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Error al enviar el formulario");
+          }
+        })
+        .then((data) => {
+          const elementS = document.getElementById("sidebar");
+          const elementP = document.getElementById("main-content");
+
+          const textoSidebar = this.textColor(data.sidebar);
+          elementS.style.background = data.sidebar;
+          elementS.style.color = textoSidebar;
+          document.getElementById("sidebaricon").style.color = textoSidebar;
+
+          const textoPanel = this.textColor(data.panel);
+          elementP.style.background = data.panel;
+          elementP.style.color = textoPanel;
+
+          const colorReducido = tinycolor(data.panel).lighten(10).toString();
+          document.getElementById("content-container").style.background = colorReducido;
+          this.IdUsu = data.login_id;
+        })
+        .catch((error) => {
+          console.error("Error formulario", error);
+        });
+    },
+    textColor(color) {
+      let r = parseInt(color.substring(1, 3), 16);
+      let g = parseInt(color.substring(3, 5), 16);
+      let b = parseInt(color.substring(5, 7), 16);
+
+      let luminosity = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+
+      return luminosity > 0.5 ? "#000" : "#fff";
     },
   },
 };

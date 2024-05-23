@@ -1,10 +1,8 @@
 <template>
   <div class="flex justify-center items-center h-screen">
-    <div
-      class="max-w-md w-full bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 shadow-lg rounded-lg p-8"
-    >
+    <div class="max-w-md w-full bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 shadow-lg rounded-lg p-8">
       <h1 class="text-3xl font-bold mb-4 text-white">Login!</h1>
-      <div v-if="!Show">
+      <div v-if="!showRegister">
         <div v-if="error" class="text-white-500 mb-4">{{ error }}</div>
         <form @submit.prevent="login" class="space-y-4">
           <div class="mb-4">
@@ -18,15 +16,18 @@
               class="form-input w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition duration-500 ease-in-out"
             />
           </div>
-          <div class="mb-4">
+          <div class="mb-4 relative">
             <label for="password" class="block text-white">Pasahitza</label>
             <input
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               id="password"
               v-model="password"
               required
               class="form-input w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition duration-500 ease-in-out"
             />
+            <span class="absolute right-3 top-10 cursor-pointer" @click="toggleShowPassword">
+              <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+            </span>
           </div>
           <button
             type="submit"
@@ -39,18 +40,20 @@
           ¿Ez duzu konturik?
           <a
             href=""
-            @click.prevent="showRegister"
+            @click.prevent="showRegisterForm"
             class="font-medium text-blue-200 hover:text-blue-300 transition duration-300 ease-in-out"
-            >¡Erregistratu hemen!</a
           >
+            ¡Erregistratu hemen!
+          </a>
         </p>
       </div>
       <div v-else>
-        <Register @show-login="showLogin" />
+        <Register @show-login="showLoginForm" />
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import CryptoJS from "crypto-js";
 import Register from "./Register.vue";
@@ -65,35 +68,20 @@ export default {
       password: "",
       error: "",
       csrfToken: "",
-      Show: false,
+      showRegister: false,
+      showPassword: false,
     };
   },
-  computed: {
-    // Computed property para verificar si la URL coincide con /kontua-sortu
-    isRegisterPage() {
-      return this.$route === "/kontua-sortu";
-    },
-    showLogin() {
-      return () => {
-        this.Show = false; // Oculta el componente de registro y muestra el formulario de inicio de sesión
-      };
-    },
-  },
-
   mounted() {
     this.logout();
   },
   methods: {
     login() {
-      let self = this;
-      // Enviar los datos del formulario al controlador utilizando fetch
       fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute("content"),
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
         },
         body: JSON.stringify({
           username: this.username,
@@ -102,24 +90,20 @@ export default {
       })
         .then((response) => {
           if (!response.ok) {
-            self.error = "Datuak ez daude zuzen";
+            this.error = "Datuak ez daude zuzen";
             return;
           }
-          // Manejar la respuesta del controlador, por ejemplo, redirigir a una nueva página
-          return response.json(); // Convertir la respuesta a JSON
+          return response.json();
         })
         .then((data) => {
-          // Verificar si la respuesta contiene la propiedad 'success'
           if (data && data.success) {
             this.encryptAndSaveUsername(this.username);
-            // Redirigir solo si el inicio de sesión es exitoso
-            window.location.href = "/panel";
+            window.location.href = "/panel"; // Navegar programáticamente a la página de panel
           } else {
-            self.error = "Erabiltzailea edo pasahitza ez da zuzena";
+            this.error = "Erabiltzailea edo pasahitza ez da zuzena";
           }
         })
         .catch((error) => {
-          // Manejar errores, por ejemplo, mostrar un mensaje de error al usuario
           console.error(error);
         });
     },
@@ -128,15 +112,12 @@ export default {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute("content"),
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
         },
       })
         .then((response) => {
           if (response.ok) {
             console.log("Has cerrado sesión correctamente");
-            // Redirige al usuario a la página de inicio de sesión
           } else {
             console.error("Error al cerrar sesión");
           }
@@ -145,17 +126,23 @@ export default {
           console.error("Error al cerrar sesión:", error);
         });
     },
-    showRegister() {
-      this.Show = true; // Modifica el valor de Show en lugar de asignar a una variable no definida
+    showRegisterForm() {
+      this.showRegister = true;
     },
-
+    showLoginForm() {
+      this.showRegister = false;
+    },
+    toggleShowPassword() {
+      this.showPassword = !this.showPassword;
+    },
     encryptAndSaveUsername(username) {
-      const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // Clave secreta para la encriptación (asegúrate de mantenerla segura)
+      const secretKey = "LaClaveDelDiosEspacioal1.·¬";
       const encryptedUsername = CryptoJS.AES.encrypt(username, secretKey).toString();
       localStorage.setItem("encryptedUsername", encryptedUsername);
     },
   },
 };
 </script>
+
 
 <style scoped></style>

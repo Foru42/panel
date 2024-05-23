@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class ProfilaController extends Controller
 {
@@ -23,18 +23,22 @@ class ProfilaController extends Controller
             if ($existingImage) {
                 // Si existe, utilizar la ruta existente
                 $imagePath = $existingImage->argazki;
+                $usuario->argazki = $imagePath;
+                //var_dump($imagePath, 'g');
             } else {
                 // Mover y guardar la imagen en el sistema de archivos con el nuevo nombre
                 $imageNameWithSuffix = $imageName . '_profila.' . $extension;
                 $request->file('irudi')->move(public_path('img'), $imageNameWithSuffix);
                 $imagePath = 'img/' . $imageNameWithSuffix;
+                //var_dump($imagePath, 'h');
+
                 $usuario->argazki = $imagePath;
             }
         }
 
         // Verificar si se proporcionó un correo electrónico
-        if ($request->filled('gmail')) {
-            $usuario->mail = $request->input('gmail');
+        if ($request->filled('Ntek')) {
+            $usuario->Ntek = $request->input('Ntek');
         }
 
         // Guardar los cambios en la base de datos

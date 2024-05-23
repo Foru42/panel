@@ -1,7 +1,7 @@
 <template>
   <div id="aldaketak" class="container mx-auto px-4 py-8">
     <div v-if="data.length === 0" class="text-red-500 text-center mb-4">
-      Aukeratu gustuko panel bat
+     Ez dago aldaketarik
     </div>
     <div
       v-else
@@ -18,7 +18,7 @@
           :alt="item.panel.izena"
         />
         <div class="p-6">
-          <div class="font-bold text-xl mb-2">{{ item.panel.izena }}</div>
+          <div class="font-bold text-xl mb-2 text-black">{{ item.panel.izena }}</div>
           <p class="text-gray-700 text-base mb-2">{{ item.name }}</p>
           <p class="text-gray-700 text-base mb-2">{{ item.panel.desk }}</p>
           <p class="text-gray-700 text-base mb-2">

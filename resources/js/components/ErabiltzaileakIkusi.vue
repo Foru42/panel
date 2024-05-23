@@ -217,8 +217,7 @@ export default {
               this.encryptAndSaveUsername(nuevosValores.username);
             }
 
-            //this.mostrarUsuarios();
-            window.location.reload();
+            this.mostrarUsuarios();
           })
           .catch((error) => {
             console.error("Error al actualizar el usuario:", error);

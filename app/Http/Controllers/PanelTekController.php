@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Panelak;
-use App\Models\TeknologiaBertsioa;
-use Illuminate\Support\Facades\DB;
 use App\Models\PanelTek;
+use App\Models\TeknologiaBertsioa;
 use App\Models\Teknologiak;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
 
 class PanelTekController extends Controller
 {
@@ -27,12 +25,11 @@ class PanelTekController extends Controller
             'usuariosQueLoFavoritan' => function ($query) use ($userId) {
                 // Filtra los usuarios que han marcado este panel como favorito
                 $query->where('usuario_id', $userId);
-            }
+            },
         ])->get();
 
         return $panelTekInfo;
     }
-
 
     public function showPaneladmin()
     {
@@ -49,11 +46,10 @@ class PanelTekController extends Controller
         } else {
             // Devolver un JSON con un mensaje de error y un status 500 (Internal Server Error)
             return response()->json([
-                'message' => 'Error al obtener la información del panel'
+                'message' => 'Error al obtener la información del panel',
             ], 500);
         }
     }
-
 
     public function anadir(Request $request)
     {
@@ -64,7 +60,7 @@ class PanelTekController extends Controller
         $kant = $request->input('cantidad');
         $usuario = $request->input('userID');
 
-        $infoParts = explode('-', $info);
+        $infoParts = explode('|', $info);
         $izena = trim($infoParts[0]);
         $desk = trim($infoParts[1]);
 

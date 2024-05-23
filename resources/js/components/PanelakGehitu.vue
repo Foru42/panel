@@ -154,13 +154,21 @@ export default {
         .then((data) => {
           // Manejar la respuesta del servidor si es necesario
           //console.log(data);
-          window.location.href = "/panel";
+          this.resetForm();
         })
         .catch((error) => {
           console.error("Error formulario", error);
         });
     },
-
+    resetForm() {
+    this.izenapane = "";
+    this.desk = "";
+    this.izenatek = "";
+    this.desktek = "";
+    this.vertek = "";
+    this.So_id = null;
+    this.$refs.irudi.value = null; // Limpiar el campo de archivo
+  },
     cargarSistemasOperativos() {
       // Realizar la petición para obtener los sistemas operativos
       fetch("/obtener-sistemas-operativos", {

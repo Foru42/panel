@@ -11,8 +11,9 @@ return new class extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('password');
-            $table->string('mail')->nullable();
-            $table->string('argazki')->nullable()->default('img/egg_profila.jpg');
+            $table->string('Gmail')->nullable();
+            $table->string('Ntek')->nullable();
+            $table->string('argazki')->default('img/egg_profila.jpg');
 
             $table->timestamps();
         });
