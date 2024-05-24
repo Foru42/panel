@@ -83,7 +83,21 @@
           >
             Logout
           </button>
+ 
         </div>
+
+
+
+        <div v-if="UsuComent" class="notification">
+      <i class="fas fa-comment notification-icon"></i> <!-- Icono de comentario -->
+      <div class="notification-message">
+        {{ notification.username }} Iruzkina gehitu du: "{{ notification.comment.title }}"
+      </div>
+      <button @click="marcarLeido" class="mark-read-button">
+        <i class="fas fa-check"></i> <!-- Icono de tick -->
+      </button>
+    </div>
+
       </div>
     </div>
   </div>
@@ -91,7 +105,7 @@
 <script>
 // Importa el componente PanelSelect desde su ruta
 import DatuakIkusi from "./DatuakIkusi.vue";
-
+import CryptoJS from "crypto-js";
 export default {
   props: ["username", "isAdmin"],
   components: {
@@ -103,10 +117,48 @@ export default {
       show_datuak_ikusi: false,
       groupedInfo: [],
       showSidebar: true,
+      notification: null,
+      UsuComent: false,
     };
   },
+  mounted() {
+    const pusher = new Pusher("67eeb3212bd414c8db30", {
+        cluster: "eu",
+        encrypted: true,
+    });
 
+    const channel = pusher.subscribe("public-channel");
+   // console.log(channel);
+
+    channel.bind("App\\Events\\CommentAdded", (data) => {
+        //console.log(data);
+        // Aquí puedes hacer lo que quieras con los datos recibidos, por ejemplo:
+        this.notification=data; 
+        if(this.notification.username == this.decryptUsername()){
+         this.UsuComent=false;
+        }else{
+          this.UsuComent=true;
+        }
+        //alert(`Nuevo comentario: ${data.comment.title}`);
+    });
+
+
+  },
   methods: {
+    decryptUsername() {
+      const secretKey = "LaClaveDelDiosEspacioal1.·¬"; // La misma clave secreta que se utilizó para encriptar
+      const encryptedUsername = localStorage.getItem("encryptedUsername");
+      if (encryptedUsername) {
+        const bytes = CryptoJS.AES.decrypt(encryptedUsername, secretKey);
+        const decryptedUsername = bytes.toString(CryptoJS.enc.Utf8);
+        return decryptedUsername;
+      } else {
+        return null;
+      }
+    },
+    marcarLeido(){
+      this.UsuComent=false;
+    },
     toggleSidebar() {
       // Cambia el valor de showSidebar para mostrar u ocultar el sidebar
       this.showSidebar = !this.showSidebar;
@@ -187,5 +239,21 @@ export default {
   border: none;
   cursor: pointer;
   font-size: 24px; /* Tamaño del icono */
+}
+.notification {
+  background-color: #6ce976; /* Color de fondo */
+  padding: 10px; /* Espaciado interno */
+  border-radius: 5px; /* Bordes redondeados */
+  margin-top: 10px; /* Espaciado superior */
+  display: flex; /* Para alinear elementos */
+  align-items: center; /* Para alinear verticalmente */
+}
+
+.notification-icon {
+  margin-right: 10px; /* Espacio a la derecha del icono */
+}
+
+.notification-message {
+  font-weight: bold; /* Texto en negrita */
 }
 </style>

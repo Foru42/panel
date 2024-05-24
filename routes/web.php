@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\BuscarExtensionesController;
 use App\Http\Controllers\CreateUserController;
 use App\Http\Controllers\IruzkinController;

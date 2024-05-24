@@ -4,6 +4,8 @@ import Login from "./components/Login.vue";
 import Register from "./components/Register.vue";
 import Sidebar from "./components/Sidebar.vue";
 import Panel from "./components/Panel.vue";
+import "./bootstrap";
+import "./echo";
 
 const app = createApp();
 

@@ -4,7 +4,6 @@
     <button @click="openModal" class="rounded-full add-comment-button">
       Iruzkinak gehitu
     </button>
-
     <!-- Modal para agregar comentario -->
     <div v-if="showModal" class="modal text-black">
       <div class="modal-content">
@@ -100,6 +99,7 @@
 </template>
 
 <script>
+
 import CryptoJS from "crypto-js";
 
 export default {
@@ -117,6 +117,8 @@ export default {
   },
   mounted() {
     this.fetchComments();
+
+  
   },
   methods: {
     openModal() {
@@ -161,6 +163,8 @@ export default {
           }
           this.closeModal();
           this.fetchComments();
+          this.resetForm();
+
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -194,10 +198,6 @@ export default {
       this.showDeleteIcons = true; // Mostrar iconos de eliminación
     },
 
-    formatDate(dateString) {
-      const options = { year: "numeric", month: "long", day: "numeric" };
-      return new Date(dateString).toLocaleDateString(undefined, options);
-    },
     BorrarIruzkin(izenburu) {
       var confirmacion = confirm("¿Seguru Panela borratu nahi duzula?");
       if (confirmacion) {
@@ -226,6 +226,11 @@ export default {
           });
       }
     },
+    resetForm() {
+    this.commentTitle = "";
+    this.commentDesk = "";
+
+  },
     editComment(commentId, title, desk) {
       // Mostrar el modal de edición
       this.showModalEdit = true;
@@ -269,6 +274,7 @@ export default {
     },
   },
 };
+
 </script>
 
 <style>

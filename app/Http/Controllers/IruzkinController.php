@@ -2,10 +2,10 @@
 // app/Http/Controllers/CommentController.php
 namespace App\Http\Controllers;
 
+use App\Events\CommentAdded;
 use App\Models\Iruzkina;
-use App\Models\UserIruzkinak;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class IruzkinController extends Controller
 {
@@ -28,13 +28,10 @@ class IruzkinController extends Controller
         $comment->desk = $request->input('desk');
         $comment->user_id = $user->id;
         $comment->save(); // Guardar el comentario
-
-
+        event(new CommentAdded($comment, $username));
 
         return response()->json(['message' => 'Comentario añadido con éxito']);
     }
-
-
 
     public function infoIruzkinak()
     {
@@ -43,7 +40,6 @@ class IruzkinController extends Controller
 
         return $info;
     }
-
 
     public function deleteIruzkin(Request $request)
     {
