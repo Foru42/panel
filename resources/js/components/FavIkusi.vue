@@ -1,12 +1,7 @@
 <template>
   <div id="gustukoena" class="text-black">
-    <div v-if="data.length === 0" class="text-red-500">
-      Aukeratu gustuko panel bat
-    </div>
-    <div
-      v-else
-      class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-    >
+    <div v-if="data.length === 0" class="text-red-500">Aukeratu gustuko panel bat</div>
+    <div v-else class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <div
         v-for="item in data"
         :key="item.id"
@@ -14,6 +9,7 @@
       >
         <div class="card mb-4 shadow-lg rounded-lg overflow-hidden w-full car">
           <img
+            v-lazy="item.panel.irudi"
             :src="item.panel.irudi"
             class="w-full h-64 object-cover"
             :alt="item.panel.izena"
@@ -35,7 +31,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 export default {

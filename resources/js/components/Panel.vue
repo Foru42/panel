@@ -18,8 +18,6 @@
         />
       </div>
       <div id="main-content" class="flex-1 p-4 flex justify-center items-center">
-   
-
         <!-- Nuevo contenedor interior -->
         <div id="content-container" class="content-container">
           <!-- Contenido de las diferentes vistas -->
@@ -86,7 +84,6 @@ export default {
       show_KoloreAldaketa_ikusi: false,
       show_portada: true,
       show_SuperUser_ikusi: false,
-    
     };
   },
   mounted() {
@@ -94,10 +91,6 @@ export default {
     console.log("Usuario actual:", this.decryptUsername());
     this.checkAdminStatus();
     this.KoloreaKargatu();
-
-
-
-
   },
   methods: {
     showDatuakIkusi() {

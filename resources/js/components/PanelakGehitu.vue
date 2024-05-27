@@ -161,14 +161,14 @@ export default {
         });
     },
     resetForm() {
-    this.izenapane = "";
-    this.desk = "";
-    this.izenatek = "";
-    this.desktek = "";
-    this.vertek = "";
-    this.So_id = null;
-    this.$refs.irudi.value = null; // Limpiar el campo de archivo
-  },
+      this.izenapane = "";
+      this.desk = "";
+      this.izenatek = "";
+      this.desktek = "";
+      this.vertek = "";
+      this.So_id = null;
+      this.$refs.irudi.value = null; // Limpiar el campo de archivo
+    },
     cargarSistemasOperativos() {
       // Realizar la petición para obtener los sistemas operativos
       fetch("/obtener-sistemas-operativos", {

@@ -18,12 +18,12 @@ class TeknologiaBertsioaTableSeeder extends Seeder
             ['izena' => '2.3'],
             ['izena' => '5.9.1'],
             ['izena' => '4.0'],
-            // Agrega más datos según sea necesario
+            ['izena' => '1.0'],
+            ['izena' => '2.1'],
+            ['izena' => '3.5'],
+            ['izena' => '4.2'],
         ];
 
-        foreach ($teknologiaBertsioa as $teknologia) {
-
-            DB::table('teknologia_bertsioa')->insert($teknologia);
-        }
+        DB::table('teknologia_bertsioa')->insert($teknologiaBertsioa);
     }
 }

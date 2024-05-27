@@ -1,7 +1,7 @@
 <template>
   <div id="aldaketak" class="container mx-auto px-4 py-8">
     <div v-if="data.length === 0" class="text-red-500 text-center mb-4">
-     Ez dago aldaketarik
+      Ez dago aldaketarik
     </div>
     <div
       v-else
@@ -13,6 +13,7 @@
         class="card shadow-lg rounded-lg overflow-hidden"
       >
         <img
+          v-lazy="item.panel.irudi"
           :src="item.panel.irudi"
           class="w-full h-48 object-cover"
           :alt="item.panel.izena"

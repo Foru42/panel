@@ -99,7 +99,6 @@
 </template>
 
 <script>
-
 import CryptoJS from "crypto-js";
 
 export default {
@@ -117,8 +116,6 @@ export default {
   },
   mounted() {
     this.fetchComments();
-
-  
   },
   methods: {
     openModal() {
@@ -164,7 +161,6 @@ export default {
           this.closeModal();
           this.fetchComments();
           this.resetForm();
-
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -227,10 +223,9 @@ export default {
       }
     },
     resetForm() {
-    this.commentTitle = "";
-    this.commentDesk = "";
-
-  },
+      this.commentTitle = "";
+      this.commentDesk = "";
+    },
     editComment(commentId, title, desk) {
       // Mostrar el modal de edición
       this.showModalEdit = true;
@@ -274,7 +269,6 @@ export default {
     },
   },
 };
-
 </script>
 
 <style>

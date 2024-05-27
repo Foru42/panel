@@ -18,7 +18,7 @@ class CreateUserController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required|unique:users',
             'password' => 'required',
-            'gmail' => 'required',
+
         ]);
 
         // Verificar si la validación falla
@@ -31,7 +31,10 @@ class CreateUserController extends Controller
         if ($existingUser) {
             return response()->json(['error' => 'El nombre de usuario ya está registrado'], 422);
         }
-
+        $gmailExist = User::where('Gmail', $request->gmail)->first();
+        if ($gmailExist) {
+            return response()->json(['error' => 'Gmail-a badago erregistratuta'], 422);
+        }
         // Crear un nuevo usuario en la base de datos
         $user = new User();
         $user->username = $request->username;

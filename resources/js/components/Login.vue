@@ -1,6 +1,8 @@
 <template>
   <div class="flex justify-center items-center h-screen">
-    <div class="max-w-md w-full bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 shadow-lg rounded-lg p-8">
+    <div
+      class="max-w-md w-full bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 shadow-lg rounded-lg p-8"
+    >
       <h1 class="text-3xl font-bold mb-4 text-white">Login!</h1>
       <div v-if="!showRegister">
         <div v-if="error" class="text-white-500 mb-4">{{ error }}</div>
@@ -25,7 +27,10 @@
               required
               class="form-input w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition duration-500 ease-in-out"
             />
-            <span class="absolute right-3 top-10 cursor-pointer" @click="toggleShowPassword">
+            <span
+              class="absolute right-3 top-10 cursor-pointer"
+              @click="toggleShowPassword"
+            >
               <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
             </span>
           </div>
@@ -81,7 +86,9 @@ export default {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
         },
         body: JSON.stringify({
           username: this.username,
@@ -112,7 +119,9 @@ export default {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
         },
       })
         .then((response) => {
@@ -143,6 +152,5 @@ export default {
   },
 };
 </script>
-
 
 <style scoped></style>

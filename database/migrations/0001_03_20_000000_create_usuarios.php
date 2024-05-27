@@ -11,9 +11,10 @@ return new class extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('password');
-            $table->string('Gmail')->nullable();
+            $table->string('Gmail')->default('Admin@gmail.com');
             $table->string('Ntek')->nullable();
             $table->string('argazki')->default('img/egg_profila.jpg');
+            $table->string('verification_token')->nullable();
 
             $table->timestamps();
         });

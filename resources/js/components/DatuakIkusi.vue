@@ -28,7 +28,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <div
         v-for="(info, index) in paginatedInfo"
-        class="card mb-4 shadow-lg rounded-lg s w-full"
+        class="card mb-4 shadow-lg rounded-lg max-w-sm w-full"
       >
         <div class="flex justify-between items-center mb-2" v-if="this.isAdmin">
           <button
@@ -52,7 +52,8 @@
             <i class="fas fa-plus"></i>
           </button>
         </div>
-        <img :src="info.panel.irudi" class="card-img-top" :alt="info.panel.izena" />
+        <!-- Usa v-lazy para el lazy loading de imágenes -->
+        <img v-lazy="info.panel.irudi" class="card-img-top" :alt="info.panel.izena" />
         <div class="card-body" :id="info.id">
           <p class="card-text panel-izena font-bold">{{ info.panel.izena }}</p>
           <p v-if="!info.editing" class="card-text panel-desk">{{ info.panel.desk }}</p>
@@ -80,7 +81,6 @@
             </option>
           </select>
         </div>
-
         <button
           :id="'guardar_' + info.id"
           class="btn-guardar bg-green-500 text-white font-bold rounded-full h-8 w-full mt-2"
@@ -198,7 +198,7 @@ export default {
         })
           .then((response) => {
             if (response.ok) {
-            this.allDatos();
+              this.allDatos();
             } else {
               // Si hubo un error, mostrar un mensaje de error
               console.error("Error al eliminar el panel:", response.statusText);
@@ -251,7 +251,7 @@ export default {
           .then((response) => {
             if (response.ok) {
               // Si la actualización fue exitosa, recargar la página
-             this.allDatos();
+              this.allDatos();
             } else {
               // Si hubo un error, puedes mostrar un mensaje de error o realizar otras acciones necesarias
               console.error("Error al actualizar el panel:", response.statusText);
@@ -304,7 +304,7 @@ export default {
         })
           .then((response) => {
             if (response.ok) {
-             this.allDatos();
+              this.allDatos();
             } else {
               // Si hubo un error, mostrar un mensaje de error
               console.error("Error al añadir panel:", response.statusText);

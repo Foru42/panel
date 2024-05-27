@@ -83,21 +83,21 @@
           >
             Logout
           </button>
- 
         </div>
 
-
-
         <div v-if="UsuComent" class="notification">
-      <i class="fas fa-comment notification-icon"></i> <!-- Icono de comentario -->
-      <div class="notification-message">
-        {{ notification.username }} Iruzkina gehitu du: "{{ notification.comment.title }}"
-      </div>
-      <button @click="marcarLeido" class="mark-read-button">
-        <i class="fas fa-check"></i> <!-- Icono de tick -->
-      </button>
-    </div>
-
+          <i class="fas fa-comment notification-icon"></i>
+          <!-- Icono de comentario -->
+          <div class="notification-message">
+            {{ notification.username }} Iruzkina gehitu du: "{{
+              notification.comment.title
+            }}"
+          </div>
+          <button @click="marcarLeido" class="mark-read-button">
+            <i class="fas fa-check"></i>
+            <!-- Icono de tick -->
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -123,26 +123,24 @@ export default {
   },
   mounted() {
     const pusher = new Pusher("67eeb3212bd414c8db30", {
-        cluster: "eu",
-        encrypted: true,
+      cluster: "eu",
+      encrypted: true,
     });
 
     const channel = pusher.subscribe("public-channel");
-   // console.log(channel);
+    // console.log(channel);
 
     channel.bind("App\\Events\\CommentAdded", (data) => {
-        //console.log(data);
-        // Aquí puedes hacer lo que quieras con los datos recibidos, por ejemplo:
-        this.notification=data; 
-        if(this.notification.username == this.decryptUsername()){
-         this.UsuComent=false;
-        }else{
-          this.UsuComent=true;
-        }
-        //alert(`Nuevo comentario: ${data.comment.title}`);
+      //console.log(data);
+      // Aquí puedes hacer lo que quieras con los datos recibidos, por ejemplo:
+      this.notification = data;
+      if (this.notification.username == this.decryptUsername()) {
+        this.UsuComent = false;
+      } else {
+        this.UsuComent = true;
+      }
+      //alert(`Nuevo comentario: ${data.comment.title}`);
     });
-
-
   },
   methods: {
     decryptUsername() {
@@ -156,8 +154,8 @@ export default {
         return null;
       }
     },
-    marcarLeido(){
-      this.UsuComent=false;
+    marcarLeido() {
+      this.UsuComent = false;
     },
     toggleSidebar() {
       // Cambia el valor de showSidebar para mostrar u ocultar el sidebar

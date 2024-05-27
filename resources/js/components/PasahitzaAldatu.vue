@@ -27,7 +27,10 @@
               <span v-if="errors.password_actual" class="text-red-500 text-xs">{{
                 errors.password_actual
               }}</span>
-              <span class="absolute right-3 top-9 cursor-pointer" @click="toggleShowPassword('actual')">
+              <span
+                class="absolute right-3 top-9 cursor-pointer"
+                @click="toggleShowPassword('actual')"
+              >
                 <i :class="showPasswordActual ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
               </span>
             </div>
@@ -47,7 +50,10 @@
                 required
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
-              <span class="absolute right-3 top-9 cursor-pointer" @click="toggleShowPassword('nueva')">
+              <span
+                class="absolute right-3 top-9 cursor-pointer"
+                @click="toggleShowPassword('nueva')"
+              >
                 <i :class="showPasswordNueva ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
               </span>
             </div>
@@ -70,8 +76,15 @@
               <span v-if="errors.password_confirmation" class="text-red-500 text-xs">{{
                 error
               }}</span>
-              <span class="absolute right-3 top-9 cursor-pointer" @click="toggleShowPassword('nueva_confirmation')">
-                <i :class="showPasswordNuevaConfirmation ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+              <span
+                class="absolute right-3 top-9 cursor-pointer"
+                @click="toggleShowPassword('nueva_confirmation')"
+              >
+                <i
+                  :class="
+                    showPasswordNuevaConfirmation ? 'fas fa-eye-slash' : 'fas fa-eye'
+                  "
+                ></i>
               </span>
             </div>
 
@@ -94,8 +107,6 @@
     </transition>
   </div>
 </template>
-
-
 
 <script>
 export default {
@@ -126,7 +137,9 @@ export default {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
         },
         body: JSON.stringify({
           password_actual: this.password_actual,
@@ -158,23 +171,25 @@ export default {
       this.password_nueva_confirmation = "";
     },
     toggleShowPassword(field) {
-      if (field === 'actual') {
+      if (field === "actual") {
         this.showPasswordActual = !this.showPasswordActual;
-      } else if (field === 'nueva') {
+      } else if (field === "nueva") {
         this.showPasswordNueva = !this.showPasswordNueva;
-      } else if (field === 'nueva_confirmation') {
+      } else if (field === "nueva_confirmation") {
         this.showPasswordNuevaConfirmation = !this.showPasswordNuevaConfirmation;
       }
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 .modal {

@@ -9,6 +9,7 @@ class SistemaOperativoTableSeeder extends Seeder
 {
     public function run()
     {
+
         DB::table('sistema_operativo')->truncate(); // Elimina todos los registros de la tabla antes de insertar nuevos
 
         $sistemasOperativos = [
@@ -18,13 +19,12 @@ class SistemaOperativoTableSeeder extends Seeder
             ['izena' => 'Windows 10', 'desk' => 'Azken erabiltzaileek erabili ohi duten sistema eragilea'],
             ['izena' => 'CentOS 7', 'desk' => 'Zerbitzarietan erabilitako Linux sistema eragilea'],
             ['izena' => 'Android', 'desk' => 'Smartphone eta tabletak bezalako gailuetan erabiltzen den sistema eragile mugikorra'],
-            // Agrega más datos según sea necesario
+            ['izena' => 'iOS', 'desk' => 'Apple-ren gailu mugikorretarako sistema eragilea'],
+            ['izena' => 'macOS', 'desk' => 'Apple-ren ordenagailuetarako sistema eragilea'],
+            ['izena' => 'Fedora', 'desk' => 'Red Hat-ek garatutako Linux banaketa'],
+            ['izena' => 'Arch Linux', 'desk' => 'Minimalista eta erabiltzaile aurreratuei zuzendutako Linux banaketa'],
         ];
 
-        foreach ($sistemasOperativos as $sistema) {
-            // Añade las fechas de creación y actualización
-
-            DB::table('sistema_operativo')->insert($sistema);
-        }
+        DB::table('sistema_operativo')->insert($sistemasOperativos);
     }
 }

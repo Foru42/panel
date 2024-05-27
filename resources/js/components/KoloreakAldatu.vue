@@ -26,7 +26,9 @@
         </button>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Opciones de colores -->
-          <div class="color-option rounded-lg p-4 border border-gray-200 hover:border-purple-500 transition duration-300">
+          <div
+            class="color-option rounded-lg p-4 border border-gray-200 hover:border-purple-500 transition duration-300"
+          >
             <p class="text-black mt-2 font-bold">Sidebar Kolorea</p>
             <div class="input-container flex justify-center items-center">
               <input
@@ -38,7 +40,9 @@
               />
             </div>
           </div>
-          <div class="color-option rounded-lg p-4 border border-gray-200 hover:border-purple-500 transition duration-300">
+          <div
+            class="color-option rounded-lg p-4 border border-gray-200 hover:border-purple-500 transition duration-300"
+          >
             <p class="text-black mt-2 font-bold">Panel printzipal</p>
             <div class="input-container flex justify-center items-center">
               <input
@@ -51,7 +55,10 @@
             </div>
           </div>
         </div>
-        <button @click="closeColorPicker" class=" text-black mt-4 font-bold bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300">
+        <button
+          @click="closeColorPicker"
+          class="text-black mt-4 font-bold bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300"
+        >
           Gorde Koloreak
         </button>
       </div>
@@ -137,7 +144,10 @@ export default {
       tipo = "panel";
       localStorage.setItem("koloreP", color);
       this.fetcheskaera(color, tipo);
-      this.KoloreaKargatu();
+
+      setTimeout(() => {
+        this.KoloreaKargatu();
+      }, 500);
     },
     KoloreaKargatu() {
       const userId = this.decryptUsername();
