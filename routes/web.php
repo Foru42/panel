@@ -14,7 +14,6 @@ use App\Http\Controllers\ProfilaController;
 use App\Http\Controllers\UsuarioController;
 use App\Models\SisOperativo;
 use App\Models\Teknologiak;
-use Illuminate\Support\Facades\Route;
 
 //Datubasea
 Route::get('/reset-database', function () {

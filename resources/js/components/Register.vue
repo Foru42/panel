@@ -79,8 +79,10 @@
             >Bueltatu!</a
           >
         </p>
+        <div class="g-recaptcha" :data-sitekey="siteKey"></div>
       </form>
     </transition>
+
   </div>
 </template>
 
@@ -93,21 +95,29 @@ export default {
       gmail: "",
       error: "",
       success: "",
-      csrfToken: "",
+      siteKey: "6LcKUekpAAAAAFhuPDT2rbYUsGJR7kx6WQ80kmzJ", // Reemplaza con tu clave del sitio
     };
   },
+  mounted() {
+    // Asegúrate de que el reCAPTCHA esté completamente cargado
+    const checkRecaptcha = setInterval(() => {
+      if (window.grecaptcha) {
+        window.grecaptcha.ready(() => {
+          window.grecaptcha.render(this.$el.querySelector('.g-recaptcha'), {
+            sitekey: this.siteKey,
+          });
+          clearInterval(checkRecaptcha);
+        });
+      }
+    }, 1000);
+  },
   methods: {
-    showLogin() {
-      this.$emit("show-login");
-    },
-    isValidEmail(email) {
-      const re = /^(([^<>()\[\]\.,;:\s@"]+(\.[^<>()\[\]\.,;:\s@"]+)*)|(".+"))@gmail\.com$/;
-      return re.test(String(email).toLowerCase());
-    },
     register() {
-      if (!this.isValidEmail(this.gmail)) {
-        this.error = "Gmail no válido. Por favor, ingresa un correo de Gmail válido.";
-        this.success = "";
+      // Obtén la respuesta del reCAPTCHA
+      const recaptchaResponse = window.grecaptcha.getResponse();
+
+      if (!recaptchaResponse) {
+        this.error = "Por favor, completa la verificación reCAPTCHA.";
         return;
       }
 
@@ -123,29 +133,28 @@ export default {
           username: this.username,
           password: this.password,
           gmail: this.gmail,
+          'g-recaptcha-response': recaptchaResponse,
         }),
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error en la solicitud");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data.error) {
-            this.error = data.error;
-            this.success = "";
-          } else if (data.success) {
-            this.error = "";
-            this.success = data.success;
-            this.$emit("show-login"); // Emitir evento para mostrar el login
-          }
-        })
-        .catch((error) => {
-          console.error("Error al registrar:", error);
-          this.error = "Errorea erabiltzailea erregistratzen. Badago gure datubasean.";
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error en la solicitud");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.error) {
+          this.error = data.error;
           this.success = "";
-        });
+        } else if (data.success) {
+          this.error = "";
+          this.success = data.success;
+        }
+      })
+      .catch((error) => {
+        this.error = "Error al registrar: " + error.message;
+        this.success = "";
+      });
     },
   },
 };

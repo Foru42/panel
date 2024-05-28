@@ -14,35 +14,34 @@ class CreateUserController extends Controller
     }
     public function register(Request $request)
     {
-        // Validar los datos del formulario
         $validator = Validator::make($request->all(), [
             'username' => 'required|unique:users',
             'password' => 'required',
-
+            'gmail' => 'required|email',
+            'g-recaptcha-response' => 'required',
         ]);
 
-        // Verificar si la validación falla
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()->first()], 422);
         }
 
-        // Verificar si el nombre de usuario ya existe
-        $existingUser = User::where('username', $request->username)->first();
-        if ($existingUser) {
-            return response()->json(['error' => 'El nombre de usuario ya está registrado'], 422);
+        // Verifica la respuesta del reCAPTCHA
+        $recaptchaResponse = $request->input('g-recaptcha-response');
+        $secretKey = env('RECAPTCHA_SECRET_KEY'); // Asegúrate de tener esta clave en tu archivo .env
+        $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}");
+        $responseKeys = json_decode($response, true);
+
+        if (intval($responseKeys["success"]) !== 1) {
+            return response()->json(['error' => 'La verificación reCAPTCHA falló'], 422);
         }
-        $gmailExist = User::where('Gmail', $request->gmail)->first();
-        if ($gmailExist) {
-            return response()->json(['error' => 'Gmail-a badago erregistratuta'], 422);
-        }
-        // Crear un nuevo usuario en la base de datos
+
+        // Crea el nuevo usuario
         $user = new User();
         $user->username = $request->username;
         $user->password = bcrypt($request->password);
         $user->Gmail = $request->gmail;
         $user->save();
 
-        // Retornar una respuesta JSON para indicar que el registro fue exitoso
         return response()->json(['success' => true], 200);
     }
 
