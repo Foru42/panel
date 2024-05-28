@@ -1,88 +1,40 @@
 <template>
-  <div
-    class="bg-white shadow-md rounded-lg p-8 flex flex-col justify-center max-w-md w-full"
-  >
-    <h1 class="text-center text-3xl font-bold text-gray-800 mb-8">
-      ¡Erregistratu orain!
-    </h1>
-    <div
-      v-if="error"
-      class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-5"
-      role="alert"
-    >
+  <div class="bg-white shadow-md rounded-lg p-8 flex flex-col justify-center max-w-md w-full">
+    <h1 class="text-center text-3xl font-bold text-gray-800 mb-8">¡Erregistratu orain!</h1>
+    <div v-if="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-5" role="alert">
       <span class="block font-semibold">¡Ups!.</span>
       <span>{{ error }}</span>
     </div>
-    <div
-      v-if="success"
-      class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-5"
-      role="alert"
-    >
+    <div v-if="success" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-5" role="alert">
       <span class="block font-semibold">¡Erregistro ondo!</span>
       <span>{{ success }}</span>
     </div>
     <transition name="fade">
       <form class="space-y-4" v-if="!success" @submit.prevent="register">
         <div>
-          <label for="username" class="block text-gray-800 font-semibold"
-            >Erabiltzailea</label
-          >
-          <input
-            v-model="username"
-            type="text"
-            id="username"
-            name="username"
-            class="form-input"
-            required
-            autofocus
-          />
+          <label for="username" class="block text-gray-800 font-semibold">Erabiltzailea</label>
+          <input v-model="username" type="text" id="username" name="username" class="form-input" required autofocus />
         </div>
         <div>
-          <label for="password" class="block text-gray-800 font-semibold"
-            >Pasahitza</label
-          >
-          <input
-            v-model="password"
-            type="password"
-            id="password"
-            name="password"
-            class="form-input"
-            required
-          />
+          <label for="password" class="block text-gray-800 font-semibold">Pasahitza</label>
+          <input v-model="password" type="password" id="password" name="password" class="form-input" required />
         </div>
-
         <div class="mb-6">
           <label class="block text-gray-700 text-sm font-bold mb-2">Gmail</label>
-          <input
-            name="gmail"
-            id="gmail"
-            type="text"
-            v-model="gmail"
-            class="block w-full py-2 px-3 border border-gray-300 rounded shadow appearance-none text-black"
-            required
-          />
+          <input name="gmail" id="gmail" type="text" v-model="gmail" class="block w-full py-2 px-3 border border-gray-300 rounded shadow appearance-none text-black" required />
         </div>
-
+        <div v-if="showCaptcha">
+          <div class="g-recaptcha" :data-sitekey="siteKey"></div>
+          <button @click.prevent="acceptCaptcha" class="w-full px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:bg-purple-700 rounded-lg transition duration-300">Aceptar reCAPTCHA</button>
+        </div>
         <div>
-          <button
-            type="submit"
-            class="w-full px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:bg-purple-700 rounded-lg transition duration-300"
-          >
-            Erregistratu!
-          </button>
+          <button type="submit" class="w-full px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:bg-purple-700 rounded-lg transition duration-300">Erregistratu!</button>
         </div>
         <p class="mt-4 text-center text-white text-sm">
-          <a
-            href=""
-            @click.prevent="showLogin"
-            class="font-medium text-blue-400 hover:text-blue-300 transition duration-300 ease-in-out"
-            >Bueltatu!</a
-          >
+          <a href="" @click.prevent="showLogin" class="font-medium text-blue-400 hover:text-blue-300 transition duration-300 ease-in-out">Bueltatu!</a>
         </p>
-        <div class="g-recaptcha" :data-sitekey="siteKey"></div>
       </form>
     </transition>
-
   </div>
 </template>
 
@@ -95,45 +47,56 @@ export default {
       gmail: "",
       error: "",
       success: "",
-      siteKey: "6LcKUekpAAAAAFhuPDT2rbYUsGJR7kx6WQ80kmzJ", // Reemplaza con tu clave del sitio
+      siteKey: "6LexluopAAAAAJPuC3Vugb-YuhPRl6-yAtfHUq6a",
+      showCaptcha: false,
+      captchaToken: "",
     };
   },
   mounted() {
-    // Asegúrate de que el reCAPTCHA esté completamente cargado
-    const checkRecaptcha = setInterval(() => {
-      if (window.grecaptcha) {
-        window.grecaptcha.ready(() => {
-          window.grecaptcha.render(this.$el.querySelector('.g-recaptcha'), {
-            sitekey: this.siteKey,
-          });
-          clearInterval(checkRecaptcha);
-        });
-      }
-    }, 1000);
+    this.showCaptcha = true;
   },
   methods: {
-    register() {
-      // Obtén la respuesta del reCAPTCHA
-      const recaptchaResponse = window.grecaptcha.getResponse();
+    showLogin() {
+      this.$emit("show-login");
+    },
+    isValidEmail(email) {
+      const re = /^(([^<>()\[\]\.,;:\s@"]+(\.[^<>()\[\]\.,;:\s@"]+)*)|(".+"))@gmail\.com$/;
+      return re.test(String(email).toLowerCase());
+    },
+    
 
-      if (!recaptchaResponse) {
+    acceptCaptcha() {
+      grecaptcha.enterprise.execute(this.siteKey, { action: 'submit' })
+        .then(token => {
+          this.captchaToken = token;
+          this.error = "";
+        })
+        .catch(error => {
+          console.error("Error al aceptar reCAPTCHA:", error);
+          this.error = "Error al aceptar el reCAPTCHA.";
+        });
+    },
+    register() {
+      if (!this.isValidEmail(this.gmail)) {
+        this.error = "Gmail-a ez da baliogarria. Mesedez, sartu gmail bat.";
+        this.success = "";
+        return;
+      }
+      if (!this.captchaToken) {
         this.error = "Por favor, completa la verificación reCAPTCHA.";
         return;
       }
-
       fetch("/registrar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute("content"),
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
         },
         body: JSON.stringify({
           username: this.username,
           password: this.password,
           gmail: this.gmail,
-          'g-recaptcha-response': recaptchaResponse,
+          'g-recaptcha-response': this.captchaToken,
         }),
       })
       .then((response) => {
@@ -149,6 +112,7 @@ export default {
         } else if (data.success) {
           this.error = "";
           this.success = data.success;
+          this.showLogin();
         }
       })
       .catch((error) => {

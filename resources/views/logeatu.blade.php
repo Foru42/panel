@@ -8,8 +8,8 @@
     <title>Login</title>
     @vite('resources/css/app.css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
+    <script src="https://www.google.com/recaptcha/enterprise.js?render={{ env('RECAPTCHA_SITE_KEY') }}"></script>
 </head>
 <body>
     <div id="app">

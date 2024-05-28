@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -12,6 +11,7 @@ class CreateUserController extends Controller
     {
         return view('register');
     }
+
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -25,24 +25,30 @@ class CreateUserController extends Controller
             return response()->json(['error' => $validator->errors()->first()], 422);
         }
 
-        // Verifica la respuesta del reCAPTCHA
         $recaptchaResponse = $request->input('g-recaptcha-response');
-        $secretKey = env('RECAPTCHA_SECRET_KEY'); // Asegúrate de tener esta clave en tu archivo .env
+        $secretKey = env('RECAPTCHA_SECRET_KEY');
+
+        if (!$secretKey) {
+            return response()->json(['error' => 'Clave secreta de reCAPTCHA no encontrada en el archivo .env'], 500);
+        }
+
         $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}");
         $responseKeys = json_decode($response, true);
 
-        if (intval($responseKeys["success"]) !== 1) {
-            return response()->json(['error' => 'La verificación reCAPTCHA falló'], 422);
+        if (!isset($responseKeys["success"])) {
+            return response()->json(['error' => 'No se pudo verificar la respuesta del reCAPTCHA', 'response' => $responseKeys], 500);
         }
 
-        // Crea el nuevo usuario
+        if (intval($responseKeys["success"]) !== 1) {
+            return response()->json(['error' => 'La verificación reCAPTCHA falló', 'details' => $responseKeys], 422);
+        }
+
         $user = new User();
         $user->username = $request->username;
         $user->password = bcrypt($request->password);
-        $user->Gmail = $request->gmail;
+        $user->gmail = $request->gmail;
         $user->save();
 
         return response()->json(['success' => true], 200);
     }
-
 }
