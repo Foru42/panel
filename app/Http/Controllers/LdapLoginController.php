@@ -1,11 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
-
 use App\Models\LoginLdapAuto;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class LdapLoginController extends Controller
 {

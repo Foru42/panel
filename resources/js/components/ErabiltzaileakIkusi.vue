@@ -254,7 +254,7 @@ export default {
         password: this.pass,
       };
 
-      fetch("/registrar", {
+      fetch("/usunuevo", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

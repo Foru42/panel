@@ -1,14 +1,14 @@
 <template>
   <div class="carousel-container">
-    <div class="carousel relative">
-      <transition name="fade" mode="out-in">
-        <img
-          :key="currentCardIndex"
-          :src="currentCard"
-          alt="carousel image"
-          class="carousel-image"
-        />
-      </transition>
+    <div  class="carousel relative">
+      <img 
+        v-if="cards.length > 0"
+        v-lazy="currentCard"
+        :key="currentCardIndex"
+        :src="currentCard"
+        alt="carousel image"
+        class="carousel-image"
+      />
     </div>
     <div class="controls flex justify-center mt-4">
       <button @click="prevCard" class="text-3xl mr-4">&lt;</button>
@@ -27,7 +27,12 @@ export default {
   },
   computed: {
     currentCard() {
-      return `/img/${this.cards[this.currentCardIndex]}`;
+      // Verifica si cards tiene elementos antes de evaluar currentCard
+      if (this.cards.length > 0) {
+        return `/img/${this.cards[this.currentCardIndex]}`;
+      } else {
+        return '';
+      }
     },
   },
   mounted() {

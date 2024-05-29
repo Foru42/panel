@@ -9,7 +9,7 @@
     @vite('resources/css/app.css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <script src="https://www.google.com/recaptcha/enterprise.js?render={{ env('RECAPTCHA_SITE_KEY') }}"></script>
+     <script src="https://www.google.com/recaptcha/enterprise.js?render=6LdKa-spAAAAAAyu2yS_UuTV3QUIhbX4-iixYvyC"></script>
 </head>
 <body>
     <div id="app">

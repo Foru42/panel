@@ -15,6 +15,16 @@ class UsuarioController extends Controller
         $usuarios = User::with('roles')->get(['id', 'username', 'mail', 'argazki']);
         return response()->json($usuarios);
     }
+
+    public function crear(Request $request)
+    {
+        $user = new User();
+        $user->username = $request->username;
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return response()->json(['success' => true], 200);
+    }
     public function eliminar(Request $request)
     {
         // Obtener el ID del usuario a eliminar desde la solicitud

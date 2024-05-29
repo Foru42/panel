@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Mail\WelcomeMail;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class CreateUserController extends Controller
@@ -26,10 +28,11 @@ class CreateUserController extends Controller
         }
 
         $recaptchaResponse = $request->input('g-recaptcha-response');
-        $secretKey = env('RECAPTCHA_SECRET_KEY');
+        $secretKey = '6LdKa-spAAAAAOAKDlCGAKcdHT3V_Q2aMxwoP06F';
 
         if (!$secretKey) {
             return response()->json(['error' => 'Clave secreta de reCAPTCHA no encontrada en el archivo .env'], 500);
+
         }
 
         $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}");
@@ -48,6 +51,8 @@ class CreateUserController extends Controller
         $user->password = bcrypt($request->password);
         $user->gmail = $request->gmail;
         $user->save();
+
+        Mail::to($user->gmail)->send(new WelcomeMail($user));
 
         return response()->json(['success' => true], 200);
     }

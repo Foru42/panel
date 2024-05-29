@@ -14,7 +14,7 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'password',
-        'administrator', // Campo para indicar si el usuario es administrador
+
     ];
 
     protected $hidden = [

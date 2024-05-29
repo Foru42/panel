@@ -48,6 +48,7 @@ Route::get('/usuarios', [UsuarioController::class, 'index']);
 Route::post('/usuario', [UsuarioController::class, 'mostrarPorNombre']);
 Route::post('/eliminar-usuario', [UsuarioController::class, 'eliminar'])->name('eliminar');
 Route::post('/cambiar-contrasena', [UsuarioController::class, 'cambiarContraseña']);
+Route::post('/usunuevo', [UsuarioController::class, 'crear']);
 
 //Panel DatuakIkusi editatu
 Route::view('/panel', 'panelMain')->middleware('auth');

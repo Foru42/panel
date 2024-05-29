@@ -29,7 +29,12 @@ class LoginLdapAuto
     public static function connect()
     {
         self::setDefaults();
+
         $servers = self::$hosts;
+
+        if (is_null($servers) || !is_array($servers)) {
+            throw new \Exception("LDAP hosts configuration is invalid.");
+        }
 
         $connection = false;
         foreach ($servers as $server) {
